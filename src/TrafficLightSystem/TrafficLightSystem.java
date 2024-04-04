@@ -1,7 +1,7 @@
 /**
  * 
  */
-package TrafficLightSystem;
+package trafficLightSystem;
 
 import java.util.List;
 

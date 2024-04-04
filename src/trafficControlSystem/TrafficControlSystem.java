@@ -6,8 +6,7 @@ package trafficControlSystem;
 import java.time.LocalTime;
 import java.util.List;
 
-import TrafficLightSystem.TrafficLight;
-import TrafficLightSystem.TrafficLightSystem;
+import trafficLightSystem.TrafficLightSystem;
 
 /**
  * 
@@ -28,6 +27,29 @@ public class TrafficControlSystem {
 		}
 				
 				
+		/***
+		 * 
+		 * ***/
+		private void startTrafficControl(String newState, LocalTime timer) {
+			
+		    
+			LocalTime currentTime = LocalTime.now();
+			LocalTime greenCycleEnd = currentTime.plusSeconds(30);
+			LocalTime yellowCycleEnd = greenCycleEnd.plusSeconds(5);
+			
+			TrafficLightSystem tls1 =  systemsOfTrafficLight.get(0);
+	        TrafficLightSystem tls2 =  systemsOfTrafficLight.get(1);
+	        
+			// while current time is before the traffic light open cycle
+			while (currentTime.isBefore(yellowCycleEnd)) {
+				
+		        
+		        
+		                
+		        
+		        currentTime = LocalTime.now(); // Update the current time
+		    }
+		}
 	/**
 	 * @param args
 	 */
