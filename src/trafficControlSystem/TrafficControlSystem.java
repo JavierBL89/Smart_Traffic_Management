@@ -28,8 +28,6 @@ public class TrafficControlSystem {
 		}
 				
 				
-
-
 	/**
 	 * @param args
 	 */
