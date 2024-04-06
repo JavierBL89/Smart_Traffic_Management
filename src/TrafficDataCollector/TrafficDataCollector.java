@@ -13,8 +13,8 @@ import java.util.Random;
 public class TrafficDataCollector {
 	
 	private final int SYSTEMID = 300;
+	private int trafficLightID;
 	private int scanTime;
-	private LocalTime scanTimeEnd;
 	private int numOfTrafficScans;
 	private int carCounter;
 	private int truckCounter;
@@ -24,13 +24,13 @@ public class TrafficDataCollector {
 	private Random randomNumber;
 	
 	/**
-	 * 
+	 * Initialises a new TrafficDataCollector object with default values.
 	 * **/
-	public TrafficDataCollector(int scanTime, int numOfTrafficScans) {
+	public TrafficDataCollector() {
 		
-		this.numOfTrafficScans = numOfTrafficScans;
+		this.trafficLightID = 0;
+		this.numOfTrafficScans = 3;
 		this.scanTime = 2000;
-		this.scanTimeEnd = null;
 		this.bikeCounter = 0;
 		this.carCounter = 0;
 		this.truckCounter = 0;
@@ -127,11 +127,23 @@ public class TrafficDataCollector {
 	}
 
 	//setters 
+	
+	/**
+	 * Set setCycleTime
+	 */
 	public void setCycleTime(int scanTime) {
 		this.scanTime = scanTime;
 	}
 
+	/**
+	 * Set trafficLightID 
+	 */
+	public void setTrafficLightID(int trafficLightID) {
+		this.trafficLightID = trafficLightID;
+	}
 
+
+	
 	public void setBusCounter(int busCounter) {
 		this.busCounter = busCounter;
 	}
@@ -155,28 +167,52 @@ public class TrafficDataCollector {
 
 	
 	// getters
+	
+	/**
+	 * Get trafficLightID
+	 */
+	public int getTrafficLightID() {
+		return trafficLightID;
+	}
+	
+	/**
+	 * Get getNumOfTrafficScans
+	 */
 	public int getNumOfTrafficScans() {
 		return numOfTrafficScans;
 	}
 
+	/**
+	 * Get getBusCounter
+	 */
 	public int getBusCounter() {
 		return busCounter;
 	}
 
+	/**
+	 * Get getCarCounter
+	 */
 	public int getCarCounter() {
 		return carCounter;
 	}
 
-
+	/**
+	 * Get getTruckCounter
+	 */
 	public int getTruckCounter() {
 		return truckCounter;
 	}
 
-
+	/**
+	 * Get getBikeCounter
+	 */
 	public int getBikeCounter() {
 		return bikeCounter;
 	}
 
+	/**
+	 * Get getSYSTEMID
+	 */
 	public int getSYSTEMID() {
 		return SYSTEMID;
 	}
@@ -185,8 +221,8 @@ public class TrafficDataCollector {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-                                                        // 2 seconds, 3 scans
-		TrafficDataCollector tdc = new TrafficDataCollector(2 ,3);
+                                                        
+		TrafficDataCollector tdc = new TrafficDataCollector();
 		
 		tdc.startDataCollector();
 

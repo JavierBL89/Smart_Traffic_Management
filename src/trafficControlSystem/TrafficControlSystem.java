@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import TrafficDataCollector.TrafficDataCollector;
+import trafficLightSystem.TrafficLight;
 import trafficLightSystem.TrafficLightSystem;
 
 /**
@@ -19,26 +20,32 @@ public class TrafficControlSystem {
 		private static final int systemID = 2012;
 		private TrafficLightSystem tls1;
 		private TrafficLightSystem tls2;
-		private List<TrafficLightSystem> systemsOfTrafficLight;   // list holds the traffic light systems that are controlled by this class
-		private LocalTime timer;
 		
+		// list holds the traffic light systems that are controlled by this Traffic Control System
+		private List<TrafficLightSystem> systemsOfTrafficLight;  
+		
+		// list list of traffic data collectors that associated with this Traffic Control System
+	    private List<TrafficDataCollector> listOfDataCollectors;  
+	    
+	    
 		/**
 		 * Constructor to initialise Traffic Control System object
-		 * and the 2 Traffic Light Systems that are controlled by this class
 		 * **/
 		public TrafficControlSystem() {
-			systemsOfTrafficLight = new 	ArrayList<>();	
-			inititTrafficLightSystems();
+			this.systemsOfTrafficLight = new ArrayList<>();
+			this.listOfDataCollectors = new 	ArrayList<>();
+			this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
 		    this.startTrafficControlCycle("green", 0);
 		}
+		
 		
 		/***
 		 * Method initialise the 2 Traffic Light Systems that 
 		 * this Traffic Control System manages
 		 * **/
-		private void inititTrafficLightSystems() {
+		private void initTrafficLightSystems() {
 			
-			// Initialize the Traffic Light Systems 
+			// Initialise the Traffic Light Systems 
 	        tls1 = new TrafficLightSystem();
 	        tls2 = new TrafficLightSystem();
 	        
@@ -46,10 +53,45 @@ public class TrafficControlSystem {
 	        systemsOfTrafficLight.add(tls1);
 	        systemsOfTrafficLight.add(tls2);
 			 
+	        initializeTrafficDataCollector();  // call method to integrate the Traffic Data Collectors
 		}	
 		
-		
-		
+		/**
+		 * Method initialises Traffic Data Collectors for each traffic light 
+		 * within the Traffic Control System's Traffic Light Systems. 
+		 * 
+		 * This method ensures that every operational traffic light 
+		 * has a corresponding Data Collector(camera) associated with it through their id. 
+		*/
+         private void initializeTrafficDataCollector() {
+			
+        	   listOfDataCollectors = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
+			
+			// loop through the list of Traffic Light Systems
+			for(TrafficLightSystem tls : systemsOfTrafficLight) {
+				
+				// check if Traffic Light (A) does not exits or is null
+				if(tls.getTlA() != null) {
+					TrafficDataCollector tdc1 = new TrafficDataCollector();   // init a new traffic data collector (tdc1)
+					listOfDataCollectors.add(tdc1); 
+					tdc1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
+				}else {
+					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemid() + " is null");
+				}
+				
+				// check if Traffic Light (B) does not exits or is null
+				if(tls.getTlB() != null) {
+					TrafficDataCollector tdc2 = new TrafficDataCollector();    // init a new traffic data collector (tdc2)
+					listOfDataCollectors.add(tdc2); 
+					tdc2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
+				}else {
+					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemid() + " is null");
+				}
+				
+			}
+		}
+         
+         
 		/***
 		 * 
 		 * ***/

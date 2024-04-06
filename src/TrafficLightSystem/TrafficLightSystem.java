@@ -12,7 +12,7 @@ import java.util.List;
 public class TrafficLightSystem {
 	
 	// vars
-	private static final int systemID = 101;
+	private int systemID = 304;
 	private TrafficLight tlA;
 	private TrafficLight tlB;
 
@@ -23,6 +23,7 @@ public class TrafficLightSystem {
 	 * and the pair of traffic lights that compose this system
 	 * ***/
 	public TrafficLightSystem() {
+		systemID++;   // auto increment id
 		this.tlA = new TrafficLight();    // Instantiate traffic light object (A)
 		this.tlB = new TrafficLight();    // Instantiate traffic light object (B)
 	}
@@ -41,7 +42,7 @@ public class TrafficLightSystem {
 		
 		
 	// getters
-	public static int getSystemid() {
+	public int getSystemid() {
 		return systemID;
 	}
 	
