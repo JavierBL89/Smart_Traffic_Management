@@ -37,6 +37,15 @@ public class TrafficDataCollector {
 	}
 	
 	
+	/***
+	 * Method generates a random number
+	 * **/
+	private int getRandomNumber() {
+		
+		int ranNumOfVehicles = randomNumber.nextInt(100);
+		return ranNumOfVehicles;
+	}
+	
 
 	//setters 
 	
@@ -98,7 +107,8 @@ public class TrafficDataCollector {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-    
+       
+
 	}
 
 }
