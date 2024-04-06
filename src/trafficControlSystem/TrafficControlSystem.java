@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import TrafficDataCollector.TrafficDataCollector;
 import trafficLightSystem.TrafficLightSystem;
 
 /**
@@ -16,7 +17,8 @@ public class TrafficControlSystem {
 	
 	    // vars
 		private static final int systemID = 2012;
-		
+		private TrafficLightSystem tls1;
+		private TrafficLightSystem tls2;
 		private List<TrafficLightSystem> systemsOfTrafficLight;   // list holds the traffic light systems that are controlled by this class
 		private LocalTime timer;
 		
@@ -26,12 +28,28 @@ public class TrafficControlSystem {
 		 * **/
 		public TrafficControlSystem() {
 			systemsOfTrafficLight = new 	ArrayList<>();	
-		    this.systemsOfTrafficLight.add(new TrafficLightSystem());
-		    this.systemsOfTrafficLight.add(new TrafficLightSystem());
+			inititTrafficLightSystems();
 		    this.startTrafficControlCycle("green", 0);
 		}
-				
-				
+		
+		/***
+		 * Method initialise the 2 Traffic Light Systems that 
+		 * this Traffic Control System manages
+		 * **/
+		private void inititTrafficLightSystems() {
+			
+			// Initialize the Traffic Light Systems 
+	        tls1 = new TrafficLightSystem();
+	        tls2 = new TrafficLightSystem();
+	        
+	        // Add the Traffic Light Systems to the list of systems that this class controls
+	        systemsOfTrafficLight.add(tls1);
+	        systemsOfTrafficLight.add(tls2);
+			 
+		}	
+		
+		
+		
 		/***
 		 * 
 		 * ***/
@@ -41,9 +59,7 @@ public class TrafficControlSystem {
 			LocalTime greenCycleEnd = currentTime.plusSeconds(3);
 			timeOfCycle += 1;
 			LocalTime yellowCycleEnd = greenCycleEnd.plusSeconds(3);
-			
-			TrafficLightSystem tls1 =  systemsOfTrafficLight.get(0);
-	        TrafficLightSystem tls2 =  systemsOfTrafficLight.get(1);
+
 	        
 	        int controlTrfficCycle = 3;
 	        
@@ -96,6 +112,40 @@ public class TrafficControlSystem {
 		
 		private void startCycleTrafficLightSystem1() {}
 		private void startCycleTrafficLightSystem2() {}
+		
+		// setters
+		
+		/**
+		 * Set TrafficLightSystem 1
+		 * */
+		public void setTls1(TrafficLightSystem tls1) {
+			this.tls1 = tls1;
+		}
+		
+		/**
+		 * Set TrafficLightSystem 1
+		 * */
+		public void setTls2(TrafficLightSystem tls2) {
+			this.tls2 = tls2;
+		}
+		
+		// getters
+		
+		/**
+		 * Get TrafficLightSystem 1
+		 * */
+	    public TrafficLightSystem getTls1() {
+			return tls1;
+		}
+
+	    /**
+		 * Get TrafficLightSystem 1
+		 * */
+		public TrafficLightSystem getTls2() {
+			return tls2;
+		}
+
+
 	/**
 	 * @param args
 	 */

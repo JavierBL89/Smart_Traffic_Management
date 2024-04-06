@@ -29,7 +29,7 @@ public class TrafficDataCollector {
 	public TrafficDataCollector(int scanTime, int numOfTrafficScans) {
 		
 		this.numOfTrafficScans = numOfTrafficScans;
-		this.scanTime = scanTime;
+		this.scanTime = 2000;
 		this.scanTimeEnd = null;
 		this.bikeCounter = 0;
 		this.carCounter = 0;
@@ -56,7 +56,7 @@ public class TrafficDataCollector {
 		
 		while(numOfTrafficScans >0) {
 			try {
-				Thread.sleep(2000);    // delay traffic scan n seconds
+				Thread.sleep(scanTime);    // delay traffic scan n seconds
 				
 					carCounter += getRandomNumber();
 					truckCounter += getRandomNumber();
