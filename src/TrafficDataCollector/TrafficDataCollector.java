@@ -20,6 +20,7 @@ public class TrafficDataCollector {
 	private int truckCounter;
 	private int bikeCounter;
 	private int busCounter;
+	private int anomalies;
 	private Random randomNumber;
 	
 	/**
@@ -34,6 +35,7 @@ public class TrafficDataCollector {
 		this.carCounter = 0;
 		this.truckCounter = 0;
 		this.busCounter = 0;
+		this.anomalies = 0;
 		this.randomNumber = new Random();
 	}
 	
@@ -61,6 +63,7 @@ public class TrafficDataCollector {
 					bikeCounter += getRandomNumber();
 					busCounter += getRandomNumber();
 
+
 			} catch (InterruptedException e) {
 				
 				System.err.println("Error occurred while collecting traffic data: " + e.getMessage());
@@ -69,6 +72,7 @@ public class TrafficDataCollector {
 			numOfTrafficScans--;   // decrease number of traffic scan
 		}
 		
+		getAnomalies();            // check traffic anomalies
 		printVehiclesCount();     // prints total of vehicles per cycle
 	}
 	
@@ -86,6 +90,7 @@ public class TrafficDataCollector {
 		str += "\nTrucks " + truckCounter;
 		str += "\nBikes " + bikeCounter;
 		str += "\nBuses " + busCounter;
+		str += "\nTraffic anomalies " + anomalies;
 		System.out.println(str);
 	}
 	
@@ -101,6 +106,25 @@ public class TrafficDataCollector {
 		return ranNumOfVehicles;
 	}
 	
+	
+	/***
+	 * Method detects any traffic anomalies such as;
+	 * 
+	 * - Any vehicles stopped for a period of time while should be on the move
+	 * - Any vehicles stopped for a period of occupying 2 different leans while should be on the move
+	 * **/
+	private int getAnomalies() {
+		
+		int[] chancesArray = new int[] { 0, 0, 1};          // array of possible anomalies during traffic scan
+		int randomNum = randomNumber.nextInt(chancesArray.length);
+		anomalies = chancesArray[randomNum];
+		if (anomalies==1) {
+			System.out.println("ALERT !! " + anomalies + " anomalies encountered. "
+					+ "Please check camera for anomalies and turn off alert "
+					+ "or emergency services will be allert in 10 seconds");
+		}
+		return anomalies;
+	}
 
 	//setters 
 	public void setCycleTime(int scanTime) {
