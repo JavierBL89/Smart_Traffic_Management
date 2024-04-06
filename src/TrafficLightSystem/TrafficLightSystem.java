@@ -18,18 +18,25 @@ public class TrafficLightSystem {
 
 	
 
-	// consructor
+	/***
+	 * Constructor to initialise a new Object Traffic Light System
+	 * and the pair of traffic lights that compose this system
+	 * ***/
 	public TrafficLightSystem() {
-		this.tlA = new TrafficLight();
-		this.tlB = new TrafficLight();
+		this.tlA = new TrafficLight();    // Instantiate traffic light object (A)
+		this.tlB = new TrafficLight();    // Instantiate traffic light object (B)
 	}
 
 	
 	// proccess
-		private void updateLightsState(String newState) {
+	
+	/***
+	 * Method updates the state of both traffic lights of the system
+	 * */
+		public void updateLightsState(String newState) {
 			
-			tlA.setState(newState);
-			tlB.setState(newState);
+			tlA.setState(newState);    // update state traffic Light A
+			tlB.setState(newState);    // update state traffic Light B
 		};
 		
 		
@@ -53,10 +60,8 @@ public class TrafficLightSystem {
 	 */
 	public static void main(String[] args) {
 
-		
 		TrafficLightSystem p = new TrafficLightSystem();
 		
-
 	}
 
 }
