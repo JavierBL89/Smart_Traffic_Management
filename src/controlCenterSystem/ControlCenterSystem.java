@@ -60,24 +60,19 @@ public class ControlCenterSystem {
 	}
 	
 	/***
-	 * Method initilizes all Traffic Light Systems associated with the Traffic Control System.
+	 * Method initilizes all Traffic Light Systems associated with each Traffic Control System.
 	 * Method ensures that every Traffic Control System is fully operational with its Traffic Light Systems integration.
 	 * 
 	 * If any Traffic Light System fails to initialise, an exception is thrown, halting the process.
 	 * @throws Exception if any of the Traffic Light Systems could not be initialsd.
 	 * */
-	private void initTrafficLightsSystems() throws Exception {
+	private void initTrafficLightsSystems() {
 		
 		// Iterate through each Traffic Control System in the list
-				for(TrafficControlSystem tcs :listOfTrafficControlSSystems) {
-					
-					try {
-						tcs.initTrafficLightSystems();
-					}catch(Exception e) {
-						throw new Exception("Somthing went wrong, Traffic Light Systems could not be initialize");
-					}
-			
-				}
+		for(TrafficControlSystem tcs :listOfTrafficControlSSystems) {
+
+			tcs.initTrafficLightSystems();
+	        }
 	}
 	
 	/**

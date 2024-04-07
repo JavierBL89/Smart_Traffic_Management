@@ -46,7 +46,7 @@ public class TrafficLightSystem {
 	// getters
 		
 	/**
-	* Get Traffic Light System ID
+	* Get Traffic Light System status
 	* */	
 	public int getSystemid() {
 		return systemID;

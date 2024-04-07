@@ -23,7 +23,7 @@ public class TrafficControlSystem {
 		private boolean isOperative;
 		
 		// list holds the traffic light systems that are controlled by this Traffic Control System
-		private List<TrafficLightSystem> systemsOfTrafficLight;  
+		private List<TrafficLightSystem> listOfTrafficLightSystems;  
 		
 		// list list of traffic data collectors that associated with this Traffic Control System
 	    private List<TrafficDataCollector> listOfDataCollectors;  
@@ -34,7 +34,7 @@ public class TrafficControlSystem {
 		 * **/
 		public TrafficControlSystem() {
 			this.isOperative = true;
-			this.systemsOfTrafficLight = new ArrayList<>();
+			this.listOfTrafficLightSystems = new ArrayList<>();
 			this.listOfDataCollectors = new 	ArrayList<>();
 			this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
 		    this.startTrafficControlCycle("green", 0);
@@ -51,10 +51,45 @@ public class TrafficControlSystem {
 	        tls1 = new TrafficLightSystem();
 	        tls2 = new TrafficLightSystem();
 	        
+	        try {
+	        	    // Check if Traffic Light System 1 is operative
+	        	    if(!tls1.isOperative()) {
+	        	    	
+	        	         System.out.println("Traffic Light System 1 with id " + tls1.getSystemid() + 
+	        	    			" is not operative and could not be initialized");
+	        	         
+	        	    }else {
+	                 listOfTrafficLightSystems.add(tls1);   // add Traffic Light System 1 to the control list
+	                 
+	                 System.out.println("Traffic Light System 1 with id " + tls1.getSystemid() + 
+	                        " has been successfully initialized");
+	            }
+	        	    
+	        	 // Check if Traffic Light System 2 is operative
+	        	    if(!tls2.isOperative()) {
+	        	    	
+	        	    	    System.out.println("Traffic Light System 2 with id " + tls2.getSystemid() + 
+	        	    			" is not operative and could not be initialized");
+	        	    	    
+	        	    }else {
+	                listOfTrafficLightSystems.add(tls2);   // add Traffic Light System 2 to the control list
+	                
+	                    System.out.println("Traffic Light System 2 with id " + tls2.getSystemid() + 
+	                        " has been successfully initialized");
+	            }
+
+	        	      // Handle any exceptions that might occur during the Traffic Light Systems initialitation
+	        }catch (Exception e) {  
+	            
+	            System.out.println("An error occurred during the initialization of a Traffic Light System: " + e.getMessage());
+	            
+	        }
+	        
 	        // Add the Traffic Light Systems to the list of systems that this class controls
-	        systemsOfTrafficLight.add(tls1);
-	        systemsOfTrafficLight.add(tls2);
+	        listOfTrafficLightSystems.add(tls1);
+	        listOfTrafficLightSystems.add(tls2);
 			 
+	        
 	        initializeTrafficDataCollector();  // call method to integrate the Traffic Data Collectors
 		}	
 		
@@ -70,7 +105,7 @@ public class TrafficControlSystem {
         	   listOfDataCollectors = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
 			
 			// loop through the list of Traffic Light Systems
-			for(TrafficLightSystem tls : systemsOfTrafficLight) {
+			for(TrafficLightSystem tls : listOfTrafficLightSystems) {
 				
 				// check if Traffic Light (A) does not exits or is null
 				if(tls.getTlA() != null) {
