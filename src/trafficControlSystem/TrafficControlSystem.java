@@ -102,7 +102,6 @@ public class TrafficControlSystem {
 			timeOfCycle += 1;
 			LocalTime yellowCycleEnd = greenCycleEnd.plusSeconds(3);
 
-	        
 	        int controlTrfficCycle = 3;
 	        
 	        String str= "";
