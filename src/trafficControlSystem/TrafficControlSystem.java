@@ -20,6 +20,7 @@ public class TrafficControlSystem {
 		private static final int systemID = 2012;
 		private TrafficLightSystem tls1;
 		private TrafficLightSystem tls2;
+		private boolean isOperative;
 		
 		// list holds the traffic light systems that are controlled by this Traffic Control System
 		private List<TrafficLightSystem> systemsOfTrafficLight;  
@@ -32,6 +33,7 @@ public class TrafficControlSystem {
 		 * Constructor to initialise Traffic Control System object
 		 * **/
 		public TrafficControlSystem() {
+			this.isOperative = true;
 			this.systemsOfTrafficLight = new ArrayList<>();
 			this.listOfDataCollectors = new 	ArrayList<>();
 			this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
@@ -43,7 +45,7 @@ public class TrafficControlSystem {
 		 * Method initialise the 2 Traffic Light Systems that 
 		 * this Traffic Control System manages
 		 * **/
-		private void initTrafficLightSystems() {
+		public void initTrafficLightSystems() {
 			
 			// Initialise the Traffic Light Systems 
 	        tls1 = new TrafficLightSystem();
@@ -170,6 +172,13 @@ public class TrafficControlSystem {
 			this.tls2 = tls2;
 		}
 		
+		/**
+		 * Set Traffic Control System status
+		 * */
+		public void setIsOperative(boolean status) {
+			this.isOperative = status;
+		}
+		
 		// getters
 		
 		/**
@@ -186,6 +195,12 @@ public class TrafficControlSystem {
 			return tls2;
 		}
 
+		/**
+		 * Get Traffic Control System status
+		 * */
+		public boolean isOperative() {
+			return isOperative;
+		}
 
 	/**
 	 * @param args

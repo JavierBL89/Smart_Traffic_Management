@@ -31,9 +31,11 @@ public class ControlCenterSystem {
 	 */
 	private void addTrafficContolSystem() {
 		
-		TrafficControlSystem newTCS = new TrafficControlSystem();
-		listOfTrafficControlSSystems.add(newTCS);
+		TrafficControlSystem newTCS = new TrafficControlSystem();   
+		listOfTrafficControlSSystems.add(newTCS);   
 	}
+	
+	
 	
 	/**
 	 * @return the systemID
