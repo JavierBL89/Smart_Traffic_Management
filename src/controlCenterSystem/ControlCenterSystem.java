@@ -66,13 +66,13 @@ public class ControlCenterSystem {
 	 * If any Traffic Light System fails to initialise, an exception is thrown, halting the process.
 	 * @throws Exception if any of the Traffic Light Systems could not be initialsd.
 	 * */
-	private void initTrafficLightsSystems() {
+	private void initTrafficLightSystems() {
 		
 		// Iterate through each Traffic Control System in the list
 		for(TrafficControlSystem tcs :listOfTrafficControlSSystems) {
-
 			tcs.initTrafficLightSystems();
-	        }
+	        
+		}
 	}
 	
 	/**
@@ -87,8 +87,10 @@ public class ControlCenterSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		ControlCenterSystem n = new ControlCenterSystem();
+		
+		n.addTrafficContolSystem();
 	}
 
 }

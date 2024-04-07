@@ -12,7 +12,8 @@ import java.util.List;
 public class TrafficLightSystem {
 	
 	// vars
-	private int systemID = 304;
+	private static int nextSystemID = 304;
+	private  int systemID;
 	private TrafficLight tlA;
 	private TrafficLight tlB;
 	private boolean operative;
@@ -24,7 +25,7 @@ public class TrafficLightSystem {
 	 * and the pair of traffic lights that compose this system
 	 * ***/
 	public TrafficLightSystem() {
-		systemID++;   // auto increment id
+		this.systemID = ++nextSystemID;   // auto increment id
 		this.operative = true;
 		this.tlA = new TrafficLight();    // Instantiate traffic light object (A)
 		this.tlB = new TrafficLight();    // Instantiate traffic light object (B)
@@ -42,13 +43,14 @@ public class TrafficLightSystem {
 			tlB.setState(newState);    // update state traffic Light B
 		};
 		
+			
 		
 	// getters
 		
 	/**
 	* Get Traffic Light System status
 	* */	
-	public int getSystemid() {
+	public int getSystemId() {
 		return systemID;
 	}
 	

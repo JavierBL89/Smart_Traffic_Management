@@ -51,45 +51,33 @@ public class TrafficControlSystem {
 	        tls1 = new TrafficLightSystem();
 	        tls2 = new TrafficLightSystem();
 	        
-	        try {
-	        	    // Check if Traffic Light System 1 is operative
-	        	    if(!tls1.isOperative()) {
+	        
+	        	// Check if Traffic Light System 1 is operative
+	        	if(!tls1.isOperative()) {
 	        	    	
-	        	         System.out.println("Traffic Light System 1 with id " + tls1.getSystemid() + 
-	        	    			" is not operative and could not be initialized");
+	        	     System.out.println("Traffic Light System 1 with id " + tls1.getSystemId() + 
+	        	    	   " is not operative and could not be initialized");
 	        	         
-	        	    }else {
-	                 listOfTrafficLightSystems.add(tls1);   // add Traffic Light System 1 to the control list
+	        	}else {
+	             listOfTrafficLightSystems.add(tls1);   // add Traffic Light System 1 to the control list
 	                 
-	                 System.out.println("Traffic Light System 1 with id " + tls1.getSystemid() + 
-	                        " has been successfully initialized");
-	            }
-	        	    
-	        	 // Check if Traffic Light System 2 is operative
-	        	    if(!tls2.isOperative()) {
-	        	    	
-	        	    	    System.out.println("Traffic Light System 2 with id " + tls2.getSystemid() + 
-	        	    			" is not operative and could not be initialized");
-	        	    	    
-	        	    }else {
-	                listOfTrafficLightSystems.add(tls2);   // add Traffic Light System 2 to the control list
-	                
-	                    System.out.println("Traffic Light System 2 with id " + tls2.getSystemid() + 
-	                        " has been successfully initialized");
-	            }
-
-	        	      // Handle any exceptions that might occur during the Traffic Light Systems initialitation
-	        }catch (Exception e) {  
-	            
-	            System.out.println("An error occurred during the initialization of a Traffic Light System: " + e.getMessage());
-	            
+	             System.out.println("Traffic Light System 1 with id " + tls1.getSystemId() + 
+	                    " has been successfully initialized");
 	        }
-	        
-	        // Add the Traffic Light Systems to the list of systems that this class controls
-	        listOfTrafficLightSystems.add(tls1);
-	        listOfTrafficLightSystems.add(tls2);
-			 
-	        
+	        	    
+	        	// Check if Traffic Light System 2 is operative
+	        	if(!tls2.isOperative()) {
+	        	    	
+	        	    	System.out.println("Traffic Light System 2 with id " + tls2.getSystemId() + 
+	        	    	    " is not operative and could not be initialized");
+	        	    	    
+	        	}else {
+	            listOfTrafficLightSystems.add(tls2);   // add Traffic Light System 2 to the control list
+	                
+	            System.out.println("Traffic Light System 2 with id " + tls2.getSystemId() + 
+	                  " has been successfully initialized");
+	            }
+	          
 	        initializeTrafficDataCollector();  // call method to integrate the Traffic Data Collectors
 		}	
 		
@@ -113,7 +101,7 @@ public class TrafficControlSystem {
 					listOfDataCollectors.add(tdc1); 
 					tdc1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
 				}else {
-					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemid() + " is null");
+					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
 				
 				// check if Traffic Light (B) does not exits or is null
@@ -122,7 +110,7 @@ public class TrafficControlSystem {
 					listOfDataCollectors.add(tdc2); 
 					tdc2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
 				}else {
-					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemid() + " is null");
+					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
 				
 			}
