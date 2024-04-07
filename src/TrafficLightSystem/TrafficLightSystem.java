@@ -15,6 +15,7 @@ public class TrafficLightSystem {
 	private int systemID = 304;
 	private TrafficLight tlA;
 	private TrafficLight tlB;
+	private boolean operative;
 
 	
 
@@ -24,6 +25,7 @@ public class TrafficLightSystem {
 	 * ***/
 	public TrafficLightSystem() {
 		systemID++;   // auto increment id
+		this.operative = true;
 		this.tlA = new TrafficLight();    // Instantiate traffic light object (A)
 		this.tlB = new TrafficLight();    // Instantiate traffic light object (B)
 	}
@@ -42,15 +44,31 @@ public class TrafficLightSystem {
 		
 		
 	// getters
+		
+	/**
+	* Get Traffic Light System ID
+	* */	
 	public int getSystemid() {
 		return systemID;
 	}
 	
-
+	/**
+	 * Get Traffic Light System status
+	 * */
+	public boolean isOperative() {
+		return operative;
+	}
+	
+	/**
+	 * Get Traffic Light A
+	 * */
 	public TrafficLight getTlA() {
 		return tlA;
 	}
 
+	/**
+	 * Get Traffic Light B
+	 * */
 	public TrafficLight getTlB() {
 		return tlB;
 	}
