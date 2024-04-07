@@ -22,16 +22,6 @@ public class ControlCenterSystem {
 	}
 	
 
-	/***
-	 * Method adds a new Traffic Control System to the list 
-	 * of Traffic Control Systems that this Control Centre System manages
-	 * 
-	 */
-	private void addTrafficContolSystem() {
-		
-		TrafficControlSystem newTCS = new TrafficControlSystem();   
-		listOfTrafficControlSSystems.add(newTCS);   
-	}
 	
 	
 	/***
@@ -44,7 +34,7 @@ public class ControlCenterSystem {
 	private void initTrafficLightSystems() {
 		
 		// Iterate through each Traffic Control System in the list
-		for(TrafficControlSystem tcs :listOfTrafficControlSSystems) {
+		for(TrafficControlSystem tcs :listOfTrafficControlSystems) {
 			tcs.initTrafficLightSystems();
 	        
 		}

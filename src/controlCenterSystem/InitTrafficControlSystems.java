@@ -19,12 +19,12 @@ import trafficControlSystem.TrafficControlSystem;
  */
 public class InitTrafficControlSystems {
 	
-	// vars
-	private List<TrafficControlSystem> listOfTrafficControlSystems;
+	// objects
+	private TCSystemsListManager listOfTrafficControlSystems = null;	
 	
 	// Cotructor
 	public InitTrafficControlSystems() {
-		this.listOfTrafficControlSystems =  new ArrayList<>();
+		listOfTrafficControlSystems = TCSystemsListManager.getInstance();
 
 	}
 	
@@ -53,6 +53,7 @@ public class InitTrafficControlSystems {
 			}
 		}
 	}
+	
 	
 
 }
