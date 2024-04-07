@@ -17,7 +17,7 @@ import trafficLightSystem.TrafficLightSystem;
 public class TrafficControlSystem {
 	
 	    // vars
-		private static final int systemID = 2012;
+		private int systemID = 2012;
 		private TrafficLightSystem tls1;
 		private TrafficLightSystem tls2;
 		private boolean isOperative;
@@ -179,8 +179,18 @@ public class TrafficControlSystem {
 			this.isOperative = status;
 		}
 		
+		
+		
 		// getters
 		
+		/**
+		 * Get the systemID
+		 */
+		public int getSystemID() {
+			return systemID;
+		}
+
+
 		/**
 		 * Get TrafficLightSystem 1
 		 * */

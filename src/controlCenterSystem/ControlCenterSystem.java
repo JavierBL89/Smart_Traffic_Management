@@ -36,6 +36,29 @@ public class ControlCenterSystem {
 	}
 	
 	
+	/**
+	 * Method initialises all Traffic Control Systems
+	 * **/
+	private void initTrafficControlSystems() {
+		
+		// Iterate through each Traffic Control System in the list
+		for(TrafficControlSystem tcs :listOfTrafficControlSSystems) {
+			
+			if(tcs.isOperative()) {     // Check if the Traffic Control System is operative
+				
+				tcs.initTrafficLightSystems(); // Initialise the Traffic Light Systems associated to the Traffic Control System
+
+				// confirm it has been been successfully initialized
+				System.out.println("Traffic Control System " + tcs.getSystemID() + " is up and running"); 
+			}else {
+				
+				 // Print an error message if Traffic Control System is operative
+				System.out.println("Error at initializing Traffic Control System with id " + tcs.getSystemID()
+				+ ". This system is not operative");
+			}
+		}
+	}
+	
 	
 	/**
 	 * @return the systemID
