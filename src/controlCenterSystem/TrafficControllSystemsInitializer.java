@@ -1,32 +1,25 @@
-/**
- * Javier Bastande
- */
-
 package controlCenterSystem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import trafficControlSystem.TrafficControlSystem;
 
-/**
- * Class responsible for Initialising all Traffic Control Systems 
- * that are initially managed by the Control Centre network.
- * 
- * It contains a list with all the Traffic Control Systems managed by Control Centre
- * and ensures each Traffic Control System is operational
- * 
- */
-public class InitTrafficControlSystems {
-	
+
+/***
+ * Class responsible for the initialising all Traffic Control Systems managed within the Control Centre network. 
+ * It ensures that each Traffic Control System is operational.
+ *
+ * ***/
+public class TrafficControllSystemsInitializer {
+
 	// objects
 	private TCSystemsListManager listOfTrafficControlSystems = null;	
-	
+			
 	// Cotructor
-	public InitTrafficControlSystems() {
-		listOfTrafficControlSystems = TCSystemsListManager.getInstance();
+	public TrafficControllSystemsInitializer() {
+		
+    // get list of Traffic Control Systems associated to Control Centre
+    listOfTrafficControlSystems = TCSystemsListManager.getInstance(); 
 
-	}
+    }
 	
 	/**
 	 * Method initialise all Traffic Control Systems within the  network. 
@@ -34,7 +27,7 @@ public class InitTrafficControlSystems {
 	 *  and initialises the Traffic Light Systems associated with each  Traffic Control System
 	 *  or prints and error message is the ar not operational
 	 * **/
-	private void initTrafficControlSystems() {
+	public void initTrafficControlSystems() {
 		
 		// Iterate through each Traffic Control System in the list
 		for(TrafficControlSystem tcs :listOfTrafficControlSystems) {
@@ -53,7 +46,5 @@ public class InitTrafficControlSystems {
 			}
 		}
 	}
-	
-	
-
 }
+
