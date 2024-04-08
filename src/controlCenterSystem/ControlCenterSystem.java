@@ -28,7 +28,16 @@ public class ControlCenterSystem {
 		return systemID;
 	}
 
+	
 
+	// Method to initialise Traffic Control Systems
+	private static void initializeTrafficControlSystems() {
+		
+	    TrafficControllSystemsInitializer tcsInitializer = new TrafficControllSystemsInitializer();
+	    tcsInitializer.initTrafficControlSystems();            // init both Traffic Controll Systems
+	    tcsInitializer.startTrafficControlCycle();   // init Traffic Controll Cycle with initial states
+	}
+	
 	/**
 	 * @param args
 	 */
@@ -36,15 +45,16 @@ public class ControlCenterSystem {
 		
 		ControlCenterSystem n = new ControlCenterSystem();
 		
-		TrafficControllSystemsInitializer s = new TrafficControllSystemsInitializer();
+	
         
 		TCSystemsListManager instance = TCSystemsListManager.getInstance();
 		instance.addTrafficContolSystem();   // add new Traffic Control System to the list
         VisualRecognitionSystem vrs = new VisualRecognitionSystem();
-
-		s.initTrafficControlSystems();
-		s.startTrafficControlCycle("green", 2);
+        
 		
+		vrs.configVisualRecognition(3, 2000);
+		vrs.startDataCollectorCycle();
+		vrs.printScanReport();
 	}
 
 	

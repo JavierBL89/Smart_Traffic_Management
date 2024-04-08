@@ -48,8 +48,8 @@ public class TrafficDataCollector {
 	 * **/
 	public TrafficDataCollector() {
 		
-		this.numOfTrafficScans = 3;
-		this.scanTime = 2000;
+		this.numOfTrafficScans = 0;
+		this.scanTime = 0;
 		this.totalVehicles = 0;
 		this.bikeCounter = 0;
 		this.carCounter = 0;
@@ -71,10 +71,11 @@ public class TrafficDataCollector {
 	 * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
 	 * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
 	 * **/
-	public int startDataCollector() {
+	public int startDataCollector(int numOfTrafficScans, int scanTime) {
 		
-		int numOfTrafficScans = 3;   // set number of traffic scans per cycle
-		
+		this.numOfTrafficScans = numOfTrafficScans;    // reset numOfTrafficScans value
+		this.scanTime = scanTime;                      // reset scanTime value
+		 
 		while(numOfTrafficScans >0) {
 			try {
 				Thread.sleep(scanTime);    // delay traffic scan n seconds

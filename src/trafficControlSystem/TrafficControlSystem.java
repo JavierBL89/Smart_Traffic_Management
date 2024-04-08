@@ -52,7 +52,7 @@ public class TrafficControlSystem {
 	        tls1 = new TrafficLightSystem();
 	        tls2 = new TrafficLightSystem();
 	        
-	        System.out.println("Iitilazing Traffic Light Systems");
+	        System.out.println("\n2- Initialiting Traffic Light Systems...");
 	        
 	        	// Check if Traffic Light System 1 is operative
 	        	if(!tls1.isOperative()) {
@@ -99,18 +99,18 @@ public class TrafficControlSystem {
 				
 				// check if Traffic Light (A) exits or is null
 				if(tls.getTlA() != null) {
-					VisualRecognitionSystem tdc1 = new VisualRecognitionSystem();   // init a new traffic data collector (tdc1)
-					listOfVisualRecognitionSystems.add(tdc1); 
-					tdc1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
+					VisualRecognitionSystem vrs1 = new VisualRecognitionSystem();   // init a new traffic data collector (tdc1)
+					listOfVisualRecognitionSystems.add(vrs1); 
+					vrs1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
 				}else {
 					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
 				
 				// check if Traffic Light (B) exits or is null
 				if(tls.getTlB() != null) {
-					VisualRecognitionSystem tdc2 = new VisualRecognitionSystem();    // init a new traffic data collector (tdc2)
-					listOfVisualRecognitionSystems.add(tdc2); 
-					tdc2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
+					VisualRecognitionSystem vrs2 = new VisualRecognitionSystem();    // init a new traffic data collector (tdc2)
+					listOfVisualRecognitionSystems.add(vrs2); 
+					vrs2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
 				}else {
 					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
@@ -122,8 +122,9 @@ public class TrafficControlSystem {
 		/***
 		 * 
 		 * ***/
-		public void startTrafficControlCycle(String newState, int timeOfCycle) {
-			
+		public void startTrafficControlCycle() {
+			int timeOfCycle = 2;
+			String newState = "green"; 
 			LocalTime currentTime = LocalTime.now();
 			LocalTime greenCycleEnd = currentTime.plusSeconds(3);
 			timeOfCycle += 1;
@@ -131,9 +132,7 @@ public class TrafficControlSystem {
 
 	        int controlTrfficCycle = 3;
 	        
-	        String str= "";
 	        
-		
 	        while(controlTrfficCycle >= 0) {
 	        	
 			    // while current time is before the end of traffic light open cycle
@@ -160,13 +159,15 @@ public class TrafficControlSystem {
 				controlTrfficCycle--;
 
 	        }
-	        str += "\nStart of Cycle" ;
+	        String str= "";
+	        str += "3- Start Traffic Controll Cycle with the initial predifined state...";
+	        str += "Start of Cycle " ;
 			str += "\nTraffic light System 1 is: ";
 			str +=  " light 1 green";
 			str +=  " light 2 green";
 			str += "\nTraffic light System 2 is: ";
 			str +=  "light 1 red";
-			str +=  " light 2 red";
+			str +=  "light 2 red\n";
 	        str += "\nEnd of Cycle" ;
 			str += "\nTraffic light System 1 is: ";
 			str +=  " light 1 " + tls1.getTlA().getState();

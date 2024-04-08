@@ -148,9 +148,15 @@
 		 * Methos responsible for startting visual recognition proccess
 		 * **/
 		public void startDataCollectorCycle() {
-			totalVehicles =  tdc.startDataCollector();
+			totalVehicles =  tdc.startDataCollector(this.numOfTrafficScans, this.scanTime);
 		}
 		
+		/**
+		 * Methos responsible for startting visual recognition proccess
+		 * **/
+		public void printScanReport() {
+			  tdc.printVehiclesCount();
+		}
 		
 		@Override 
 		public String toString() {
@@ -167,11 +173,12 @@
 		 */
 		public static void main(String[] args) {
 	        
-			TrafficDataCollector tdc = new TrafficDataCollector();
+		/*	TrafficDataCollector tdc = new TrafficDataCollector();
 			
 			tdc.startDataCollector();
 			tdc.getAnomalies();
 			tdc.printVehiclesCount();
+			*/
 
 		}
 
