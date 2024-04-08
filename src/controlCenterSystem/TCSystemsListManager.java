@@ -50,9 +50,8 @@ public class TCSystemsListManager implements Iterable<TrafficControlSystem>{
 	 * of Traffic Control Systems that Control Centre System manages
 	 * 
 	 */
-	public void addTrafficContolSystem() {
+	public void addTrafficContolSystem(TrafficControlSystem newTCS) {
 		
-		TrafficControlSystem newTCS = new TrafficControlSystem();   
 		trafficControlSystems.add(newTCS);   
 	}
 

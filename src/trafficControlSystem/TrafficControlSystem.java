@@ -80,11 +80,12 @@ public class TrafficControlSystem {
 	                  " has been successfully initialized");
 	            }
 	          
+	        	
 	        initializeTrafficDataCollector();  // call method to integrate the Traffic Data Collectors
 		}	
 		
 		/**
-		 * Method initialises Traffic Data Collectors for each traffic light 
+		 * Method initializes and associates a Traffic Data Collector for each traffic light 
 		 * within the Traffic Control System's Traffic Light Systems. 
 		 * 
 		 * This method ensures that every operational traffic light 
@@ -93,7 +94,10 @@ public class TrafficControlSystem {
          private void initializeTrafficDataCollector() {
 			
         	 listOfVisualRecognitionSystems = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
-			
+        	 
+        	 
+        	 String str = "Initialising Visual Recognition Systems...";
+        	 
 			// loop through the list of Traffic Light Systems
 			for(TrafficLightSystem tls : listOfTrafficLightSystems) {
 				
@@ -102,6 +106,10 @@ public class TrafficControlSystem {
 					VisualRecognitionSystem vrs1 = new VisualRecognitionSystem();   // init a new traffic data collector (tdc1)
 					listOfVisualRecognitionSystems.add(vrs1); 
 					vrs1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
+					
+					str += "Traffic Light System " + tls.getSystemId()  
+							+ "id. Traffic Light " + tls.getTlA() 
+							+ " id is now associated with Visual Recognition System " + vrs1.getSYSTEMID();
 				}else {
 					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
@@ -111,13 +119,35 @@ public class TrafficControlSystem {
 					VisualRecognitionSystem vrs2 = new VisualRecognitionSystem();    // init a new traffic data collector (tdc2)
 					listOfVisualRecognitionSystems.add(vrs2); 
 					vrs2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
+				
+					str += "Traffic Light System " + tls.getSystemId()  
+					+ "id. Traffic Light " + tls.getTlB() 
+					+ " id is now associated with Visual Recognition System " + vrs2.getSYSTEMID();
+					
 				}else {
 					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
 				
 			}
+			
+			System.out.println(str);  // print string
+			
 		}
          
+         
+         /**
+         * Method Configures the visual recognition parameters for all associated Visual Recognition Systems.
+         * 
+         * @param scanFrequency The frequency at which each VRS should perform scans.
+         * @param scanResolution The resolution or detail level each VRS should use for scans.
+         */
+         public void configAllVisualRecognitionSystems(int numOfTrafficScans, int scanTime) {
+        	 
+        	     for (VisualRecognitionSystem vrs : listOfVisualRecognitionSystems) {
+                 vrs.setNumOfTrafficScans(numOfTrafficScans);
+                 vrs.setScanTime(scanTime);
+             }
+         }
          
 		/***
 		 * 
@@ -182,6 +212,10 @@ public class TrafficControlSystem {
 		private void startCycleTrafficLightSystem1() {}
 		private void startCycleTrafficLightSystem2() {}
 		
+		
+		public void configVisualRecognition() {
+			
+		}
 		// setters
 		
 		/**
