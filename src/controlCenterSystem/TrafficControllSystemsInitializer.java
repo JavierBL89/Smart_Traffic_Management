@@ -47,7 +47,9 @@ public class TrafficControllSystemsInitializer {
 		}
 	}
 	
+	
 	public void startTrafficControlCycle(String newState, int timeOfCycle) {
+		
 		for(TrafficControlSystem tcs : listOfTrafficControlSystems) {
 			tcs.startTrafficControlCycle(newState, timeOfCycle);
 		}
