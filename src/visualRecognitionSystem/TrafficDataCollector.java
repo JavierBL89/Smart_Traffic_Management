@@ -8,12 +8,34 @@ import java.time.LocalTime;
 import java.util.Random;
 
 /**
+ * * Class simulates the monitoring of traffic flow by counting and recognising various types of vehicles 
+ * - cars, trucks, bikes, and buses - passing through the control point within specified time intervals.
+ * 
+ * This class aims to provide a realistic representation of traffic data collection, 
+ * which can be used to analyse traffic patterns, optimize traffic light timing, and identify potential traffic anomalies.
+ * 
+ * 
+ *  * Functionalities:
+ *  
+ * - Real-time Traffic Data Simulation: Simulates the collection of traffic data in real time through periodic scans, 
+ *   where each scan counts the number of different types of vehicles passing through the intersection.
+ * - Anomaly Detection: Identifies traffic anomalies during data collection, such as vehicles stopped for an extended 
+ *   period or occupying multiple lanes, which could indicate traffic incidents or unusual conditions.   
+ * - Configurable Scan Parameters: Allows customization of the traffic scan parameters, including the number of scans 
+ *   per cycle and the duration of each scan, to adapt the data collection process to varying traffic conditions.
+ * - Data Reporting: Provides a summary of the collected traffic data and detected anomalies at the end of each scan cycle, 
+ *   offering insights into traffic flow and potential issues at the control point.
+ *    
+ * Usage:
+ * 
+ * This class is designed to be instantiated for each traffic control point ( traffic light ) where data collection is necessary. 
  * 
  */
 public class TrafficDataCollector {
 	
 	private int scanTime;
 	private int numOfTrafficScans;
+	private int totalVehicles;
 	private int carCounter;
 	private int truckCounter;
 	private int bikeCounter;
@@ -28,6 +50,7 @@ public class TrafficDataCollector {
 		
 		this.numOfTrafficScans = 3;
 		this.scanTime = 2000;
+		this.totalVehicles = 0;
 		this.bikeCounter = 0;
 		this.carCounter = 0;
 		this.truckCounter = 0;
@@ -48,7 +71,7 @@ public class TrafficDataCollector {
 	 * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
 	 * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
 	 * **/
-	public void startDataCollector() {
+	public int startDataCollector() {
 		
 		int numOfTrafficScans = 3;   // set number of traffic scans per cycle
 		
@@ -70,9 +93,9 @@ public class TrafficDataCollector {
 			numOfTrafficScans--;   // decrease number of traffic scan
 		}
 
-		getAnomalies();            // check traffic anomalies
+		//getAnomalies();            // check traffic anomalies
+		return totalVehicles;
 	}
-	
 	
 	
 	/***
@@ -93,7 +116,7 @@ public class TrafficDataCollector {
 	 * - Any vehicles stopped for a period of time while should be on the move
 	 * - Any vehicles stopped for a period of occupying 2 different leans while should be on the move
 	 * **/
-	private int getAnomalies() {
+	public int getAnomalies() {
 		
 		int[] chancesArray = new int[] { 0, 0, 1};          // array of possible anomalies during traffic scan
 		int randomNum = randomNumber.nextInt(chancesArray.length);
@@ -115,7 +138,7 @@ public class TrafficDataCollector {
 	 * - Total number of bus
 	 * - Total number of bikes
 	 **/
-	private void printVehiclesCount() {
+	 public void printVehiclesCount() {
 		String str = "";
 		str += "\nCars " + carCounter;
 		str += "\nTrucks " + truckCounter;

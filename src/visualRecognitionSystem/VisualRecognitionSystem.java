@@ -13,6 +13,7 @@
 		
 		private final int SYSTEMID = 300;
 		private int trafficLightID;
+		private int totalVehicles;
 		private int scanTime;
 		private int numOfTrafficScans;
 		private int carCounter;
@@ -29,6 +30,7 @@
 			
 			this.trafficLightID = 0;
 			this.numOfTrafficScans = 3;
+			this.totalVehicles = 0;
 			this.scanTime = 2000;
 			this.bikeCounter = 0;
 			this.carCounter = 0;
@@ -43,9 +45,8 @@
 		 * Initialises a new VisualRecognitionSystem object with default values.
 		 * **/
 		public void startDataCollectorCycle() {
-			TrafficDataCollector tdc =  new TrafficDataCollector();
 			
-			tdc.startDataCollector();
+			totalVehicles =  tdc.startDataCollector();
 		}
 		
 		
@@ -134,6 +135,20 @@
 		}
 
 		/**
+		 * Get total of Vehicles per scan
+		 */
+		public int getTotalVehicles() {
+			return totalVehicles;
+		}
+		
+		/**
+		 * Get trafficLightID
+		 */
+		public int getAnomalies() {
+			return tdc.getAnomalies();
+		}
+		
+		/**
 		 * Get getSYSTEMID
 		 */
 		public int getSYSTEMID() {
@@ -144,10 +159,12 @@
 		 * @param args
 		 */
 		public static void main(String[] args) {
-	                                                        
+	        
 			TrafficDataCollector tdc = new TrafficDataCollector();
 			
 			tdc.startDataCollector();
+			tdc.getAnomalies();
+			tdc.printVehiclesCount();
 
 		}
 

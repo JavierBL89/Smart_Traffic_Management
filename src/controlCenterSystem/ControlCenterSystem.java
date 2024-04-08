@@ -3,6 +3,7 @@
  */
 package controlCenterSystem;
 
+import visualRecognitionSystem.VisualRecognitionSystem;
 
 /**
  * 
@@ -36,9 +37,12 @@ public class ControlCenterSystem {
 		ControlCenterSystem n = new ControlCenterSystem();
 		
 		TrafficControllSystemsInitializer s = new TrafficControllSystemsInitializer();
-
+        
 		TCSystemsListManager instance = TCSystemsListManager.getInstance();
 		instance.addTrafficContolSystem();   // add new Traffic Control System to the list
+        VisualRecognitionSystem vrs = new VisualRecognitionSystem();
+
+        vrs.main(args);
 		s.initTrafficControlSystems();
 		s.startTrafficControlCycle("green", 2);
 		
