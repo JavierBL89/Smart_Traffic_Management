@@ -7,9 +7,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import TrafficDataCollector.TrafficDataCollector;
 import trafficLightSystem.TrafficLight;
 import trafficLightSystem.TrafficLightSystem;
+import visualRecognitionSystem.TrafficDataCollector;
+import visualRecognitionSystem.VisualRecognitionSystem;
 
 /**
  * 
@@ -26,18 +27,18 @@ public class TrafficControlSystem {
 		private List<TrafficLightSystem> listOfTrafficLightSystems;  
 		
 		// list list of traffic data collectors that associated with this Traffic Control System
-	    private List<TrafficDataCollector> listOfDataCollectors;  
+	    private List<VisualRecognitionSystem> listOfVisualRecognitionSystems;  
 	    
 	    
 		/**
 		 * Constructor to initialise Traffic Control System object
 		 * **/
 		public TrafficControlSystem() {
+	
 			this.isOperative = true;
 			this.listOfTrafficLightSystems = new ArrayList<>();
-			this.listOfDataCollectors = new 	ArrayList<>();
-			this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
-		    this.startTrafficControlCycle("green", 0);
+			this.listOfVisualRecognitionSystems = new ArrayList<>();  // initialize a Visual Recognition System
+			//this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
 		}
 		
 		
@@ -51,6 +52,7 @@ public class TrafficControlSystem {
 	        tls1 = new TrafficLightSystem();
 	        tls2 = new TrafficLightSystem();
 	        
+	        System.out.println("Iitilazing Traffic Light Systems");
 	        
 	        	// Check if Traffic Light System 1 is operative
 	        	if(!tls1.isOperative()) {
@@ -90,24 +92,24 @@ public class TrafficControlSystem {
 		*/
          private void initializeTrafficDataCollector() {
 			
-        	   listOfDataCollectors = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
+        	 listOfVisualRecognitionSystems = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
 			
 			// loop through the list of Traffic Light Systems
 			for(TrafficLightSystem tls : listOfTrafficLightSystems) {
 				
-				// check if Traffic Light (A) does not exits or is null
+				// check if Traffic Light (A) exits or is null
 				if(tls.getTlA() != null) {
-					TrafficDataCollector tdc1 = new TrafficDataCollector();   // init a new traffic data collector (tdc1)
-					listOfDataCollectors.add(tdc1); 
+					VisualRecognitionSystem tdc1 = new VisualRecognitionSystem();   // init a new traffic data collector (tdc1)
+					listOfVisualRecognitionSystems.add(tdc1); 
 					tdc1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
 				}else {
 					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemId() + " is null");
 				}
 				
-				// check if Traffic Light (B) does not exits or is null
+				// check if Traffic Light (B) exits or is null
 				if(tls.getTlB() != null) {
-					TrafficDataCollector tdc2 = new TrafficDataCollector();    // init a new traffic data collector (tdc2)
-					listOfDataCollectors.add(tdc2); 
+					VisualRecognitionSystem tdc2 = new VisualRecognitionSystem();    // init a new traffic data collector (tdc2)
+					listOfVisualRecognitionSystems.add(tdc2); 
 					tdc2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
 				}else {
 					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemId() + " is null");
@@ -120,7 +122,7 @@ public class TrafficControlSystem {
 		/***
 		 * 
 		 * ***/
-		private void startTrafficControlCycle(String newState, int timeOfCycle) {
+		public void startTrafficControlCycle(String newState, int timeOfCycle) {
 			
 			LocalTime currentTime = LocalTime.now();
 			LocalTime greenCycleEnd = currentTime.plusSeconds(3);
@@ -158,7 +160,7 @@ public class TrafficControlSystem {
 				controlTrfficCycle--;
 
 	        }
-	        str += "\nStart cycle of Cycle" ;
+	        str += "\nStart of Cycle" ;
 			str += "\nTraffic light System 1 is: ";
 			str +=  " light 1 green";
 			str +=  " light 2 green";
@@ -239,7 +241,6 @@ public class TrafficControlSystem {
 	 */
 	public static void main(String[] args) {
 		
-		TrafficControlSystem sys = new TrafficControlSystem();
 		
 		
 	}

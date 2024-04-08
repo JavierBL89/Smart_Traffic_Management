@@ -39,8 +39,8 @@ public class TrafficLightSystem {
 	 * */
 		public void updateLightsState(String newState) {
 			
-			tlA.setState(newState);    // update state traffic Light A
-			tlB.setState(newState);    // update state traffic Light B
+			this.tlA.setState(newState);    // update state traffic Light A
+			this.tlB.setState(newState);    // update state traffic Light B
 		};
 		
 			

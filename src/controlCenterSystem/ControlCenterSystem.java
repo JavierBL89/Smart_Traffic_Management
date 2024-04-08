@@ -3,10 +3,6 @@
  */
 package controlCenterSystem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import trafficControlSystem.TrafficControlSystem;
 
 /**
  * 
@@ -24,8 +20,6 @@ public class ControlCenterSystem {
 	}
 	
 
-	
-	
 	/**
 	 * @return the systemID
 	 */
@@ -42,10 +36,11 @@ public class ControlCenterSystem {
 		ControlCenterSystem n = new ControlCenterSystem();
 		
 		TrafficControllSystemsInitializer s = new TrafficControllSystemsInitializer();
-		
+
 		TCSystemsListManager instance = TCSystemsListManager.getInstance();
-		instance.addTrafficContolSystem();
+		instance.addTrafficContolSystem();   // add new Traffic Control System to the list
 		s.initTrafficControlSystems();
+		s.startTrafficControlCycle("green", 2);
 		
 	}
 

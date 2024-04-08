@@ -1,7 +1,7 @@
 /**
  * 
  */
-package TrafficDataCollector;
+package visualRecognitionSystem;
 
 import java.sql.Time;
 import java.time.LocalTime;
@@ -12,8 +12,6 @@ import java.util.Random;
  */
 public class TrafficDataCollector {
 	
-	private final int SYSTEMID = 300;
-	private int trafficLightID;
 	private int scanTime;
 	private int numOfTrafficScans;
 	private int carCounter;
@@ -28,7 +26,6 @@ public class TrafficDataCollector {
 	 * **/
 	public TrafficDataCollector() {
 		
-		this.trafficLightID = 0;
 		this.numOfTrafficScans = 3;
 		this.scanTime = 2000;
 		this.bikeCounter = 0;
@@ -39,6 +36,7 @@ public class TrafficDataCollector {
 		this.randomNumber = new Random();
 	}
 	
+	// helper methods
 	
 	/***
 	 * Method starts collecting real time data through visual recongnition.
@@ -50,7 +48,7 @@ public class TrafficDataCollector {
 	 * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
 	 * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
 	 * **/
-	private void startDataCollector() {
+	public void startDataCollector() {
 		
 		int numOfTrafficScans = 3;   // set number of traffic scans per cycle
 		
@@ -71,28 +69,10 @@ public class TrafficDataCollector {
 			}
 			numOfTrafficScans--;   // decrease number of traffic scan
 		}
-		
+
 		getAnomalies();            // check traffic anomalies
-		printVehiclesCount();     // prints total of vehicles per cycle
 	}
 	
-	/****
-	 * Method prints the total of vehicles counted during the traffic scan cycle.
-	 * 
-	 * - Total number of cars
-	 * - Total number of trucks
-	 * - Total number of bus
-	 * - Total number of bikes
-	 **/
-	private void printVehiclesCount() {
-		String str = "";
-		str += "\nCars " + carCounter;
-		str += "\nTrucks " + truckCounter;
-		str += "\nBikes " + bikeCounter;
-		str += "\nBuses " + busCounter;
-		str += "\nTraffic anomalies " + anomalies;
-		System.out.println(str);
-	}
 	
 	
 	/***
@@ -126,6 +106,26 @@ public class TrafficDataCollector {
 		return anomalies;
 	}
 
+	
+	/****
+	 * Method prints the total of vehicles counted during the traffic scan cycle.
+	 * 
+	 * - Total number of cars
+	 * - Total number of trucks
+	 * - Total number of bus
+	 * - Total number of bikes
+	 **/
+	private void printVehiclesCount() {
+		String str = "";
+		str += "\nCars " + carCounter;
+		str += "\nTrucks " + truckCounter;
+		str += "\nBikes " + bikeCounter;
+		str += "\nBuses " + busCounter;
+		str += "\nTraffic anomalies " + anomalies;
+		System.out.println(str);
+	}
+	
+	
 	//setters 
 	
 	/**
@@ -134,14 +134,6 @@ public class TrafficDataCollector {
 	public void setCycleTime(int scanTime) {
 		this.scanTime = scanTime;
 	}
-
-	/**
-	 * Set trafficLightID 
-	 */
-	public void setTrafficLightID(int trafficLightID) {
-		this.trafficLightID = trafficLightID;
-	}
-
 
 	
 	public void setBusCounter(int busCounter) {
@@ -167,13 +159,7 @@ public class TrafficDataCollector {
 
 	
 	// getters
-	
-	/**
-	 * Get trafficLightID
-	 */
-	public int getTrafficLightID() {
-		return trafficLightID;
-	}
+
 	
 	/**
 	 * Get getNumOfTrafficScans
@@ -210,22 +196,5 @@ public class TrafficDataCollector {
 		return bikeCounter;
 	}
 
-	/**
-	 * Get getSYSTEMID
-	 */
-	public int getSYSTEMID() {
-		return SYSTEMID;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-                                                        
-		TrafficDataCollector tdc = new TrafficDataCollector();
-		
-		tdc.startDataCollector();
-
-	}
 
 }
