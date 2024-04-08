@@ -51,9 +51,19 @@ public class ControlCenterSystem {
 		
 	}
 	
+	/**
+	 * Mthod to configure the visual recognition parameters for all associated Visual Recognition Systems 
+	 * associated with the Traffic Control System that this Control Centre manages
+	 * **/
+	private static void configureVisualRecognitionSystem() {
+	    TCSystemsListManager listManager = TCSystemsListManager.getInstance();
+
+	    for(TrafficControlSystem tcs : listManager) {
+	    	    
+	       	tcs.configAllVisualRecognitionSystems(3, 2000); // Configure visual recognition parameters
+	    }
+	}
 	
-
-
 		
 	/**
 	 * @param args
