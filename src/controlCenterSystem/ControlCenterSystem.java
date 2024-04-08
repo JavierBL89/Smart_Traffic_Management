@@ -56,15 +56,26 @@ public class ControlCenterSystem {
 	 * associated with the Traffic Control System that this Control Centre manages
 	 * **/
 	private static void configureVisualRecognitionSystem() {
+		
 	    TCSystemsListManager listManager = TCSystemsListManager.getInstance();
-
 	    for(TrafficControlSystem tcs : listManager) {
-	    	    
+	 
 	       	tcs.configAllVisualRecognitionSystems(3, 2000); // Configure visual recognition parameters
 	    }
 	}
 	
+	/***
+	 * Method adds a new Traffic Control System to the list of
+	 * Traffic Control Systems this Control Centre manages.
+	 * **/
+	private static void addTrafficControlSystem() {
 		
+		TCSystemsListManager instance = TCSystemsListManager.getInstance(); // get instance of the list
+		instance.addTrafficContolSystem(new TrafficControlSystem());        // add new Traffic Control System
+		
+	}
+	
+ 
 	/**
 	 * @param args
 	 */
@@ -72,13 +83,11 @@ public class ControlCenterSystem {
 		
 		ControlCenterSystem n = new ControlCenterSystem();
 		
-	
+		addTrafficControlSystem();
+		configureVisualRecognitionSystem();
+		initializeTrafficControlSystems();
         
-        VisualRecognitionSystem vrs = new VisualRecognitionSystem();
-        
-		vrs.configVisualRecognition(3, 2000);
-		vrs.startDataCollectorCycle();
-		vrs.printScanReport();
+    
 	}
 
 	

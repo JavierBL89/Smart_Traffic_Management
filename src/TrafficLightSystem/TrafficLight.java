@@ -10,19 +10,24 @@ package trafficLightSystem;
 public class TrafficLight {
 
 	// vars
-	private static int trafficLightID = 0;
+	private static int nextSystemID = 804;
+	private int trafficLightID;
 	private String state;
 	private boolean status;
 	
 	// default constructor
-	public TrafficLight() {};
+	public TrafficLight() {
+		//this.state = state;
+		this.status = true;
+		this.trafficLightID = ++nextSystemID;    // auto increment id
+	};
 	
 	
 	public TrafficLight(String state) {
 
 		this.state = state;
 		this.status = true;
-		++trafficLightID;    // auto increment id
+		this.trafficLightID = ++nextSystemID;    // auto increment id
 	}
 
 

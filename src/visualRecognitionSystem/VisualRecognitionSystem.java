@@ -29,7 +29,8 @@
 	public class VisualRecognitionSystem {
 		
 		// vars
-		private final int SYSTEMID = 300;
+		private static int nextSystemId = 9022;
+		private int systemID;
 		private int trafficLightID;
 		private int totalVehicles;
 		private int numOfTrafficScans;
@@ -46,7 +47,7 @@
 		 * Initialises a new VisualRecognitionSystem object with default values.
 		 * **/
 		public VisualRecognitionSystem() {
-			this.trafficLightID = 0;
+			this.systemID = ++nextSystemId;  // auto increment id
 			this.numOfTrafficScans = 3;
 			this.totalVehicles = 0;
 			this.scanTime = 2000;
@@ -120,7 +121,7 @@
 		 * Get getSYSTEMID
 		 */
 		public int getSYSTEMID() {
-			return SYSTEMID;
+			return systemID;
 		}
 
 		/**

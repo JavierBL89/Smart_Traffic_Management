@@ -96,7 +96,7 @@ public class TrafficControlSystem {
         	 listOfVisualRecognitionSystems = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
         	 
         	 
-        	 String str = "Initialising Visual Recognition Systems...";
+        	 String str = "\n3- Initialising Visual Recognition Systems...";
         	 
 			// loop through the list of Traffic Light Systems
 			for(TrafficLightSystem tls : listOfTrafficLightSystems) {
@@ -107,8 +107,8 @@ public class TrafficControlSystem {
 					listOfVisualRecognitionSystems.add(vrs1); 
 					vrs1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
 					
-					str += "Traffic Light System " + tls.getSystemId()  
-							+ "id. Traffic Light " + tls.getTlA() 
+					str += "\nTraffic Light System with id " + tls.getSystemId()  
+							+ " reports; Traffic Light with " + tls.getTlA().getTrafficLightID() 
 							+ " id is now associated with Visual Recognition System " + vrs1.getSYSTEMID();
 				}else {
 					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemId() + " is null");
@@ -120,8 +120,8 @@ public class TrafficControlSystem {
 					listOfVisualRecognitionSystems.add(vrs2); 
 					vrs2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
 				
-					str += "Traffic Light System " + tls.getSystemId()  
-					+ "id. Traffic Light " + tls.getTlB() 
+					str += "\nTraffic Light System with id " + tls.getSystemId()  
+					+ " reports; Traffic Light with " + tls.getTlB().getTrafficLightID()
 					+ " id is now associated with Visual Recognition System " + vrs2.getSYSTEMID();
 					
 				}else {
@@ -129,7 +129,7 @@ public class TrafficControlSystem {
 				}
 				
 			}
-			
+			str += "\n \nAll Visual Recognition Systems has been successfully initiated and associated to a Traffic Light....";
 			System.out.println(str);  // print string
 			
 		}
@@ -190,8 +190,8 @@ public class TrafficControlSystem {
 
 	        }
 	        String str= "";
-	        str += "3- Start Traffic Controll Cycle with the initial predifined state...";
-	        str += "Start of Cycle " ;
+	        str += "4- Start Traffic Controll Cycle with the initial predifined state...";
+	        str += "\nStart of Cycle " ;
 			str += "\nTraffic light System 1 is: ";
 			str +=  " light 1 green";
 			str +=  " light 2 green";
