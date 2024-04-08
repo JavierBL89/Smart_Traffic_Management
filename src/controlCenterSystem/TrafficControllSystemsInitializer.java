@@ -29,8 +29,6 @@ public class TrafficControllSystemsInitializer {
 	 * **/
 	public void initTrafficControlSystems() {
 		
-		
-		
 		// Iterate through each Traffic Control System in the list
 		for(TrafficControlSystem tcs : listOfTrafficControlSystems) {
 			
@@ -54,5 +52,6 @@ public class TrafficControllSystemsInitializer {
 			tcs.startTrafficControlCycle(newState, timeOfCycle);
 		}
 	}
+	
 }
 

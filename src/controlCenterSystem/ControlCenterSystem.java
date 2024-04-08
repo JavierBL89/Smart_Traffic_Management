@@ -42,7 +42,6 @@ public class ControlCenterSystem {
 		instance.addTrafficContolSystem();   // add new Traffic Control System to the list
         VisualRecognitionSystem vrs = new VisualRecognitionSystem();
 
-        vrs.main(args);
 		s.initTrafficControlSystems();
 		s.startTrafficControlCycle("green", 2);
 		
