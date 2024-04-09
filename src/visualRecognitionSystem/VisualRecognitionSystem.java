@@ -30,8 +30,10 @@
 		
 		// vars
 		private static int nextSystemId = 9022;
+		
 		private int systemID;
 		private int trafficLightID;
+		private int trafficLightSystemID;
 		private int totalVehicles;
 		private int numOfTrafficScans;
 		private int scanTime;
@@ -48,9 +50,10 @@
 		 * **/
 		public VisualRecognitionSystem() {
 			this.systemID = ++nextSystemId;  // auto increment id
-			this.numOfTrafficScans = 3;
+			this.trafficLightSystemID = 0;   // Traffic Light System id the VRS is associated to
+			this.numOfTrafficScans = 0;
 			this.totalVehicles = 0;
-			this.scanTime = 2000;
+			this.scanTime = 0;
 			this.anomalies = 0;
 			this.tdc = new TrafficDataCollector();   // instantiate a Traffic Data Collector object
 		}
@@ -73,6 +76,13 @@
 		}
 
 		/**
+		 * Set trafficLightSsytemID the VRS is associated to 
+		 */
+		public void setTrafficLightSystemID(int TrafficLightSystemID) {
+			this.trafficLightID = TrafficLightSystemID;
+		} 
+		
+		/**
 		* Set number of micro traffic scans
 		*/
 	    public void setNumOfTrafficScans(int numOfTrafficScans) {
@@ -86,10 +96,11 @@
 			this.scanTime = scanTime;
 	    }
 		
+	    
 		// getters
 		
 		/**
-		 * Get trafficLightID
+		 * Get Traffic Light id the VRS is associated to
 		 */
 		public int getTrafficLightID() {
 			return trafficLightID;
@@ -111,11 +122,18 @@
 		}
 		
 		/**
-		 * Get trafficLightID
+		 * Get the number of anomalies found
 		 */
 		public int getAnomalies() {
 			return tdc.getAnomalies();
 		}
+		
+		/**
+		 * Get trafficLightSsytemID the VRS is associated to 
+		 */
+		public int getTrafficLightSystemID(int TrafficLightSystemID) {
+			return TrafficLightSystemID;
+		} 
 		
 		/**
 		 * Get getSYSTEMID

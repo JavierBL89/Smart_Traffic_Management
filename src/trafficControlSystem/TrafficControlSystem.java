@@ -100,7 +100,7 @@ public class TrafficControlSystem {
         	 
         	 String str = "\n3- Initialising Visual Recognition Systems...";
         	 
-			// loop through the list of Traffic Light Systems
+			// iterate through the list of Traffic Light Systems
 			for(TrafficLightSystem tls : listOfTrafficLightSystems) {
 				
 				// check if Traffic Light (A) exits or is null
@@ -231,6 +231,32 @@ public class TrafficControlSystem {
 	        }
 		}
 		
+		/**
+		 * 
+		 * **/
+		public void analizeTrafficData() {
+			
+			VisualRecognitionSystem dataVRS1;
+			VisualRecognitionSystem dataVRS2;
+			VisualRecognitionSystem dataVRS3;
+			VisualRecognitionSystem dataVRS4;
+			
+			// Iterarte over the list of all associated Visual Recognition Systems
+			 for (int i=0; i<=  listOfVisualRecognitionSystems.size();i++) {
+				 dataVRS1 = listOfVisualRecognitionSystems.get(0);
+				 dataVRS2 = listOfVisualRecognitionSystems.get(1);
+				 dataVRS3 = listOfVisualRecognitionSystems.get(2);
+				 dataVRS4 = listOfVisualRecognitionSystems.get(3);
+	        }
+			 
+			// loop through the list of Traffic Light Systems
+				for(TrafficLightSystem tls : listOfTrafficLightSystems) {
+					
+					
+				}
+		
+				  
+		}
 		
 		// setters
 		

@@ -27,8 +27,8 @@ public class TrafficLightSystem {
 	public TrafficLightSystem() {
 		this.systemID = ++nextSystemID;   // auto increment id
 		this.operative = true;
-		this.tlA = new TrafficLight();    // Instantiate traffic light object (A)
-		this.tlB = new TrafficLight();    // Instantiate traffic light object (B)
+		this.tlA = new TrafficLight(systemID);    // Instantiate traffic light object (A) and pass Traffic System ID it will be associated to
+		this.tlB = new TrafficLight(systemID);    // Instantiate traffic light object (B) and pass Traffic System ID it will be associated to
 	}
 
 	
