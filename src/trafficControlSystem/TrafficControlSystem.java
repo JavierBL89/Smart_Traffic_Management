@@ -172,6 +172,8 @@ public class TrafficControlSystem {
 			 * */
 			int cycleTimeInSeconds = (this.lengthOfVRScans + 2) * this.numOfVisualRecognitionScans;
 			
+			startVRSDataCollection(); // start process of traffic data collection
+			
 			String newState = "green"; 
 			
 			LocalTime cycleTimeEnd =  LocalTime.now().plusSeconds(cycleTimeInSeconds);  // set the end of the cycle
@@ -219,6 +221,15 @@ public class TrafficControlSystem {
 	        
 		}
 		
+		/**
+		 * Method start procces of traffic data collection of All Visual Recognition Systems
+		 * **/
+		public void startVRSDataCollection() {
+			//VRS are initialized and begin data collection.
+			 for (VisualRecognitionSystem vrs : listOfVisualRecognitionSystems) {
+	           vrs.startDataCollectorCycle();
+	        }
+		}
 		
 		
 		// setters
