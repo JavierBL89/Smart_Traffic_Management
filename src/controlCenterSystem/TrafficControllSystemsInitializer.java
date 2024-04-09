@@ -55,7 +55,7 @@ public class TrafficControllSystemsInitializer {
 	public void startTrafficControlCycle() {
 		
 		for(TrafficControlSystem tcs : listOfTrafficControlSystems) {
-			tcs.startTrafficControlCycle();
+			tcs.startTrafficControlCycle("green");
 		}
 	}
 	

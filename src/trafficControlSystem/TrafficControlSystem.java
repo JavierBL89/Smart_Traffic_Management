@@ -22,6 +22,8 @@ public class TrafficControlSystem {
 		private TrafficLightSystem tls1;
 		private TrafficLightSystem tls2;
 		private boolean isOperative;
+		private int numOfVisualRecognitionScans;
+		private int lengthOfVRScans;     // in nanoseconds
 		
 		// list holds the traffic light systems that are controlled by this Traffic Control System
 		private List<TrafficLightSystem> listOfTrafficLightSystems;  
@@ -141,53 +143,61 @@ public class TrafficControlSystem {
          * @param scanFrequency The frequency at which each VRS should perform scans.
          * @param scanResolution The resolution or detail level each VRS should use for scans.
          */
-         public void configAllVisualRecognitionSystems(int numOfTrafficScans, int scanTime) {
+         public void configAllVisualRecognitionSystems(int numOfScans, int scanLength) {
+        	 
+        	 this.numOfVisualRecognitionScans = numOfScans;
+        	 this.lengthOfVRScans = scanLength;    // in  seconds
         	 
         	     for (VisualRecognitionSystem vrs : listOfVisualRecognitionSystems) {
-                 vrs.setNumOfTrafficScans(numOfTrafficScans);
-                 vrs.setScanTime(scanTime);
+                 vrs.setNumOfTrafficScans(numOfVisualRecognitionScans);
+                 vrs.setScanTime(scanLength);
              }
+        	     
+        	    
          }
          
 		/***
+		 * Method to initialise the whole Traffic Control cycle.
+		 * 
+		 * - Start the cycle with the initial predefined state
+		 * - Initiates Visual Recognition Systems to start data collecting proccess
 		 * 
 		 * ***/
-		public void startTrafficControlCycle() {
-			int timeOfCycle = 2;
+		public void startTrafficControlCycle(String state) {
+			
+			/* time of traffic lights status cycle is the sum of the number of traffic scans 
+			 * by the length of each plus 2 seconds 
+			 * Those 2 extra seconds a safe time to collect and analize the data from 
+			 * the Visual Recognition system and state the set cycle based on that data.
+			 * */
+			int cycleTimeInSeconds = (this.lengthOfVRScans + 2) * this.numOfVisualRecognitionScans;
+			
 			String newState = "green"; 
-			LocalTime currentTime = LocalTime.now();
-			LocalTime greenCycleEnd = currentTime.plusSeconds(3);
-			timeOfCycle += 1;
-			LocalTime yellowCycleEnd = greenCycleEnd.plusSeconds(3);
+			
+			LocalTime cycleTimeEnd =  LocalTime.now().plusSeconds(cycleTimeInSeconds);  // set the end of the cycle
+            LocalTime greenCycleEnd = LocalTime.now().plusSeconds(cycleTimeInSeconds - 2);  // green state length is equal to the cycle time less 2 seconds
 
-	        int controlTrfficCycle = 3;
-	        
-	        
-	        while(controlTrfficCycle >= 0) {
+            
+	        while(LocalTime.now().isBefore(cycleTimeEnd)) {
 	        	
-			    // while current time is before the end of traffic light open cycle
-			    while (currentTime.isBefore(yellowCycleEnd)) {
-				
-				    // when cycle starts green cycle
-				    if(currentTime.isBefore(greenCycleEnd)) {  
-					    tls1.updateLightsState(newState);
-					    tls2.updateLightsState("red");
+	            LocalTime  currentTime = LocalTime.now(); // Update the current time
+	                        				
+				// Green phase
+				if(currentTime.isBefore(greenCycleEnd)) {  
+					tls1.updateLightsState(newState);
+					tls2.updateLightsState("red");
 					
-			        }// when current time equals the end of the green cycle, change the green light to yellow
-				    else if(currentTime.isBefore(yellowCycleEnd.minusSeconds(1))){
-					    tls1.updateLightsState("yellow");
-					    tls2.updateLightsState("red");
+			    }// Yellow phase for the last 2 seconds
+				else {
+					tls1.updateLightsState("yellow");
+					tls2.updateLightsState("red");
 				
-				    } 
-			        else { // After the yellow cycle, change the traffic lights to red-green 
-					    tls1.updateLightsState("red");
-					    tls2.updateLightsState("green");
-				    }
-		     
-		        currentTime = LocalTime.now(); // Update the current time
-		    }
-				controlTrfficCycle--;
-
+				} 
+				
+			    // After the yellow phace, change to the next cycle 
+			    tls1.updateLightsState("red");
+				tls2.updateLightsState("green");
+			
 	        }
 	        String str= "";
 	        str += "4- Start Traffic Controll Cycle with the initial predifined state...";
@@ -209,13 +219,8 @@ public class TrafficControlSystem {
 	        
 		}
 		
-		private void startCycleTrafficLightSystem1() {}
-		private void startCycleTrafficLightSystem2() {}
 		
 		
-		public void configVisualRecognition() {
-			
-		}
 		// setters
 		
 		/**
