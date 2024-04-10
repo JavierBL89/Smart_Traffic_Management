@@ -47,8 +47,9 @@ public class TrafficControlSystem {
 		/***
 		 * Method initialise the 2 Traffic Light Systems that 
 		 * this Traffic Control System manages
+		 * @throws Exception 
 		 * **/
-		public void initTrafficLightSystems() {
+		public void initTrafficLightSystems() throws Exception {
 			
 			// Initialise the Traffic Light Systems 
 	        tls1 = new TrafficLightSystem();
@@ -64,7 +65,8 @@ public class TrafficControlSystem {
 	        	         
 	        	}else {
 	             listOfTrafficLightSystems.add(tls1);   // add Traffic Light System 1 to the control list
-	                 
+	             tls1.initTLSComponents();          // init assocciated components
+	             
 	             System.out.println("Traffic Light System 1 with id " + tls1.getSystemId() + 
 	                    " has been successfully initialized");
 	        }
@@ -77,65 +79,15 @@ public class TrafficControlSystem {
 	        	    	    
 	        	}else {
 	            listOfTrafficLightSystems.add(tls2);   // add Traffic Light System 2 to the control list
-	                
+	            tls2.initTLSComponents();    // init assocciated components
+	            
 	            System.out.println("Traffic Light System 2 with id " + tls2.getSystemId() + 
 	                  " has been successfully initialized");
 	            }
-	          
-	        	
-	        initializeTrafficDataCollector();  // call method to integrate the Traffic Data Collectors
+
 		}	
 		
-		/**
-		 * Method initializes and associates a Traffic Data Collector for each traffic light 
-		 * within the Traffic Control System's Traffic Light Systems. 
-		 * 
-		 * This method ensures that every operational traffic light 
-		 * has a corresponding Data Collector(camera) associated with it through their id. 
-		*/
-         private void initializeTrafficDataCollector() {
-			
-        	 listOfVisualRecognitionSystems = new ArrayList<>(); // Initialise a list to store all Traffic Data Collectors
-        	 
-        	 
-        	 String str = "\n3- Initialising Visual Recognition Systems...";
-        	 
-			// iterate through the list of Traffic Light Systems
-			for(TrafficLightSystem tls : listOfTrafficLightSystems) {
-				
-				// check if Traffic Light (A) exits or is null
-				if(tls.getTlA() != null) {
-					VisualRecognitionSystem vrs1 = new VisualRecognitionSystem();   // init a new traffic data collector (tdc1)
-					listOfVisualRecognitionSystems.add(vrs1); 
-					vrs1.setTrafficLightID(tls.getTlA().getTrafficLightID()); // associate the traffic data collector to Traffic Light (A) object
-					
-					str += "\nTraffic Light System with id " + tls.getSystemId()  
-							+ " reports; Traffic Light with " + tls.getTlA().getTrafficLightID() 
-							+ " id is now associated with Visual Recognition System " + vrs1.getSYSTEMID();
-				}else {
-					throw new NullPointerException("Traffic Light (A) of Traffic Light System " + tls.getSystemId() + " is null");
-				}
-				
-				// check if Traffic Light (B) exits or is null
-				if(tls.getTlB() != null) {
-					VisualRecognitionSystem vrs2 = new VisualRecognitionSystem();    // init a new traffic data collector (tdc2)
-					listOfVisualRecognitionSystems.add(vrs2); 
-					vrs2.setTrafficLightID(tls.getTlB().getTrafficLightID()); // associate the traffic data collector to Traffic Light (B) object
-				
-					str += "\nTraffic Light System with id " + tls.getSystemId()  
-					+ " reports; Traffic Light with " + tls.getTlB().getTrafficLightID()
-					+ " id is now associated with Visual Recognition System " + vrs2.getSYSTEMID();
-					
-				}else {
-					throw new NullPointerException("Traffic Light (B) of Traffic Light System " + tls.getSystemId() + " is null");
-				}
-				
-			}
-			str += "\n \nAll Visual Recognition Systems has been successfully initiated and associated to a Traffic Light....";
-			System.out.println(str);  // print string
-			
-		}
-         
+
          
          /**
          * Method Configures the visual recognition parameters for all associated Visual Recognition Systems.
@@ -230,6 +182,11 @@ public class TrafficControlSystem {
 	           vrs.startDataCollectorCycle();
 	        }
 			 
+			 /***
+			  * 
+			  * WHEN SHOULD ANALIZE DATA BE CALLED ????????????????????
+			  * 
+			  * */
 		}
 		
 		/**

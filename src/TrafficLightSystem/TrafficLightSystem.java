@@ -19,8 +19,11 @@ public class TrafficLightSystem {
 	private  int systemID;
 	private List<TrafficLight> trafficLights;
 	private List<VisualRecognitionSystem> visualRecognitionSystems;
-	private TrafficLight tlA;
-	private TrafficLight tlB;
+	
+	private TrafficLight tlA ;
+	private TrafficLight tlB ;
+	private VisualRecognitionSystem vrsA;
+	private VisualRecognitionSystem vrsB;
 	private boolean operative;
 
 	
@@ -34,10 +37,61 @@ public class TrafficLightSystem {
 		this.operative = true;
 		this.trafficLights = new ArrayList<>();
 		this.visualRecognitionSystems = new ArrayList<>();
-		this.tlA = new TrafficLight(systemID);    // Instantiate traffic light object (A) and pass Traffic System ID it will be associated to
-		this.tlB = new TrafficLight(systemID);    // Instantiate traffic light object (B) and pass Traffic System ID it will be associated to
 	}
 
+	/**
+	 * Method initialises the components of a Traffic Light System (TLS),
+     * including Traffic Lights (TL) and Visual Recognition Systems (VRS).
+	 * 
+	 * This method ensures that every operational traffic light 
+	 * has a corresponding VRS(camera) associated with it through their id. 
+	 * 
+	 * Exception Handling:
+     * The method includes error handling to manage any issues that may arise during the initialization 
+     * of Traffic Lights and Visual Recognition Systems. In the event of a failure, a detailed exception is thrown,
+     * indicating what went wrong during the process.
+     */
+	public void initTLSComponents() throws Exception {
+		
+		System.out.println("\n2- Initialiting Traffic Lights...");
+		
+		try {
+			// Init 2 traffic lights
+			tlA = new TrafficLight(this.systemID);
+			tlB = new TrafficLight(this.systemID);
+			
+			
+			System.out.println("Traffic Light with id " + tlA.getTrafficLightID() + " " + tlA.getPosition() +
+	    	    	   " is up and running");
+			System.out.println("Traffic Light with id " + tlB.getTrafficLightID() + " " + tlB.getPosition() +
+	    	    	   " is up and running");
+			
+			
+		    System.out.println("\n2- Initialiting Visual Recognition Systems...");
+		    
+			// Init 2 visual recognition systems associated to each traffic light
+			vrsA = new VisualRecognitionSystem(tlA.getTrafficLightID(), this.systemID);
+		    vrsB = new VisualRecognitionSystem(tlB.getTrafficLightID(), this.systemID);
+			
+			System.out.println("Visual Recognition System with id " + vrsA.getTrafficLightID() + " " + tlA.getPosition() +
+	    	    	   " associated with Traffic Light " + tlA.getTrafficLightID() + " is up and running");
+			
+			System.out.println("Visual Recognition System with id " + vrsB.getTrafficLightID() + " " + tlB.getPosition() +
+	    	    	   " associated with Traffic Light " + tlB.getTrafficLightID() + " is up and running");
+					
+			// Add the TL and VRS to their respective lists, this lists will allow scalability and better accessibility
+	        this.trafficLights.add(tlA);
+	        this.trafficLights.add(tlB);
+	        this.visualRecognitionSystems.add(vrsA);
+	        this.visualRecognitionSystems.add(vrsB);
+	        
+		}catch(Exception e) {
+			throw new Exception("Somethig went wrong and System components could not be initialized: " 
+		                + "\nInitialization error: " + e.getMessage() );
+		}
+		
+		
+	}
 	
 	// proccess
 	

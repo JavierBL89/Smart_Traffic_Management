@@ -45,12 +45,24 @@
 		
 		// constructors
 		
-		/**
-		 * Initialises a new VisualRecognitionSystem object with default values.
-		 * **/
 		public VisualRecognitionSystem() {
 			this.systemID = ++nextSystemId;  // auto increment id
 			this.trafficLightSystemID = 0;   // Traffic Light System id the VRS is associated to
+			this.numOfTrafficScans = 0;
+			this.totalVehicles = 0;
+			this.scanTime = 0;
+			this.anomalies = 0;
+			this.tdc = new TrafficDataCollector();   // instantiate a Traffic Data Collector object
+		};
+		
+		
+		/**
+		 * Initialises a new VisualRecognitionSystem object with custom parameters
+		 * **/
+		public VisualRecognitionSystem(int trafficLightId, int trafficLightSystemID) {
+			this.systemID = ++nextSystemId;  // auto increment id
+			this.trafficLightSystemID = trafficLightSystemID;   // Traffic Light System id the VRS is associated to
+			this.trafficLightID = trafficLightId;   // Traffic Light System id the VRS is associated to
 			this.numOfTrafficScans = 0;
 			this.totalVehicles = 0;
 			this.scanTime = 0;

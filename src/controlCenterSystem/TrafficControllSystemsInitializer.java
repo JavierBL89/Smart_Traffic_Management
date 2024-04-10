@@ -26,8 +26,9 @@ public class TrafficControllSystemsInitializer {
 	 * It iterates through each system in the list, checks their operational status,
 	 *  and initialises the Traffic Light Systems associated with each  Traffic Control System
 	 *  or prints and error message is the ar not operational
+	 * @throws Exception 
 	 * **/
-	public void initTrafficControlSystems() {
+	public void initTrafficControlSystems() throws Exception {
 		
 		System.out.println("1- Initialiting Traffic Controll System.."); 
 		

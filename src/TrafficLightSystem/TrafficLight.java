@@ -86,8 +86,9 @@ public class TrafficLight {
 	/**
 	 * Get TL position
 	 */
-	public void getPosition(String position) {
-		this.position = position;
+	public String getPosition() {
+		
+		return this.position;
 	}
 
 	/**

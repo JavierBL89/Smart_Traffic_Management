@@ -46,9 +46,17 @@ public class ControlCenterSystem {
 		
 		// Init Traffic Controll Systems Initializer class
 		TrafficControllSystemsInitializer tcsInitializer = new TrafficControllSystemsInitializer(); 
-	    tcsInitializer.initTrafficControlSystems();   // init all Traffic Control Systems
-	    tcsInitializer.startTrafficControlCycle();    // init the Traffic Control Cycle with predefined initial states
-		
+	    try {
+			tcsInitializer.initTrafficControlSystems();
+			tcsInitializer.startTrafficControlCycle();    // init the Traffic Control Cycle with predefined initial states
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
+	    // init all Traffic Control Systems
+	    
+	    
+	  
 	}
 	
 	/**
