@@ -30,14 +30,15 @@ public class TrafficControllSystemsInitializer {
 	 * **/
 	public void initTrafficControlSystems() throws Exception {
 		
-		System.out.println("1- Initialiting Traffic Controll System.."); 
+		System.out.println("1- Initialiting Traffic Controll System..."); 
 		
 		// Iterate through each Traffic Control System in the list
 		for(TrafficControlSystem tcs : listOfTrafficControlSystems) {
 			
 			if(tcs.isOperative()) {     // Check if the Traffic Control System is operative
 				// confirm it has been been successfully initialized
-				System.out.println("Traffic Control System " + tcs.getSystemID() + " is up and running."); 
+				System.out.println("\nTraffic Control System " + tcs.getSystemID() + " is up and running.");
+				System.out.println("\n--------"); 
 				
 				 
 				tcs.initTrafficLightSystems(); // Initialise the Traffic Light Systems associated to the Traffic Control System

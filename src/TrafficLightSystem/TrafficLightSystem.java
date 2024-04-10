@@ -53,7 +53,10 @@ public class TrafficLightSystem {
      */
 	public void initTLSComponents() throws Exception {
 		
-		System.out.println("\n2- Initialiting Traffic Lights...");
+		Thread.sleep(500);
+		System.out.println("\n***Initialiting Traffic Light System " + this.getSystemId() + "***");
+		Thread.sleep(500);
+		System.out.println("\nInit Traffic Lights");
 		
 		try {
 			// Init 2 traffic lights
@@ -66,9 +69,10 @@ public class TrafficLightSystem {
 			System.out.println("Traffic Light with id " + tlB.getTrafficLightID() + " " + tlB.getPosition() +
 	    	    	   " is up and running");
 			
+			Thread.sleep(500);
+		    System.out.println("\nInit Visual Recognition Systems");
+			Thread.sleep(500);
 			
-		    System.out.println("\n2- Initialiting Visual Recognition Systems...");
-		    
 			// Init 2 visual recognition systems associated to each traffic light
 			vrsA = new VisualRecognitionSystem(tlA.getTrafficLightID(), this.systemID);
 		    vrsB = new VisualRecognitionSystem(tlB.getTrafficLightID(), this.systemID);
@@ -78,7 +82,10 @@ public class TrafficLightSystem {
 			
 			System.out.println("Visual Recognition System with id " + vrsB.getTrafficLightID() + " " + tlB.getPosition() +
 	    	    	   " associated with Traffic Light " + tlB.getTrafficLightID() + " is up and running");
-					
+		    
+			System.out.println("\nTraffic Light System with id " + this.getSystemId() + " has been successfully initialized.");
+			System.out.println("\n------------------------------------------------------------------------------------------");
+			
 			// Add the TL and VRS to their respective lists, this lists will allow scalability and better accessibility
 	        this.trafficLights.add(tlA);
 	        this.trafficLights.add(tlB);

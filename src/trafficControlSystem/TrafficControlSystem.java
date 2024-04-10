@@ -45,48 +45,44 @@ public class TrafficControlSystem {
 		
 		
 		/***
-		 * Method initialise the 2 Traffic Light Systems that 
-		 * this Traffic Control System manages
-		 * @throws Exception 
-		 * **/
+		* Method initialise the 2 Traffic Light Systems associated to 
+		* this Traffic Control System 
+		* 
+	    * @throws Exception if a TLS is not operative or if there's an issue initializing its components. 
+	    * 
+		* **/
 		public void initTrafficLightSystems() throws Exception {
 			
-			// Initialise the Traffic Light Systems 
-	        tls1 = new TrafficLightSystem();
-	        tls2 = new TrafficLightSystem();
-	        
-	        System.out.println("\n2- Initialiting Traffic Light Systems...");
-	        
-	        	// Check if Traffic Light System 1 is operative
-	        	if(!tls1.isOperative()) {
-	        	    	
-	        	     System.out.println("Traffic Light System 1 with id " + tls1.getSystemId() + 
-	        	    	   " is not operative and could not be initialized");
-	        	         
-	        	}else {
-	             listOfTrafficLightSystems.add(tls1);   // add Traffic Light System 1 to the control list
-	             tls1.initTLSComponents();          // init assocciated components
-	             
-	             System.out.println("Traffic Light System 1 with id " + tls1.getSystemId() + 
-	                    " has been successfully initialized");
-	        }
-	        	    
-	        	// Check if Traffic Light System 2 is operative
-	        	if(!tls2.isOperative()) {
-	        	    	
-	        	    	System.out.println("Traffic Light System 2 with id " + tls2.getSystemId() + 
-	        	    	    " is not operative and could not be initialized");
-	        	    	    
-	        	}else {
-	            listOfTrafficLightSystems.add(tls2);   // add Traffic Light System 2 to the control list
-	            tls2.initTLSComponents();    // init assocciated components
-	            
-	            System.out.println("Traffic Light System 2 with id " + tls2.getSystemId() + 
-	                  " has been successfully initialized");
-	            }
+			System.out.println("\n2- Initializing Traffic Light Systems...");
 
-		}	
-		
+			try {
+			    // Initialize the first Traffic Light System and its components
+			    tls1 = new TrafficLightSystem();
+			    if (!tls1.isOperative()) {
+			         throw new Exception("Traffic Light System 1 is not operative and could not be initialized.");
+			    }
+			    
+			    listOfTrafficLightSystems.add(tls1); // Add TLS 1 to the list
+			    tls1.initTLSComponents(); // Initialise associated components
+			    
+			    } catch (Exception e) {
+			        System.err.println("Error initializing Traffic Light System 1: " + e.getMessage());
+			       
+			    }
+
+			    try {
+			        // Initialise the second Traffic Light System and its components
+			        tls2 = new TrafficLightSystem();
+			        if (!tls2.isOperative()) {
+			            throw new Exception("Traffic Light System 2 is not operative and could not be initialized.");
+			        }
+			        listOfTrafficLightSystems.add(tls2); // Add TLS 2 to the list
+			        tls2.initTLSComponents(); // Initialise associated components
+			        
+			    } catch (Exception e) {
+			        System.err.println("Error initializing Traffic Light System 2: " + e.getMessage());
+			    }
+		}
 
          
          /**
