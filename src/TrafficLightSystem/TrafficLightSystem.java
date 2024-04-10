@@ -3,7 +3,10 @@
  */
 package trafficLightSystem;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import visualRecognitionSystem.VisualRecognitionSystem;
 
 
 /**
@@ -14,6 +17,8 @@ public class TrafficLightSystem {
 	// vars
 	private static int nextSystemID = 304;
 	private  int systemID;
+	private List<TrafficLight> trafficLights;
+	private List<VisualRecognitionSystem> visualRecognitionSystems;
 	private TrafficLight tlA;
 	private TrafficLight tlB;
 	private boolean operative;
@@ -27,6 +32,8 @@ public class TrafficLightSystem {
 	public TrafficLightSystem() {
 		this.systemID = ++nextSystemID;   // auto increment id
 		this.operative = true;
+		this.trafficLights = new ArrayList<>();
+		this.visualRecognitionSystems = new ArrayList<>();
 		this.tlA = new TrafficLight(systemID);    // Instantiate traffic light object (A) and pass Traffic System ID it will be associated to
 		this.tlB = new TrafficLight(systemID);    // Instantiate traffic light object (B) and pass Traffic System ID it will be associated to
 	}
@@ -75,6 +82,48 @@ public class TrafficLightSystem {
 		return tlB;
 	}
 
+	/**
+	 * Get list of all Traffic Lights associated to this system
+	 * 
+	 * @return trafficLights  list
+	 * **/
+	public List<TrafficLight> getTrafficLights(){
+		
+		return trafficLights;
+	}
+	
+	
+	/**
+	 * Get list of all Visual Recognition Systems associated to this system
+	 * 
+	 * @return visualRecognitionSystems  list
+	 * **/
+   public List<VisualRecognitionSystem> getVisualRecognitionSystems(){
+		
+		return visualRecognitionSystems;
+	}
+   
+   
+	// helper methods
+	
+	
+	/***
+	 * Method adds a new traffic light to the list of associated TL to this system
+	 * **/
+	public void addTrafficLight(TrafficLight tl) {
+
+		this.trafficLights.add(tl);
+	}
+	
+	
+	/***
+	 * Method adds a new visual recognition system to the list of associated VRS to this system
+	 * **/
+	public void addVisualRecognitionSystem(VisualRecognitionSystem vrs) {
+
+		this.visualRecognitionSystems.add(vrs);
+	}
+	
 
 	/**
 	 * @param args

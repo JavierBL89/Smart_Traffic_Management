@@ -14,6 +14,7 @@ public class TrafficLight {
 	private int trafficLightID;
 	private int trafficLightSystemID;   // Traffic Light System id the VRS is associated to
 	private String state;
+	private String position;
 	private boolean status;
 	
 	// default constructor
@@ -22,6 +23,7 @@ public class TrafficLight {
 		this.status = true;
 		this.trafficLightID = ++nextSystemID;    // auto increment id
 		this.trafficLightSystemID = trafficLightSystemID;   // Traffic Light System id the TL is associated to
+		this.position = "";
 	}
 	
 	
@@ -37,7 +39,7 @@ public class TrafficLight {
 	// setters
 	
 	/**
-	 * GSetet TL state
+	 * Set TL state
 	 */
 	public void setState(String state) {
 		this.state = state;
@@ -51,6 +53,12 @@ public class TrafficLight {
 	}
 	
 
+	/**
+	 * Set TL position
+	 */
+	public void setPosition(String position) {
+		this.position = position;
+	}
 	
 	// getters
 	
@@ -73,6 +81,13 @@ public class TrafficLight {
 	 */
 	public String getState() {
 		return state;
+	}
+	
+	/**
+	 * Get TL position
+	 */
+	public void getPosition(String position) {
+		this.position = position;
 	}
 
 	/**

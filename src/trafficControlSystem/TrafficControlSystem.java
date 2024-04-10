@@ -229,6 +229,7 @@ public class TrafficControlSystem {
 			 for (VisualRecognitionSystem vrs : listOfVisualRecognitionSystems) {
 	           vrs.startDataCollectorCycle();
 	        }
+			 
 		}
 		
 		/**
