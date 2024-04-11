@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import controlCenterSystem.TCSystemsListManager;
 import trafficLightSystem.TrafficLight;
 import trafficLightSystem.TrafficLightSystem;
 import visualRecognitionSystem.TrafficDataCollector;
@@ -165,10 +166,12 @@ public class TrafficControlSystem {
 		 * Method start procces of traffic data collection of All Visual Recognition Systems
 		 * **/
 		public void startVRSDataCollection() {
+			
 			//VRS are initialized and begin data collection.
-			 for (VisualRecognitionSystem vrs : listOfVisualRecognitionSystems) {
-	           vrs.startDataCollectorCycle();
+			 for ( TrafficLightSystem tls :  listOfTrafficLightSystems) {
+	               tls.startVRDataCollection();
 	        }
+			 
 			 
 			 /***
 			  * 

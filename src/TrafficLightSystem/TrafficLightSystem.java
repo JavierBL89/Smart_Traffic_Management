@@ -100,19 +100,7 @@ public class TrafficLightSystem {
 		
 	}
 	
-	// proccess
 	
-	/***
-	 * Method updates the state of both traffic lights of the system
-	 * */
-		public void updateLightsState(String newState) {
-			
-			this.tlA.setState(newState);    // update state traffic Light A
-			this.tlB.setState(newState);    // update state traffic Light B
-		};
-		
-			
-		
 	// getters
 		
 	/**
@@ -185,7 +173,28 @@ public class TrafficLightSystem {
 		this.visualRecognitionSystems.add(vrs);
 	}
 	
+	/***
+	 * Method updates the state of both traffic lights of the system
+	 * */
+		public void updateLightsState(String newState) {
+			
+			this.tlA.setState(newState);    // update state traffic Light A
+			this.tlB.setState(newState);    // update state traffic Light B
+		};
+		
+			
 
+	/***
+    * Method to start traffic data collection cycle
+    * **/
+	public void startVRDataCollection() {
+		
+		    // Iterates over the list of Visual Recognition Systems associated to this Traffic Light System
+			for(VisualRecognitionSystem vrs : visualRecognitionSystems) {
+				vrs.startDataCollectorCycle();
+			}
+	}
+	
 	/**
 	 * @param args
 	 */
