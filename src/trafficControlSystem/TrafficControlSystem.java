@@ -118,56 +118,48 @@ public class TrafficControlSystem {
 			 * Those 2 extra seconds a safe time to collect and analize the data from 
 			 * the Visual Recognition system and state the set cycle based on that data.
 			 * */
-			int cycleTimeInSeconds = (this.lengthOfVRScans + 2) * this.numOfVisualRecognitionScans;
-			
+			int cycleTimeInSeconds = (this.lengthOfVRScans * this.numOfVisualRecognitionScans) + 4;
 			startVRSDataCollection(); // start process of traffic data collection
 			
 			String newState = "green"; 
 			
-			LocalTime cycleTimeEnd =  LocalTime.now().plusSeconds(cycleTimeInSeconds);  // set the end of the cycle
-            LocalTime greenCycleEnd = LocalTime.now().plusSeconds(cycleTimeInSeconds - 2);  // green state length is equal to the cycle time less 2 seconds
-
-            
-	        while(LocalTime.now().isBefore(cycleTimeEnd)) {
-	        	
-	            LocalTime  currentTime = LocalTime.now(); // Update the current time
-	                        				
-				// Green phase
-				if(currentTime.isBefore(greenCycleEnd)) {  
-					tls1.updateLightsState(newState);
-					tls2.updateLightsState("red");
-					
-			    }// Yellow phase for the last 2 seconds
-				else {
-					tls1.updateLightsState("yellow");
-					tls2.updateLightsState("red");
-				
-				} 
-				
-			    // After the yellow phace, change to the next cycle 
-			    tls1.updateLightsState("red");
-				tls2.updateLightsState("green");
 			
-	        }
-	        String str= "";
-	        str += "4- Start Traffic Controll Cycle with the initial predifined state...";
-	        str += "\nStart of Cycle " ;
-			str += "\nTraffic light System 1 is: ";
-			str +=  " light 1 green";
-			str +=  " light 2 green";
-			str += "\nTraffic light System 2 is: ";
-			str +=  "light 1 red";
-			str +=  "light 2 red\n";
-	        str += "\nEnd of Cycle" ;
-			str += "\nTraffic light System 1 is: ";
-			str +=  " light 1 " + tls1.getTlA().getState();
-			str +=  " light 2 " + tls1.getTlB().getState();
-			str += "\nTraffic light System 2 is: ";
-			str +=  " light 1 " + tls2.getTlA().getState();
-			str +=  " light 2 " + tls2.getTlB().getState();
+            int greenPhaseLength = cycleTimeInSeconds - 4;  // green state length is equal to the cycle time less 2 seconds
+            int yellowPhaseLength = greenPhaseLength + 2 ; // Yellow phase lasts for 2 seconds, and another 2 seconds remains before changin state
+            
+            String str= "";
+            System.out.println("4- Start Traffic Controll Cycle with the initial predifined state...");
+	        try{
+                // Green phase
+                tls1.updateLightsState("green");
+                tls2.updateLightsState("red");
+                System.out.println("\nGREEN PHASE");
+                System.out.println("\nTraffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
+                System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
+                Thread.sleep(greenPhaseLength * 1000); // Convert seconds to milliseconds
+
+                // Yellow phase
+                tls1.updateLightsState("yellow");
+                tls2.updateLightsState("red");
+                System.out.println("\nYELLOW PHASE");
+                System.out.println("\nTraffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
+                System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
+                Thread.sleep(yellowPhaseLength * 1000);
+
+                // Transition to next cycle (red-green phase)
+                tls1.updateLightsState("red");
+                tls2.updateLightsState("green");
+                System.out.println("\nRED-GREEN TRANSITION");
+                System.out.println("End of Cycle") ;
+                System.out.println("Traffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
+                System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 			System.out.println(str);
 	        
-		}
+	      }
 		
 		/**
 		 * Method start procces of traffic data collection of All Visual Recognition Systems

@@ -33,7 +33,7 @@ import java.util.Random;
  */
 public class TrafficDataCollector {
 	
-	private int scanTime;
+	private int scanTimeInNanoSeconds;
 	private int numOfTrafficScans;
 	private int totalVehicles;
 	private int carCounter;
@@ -49,7 +49,7 @@ public class TrafficDataCollector {
 	public TrafficDataCollector() {
 		
 		this.numOfTrafficScans = 0;
-		this.scanTime = 0;
+		this.scanTimeInNanoSeconds = 0;
 		this.totalVehicles = 0;
 		this.bikeCounter = 0;
 		this.carCounter = 0;
@@ -71,14 +71,14 @@ public class TrafficDataCollector {
 	 * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
 	 * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
 	 * **/
-	public int startDataCollector(int numOfTrafficScans, int scanTime) {
+	public int startDataCollector(int numOfTrafficScans, int scanTimeInNanoSeconds) {
 		
 		this.numOfTrafficScans = numOfTrafficScans;    // reset numOfTrafficScans value
-		this.scanTime = scanTime;                      // reset scanTime value
+		this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;         // reset scanTime value
 		 
 		while(numOfTrafficScans >0) {
 			try {
-				Thread.sleep(scanTime);    // delay traffic scan n seconds
+				Thread.sleep(scanTimeInNanoSeconds);    // delay traffic scan n seconds
 				
 					carCounter += getRandomNumber();
 					truckCounter += getRandomNumber();
@@ -155,8 +155,8 @@ public class TrafficDataCollector {
 	/**
 	 * Set setCycleTime
 	 */
-	public void setCycleTime(int scanTime) {
-		this.scanTime = scanTime;
+	public void setCycleTime(int scanTimeInNanoSeconds) {
+		this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
 	}
 
 	
@@ -190,6 +190,13 @@ public class TrafficDataCollector {
 	 */
 	public int getNumOfTrafficScans() {
 		return numOfTrafficScans;
+	}
+	
+	/**
+	 * Get get scan time in nanoseconds
+	 */
+	public int getScanTimeInNanoSeconds() {
+		return scanTimeInNanoSeconds;
 	}
 
 	/**

@@ -28,7 +28,7 @@ public class TrafficControllSystemsInitializer {
 	 *  or prints and error message is the ar not operational
 	 * @throws Exception 
 	 * **/
-	public void initTrafficControlSystems() throws Exception {
+	public  void initTrafficControlSystems() throws Exception {
 		
 		System.out.println("1- Initialiting Traffic Controll System..."); 
 		

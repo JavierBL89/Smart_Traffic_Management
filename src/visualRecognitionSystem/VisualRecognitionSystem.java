@@ -36,7 +36,7 @@
 		private int trafficLightSystemID;
 		private int totalVehicles;
 		private int numOfTrafficScans;
-		private int scanTime;
+		private int scanTimeInNanoSeconds;
 		private int anomalies;
 
 		// objects
@@ -50,7 +50,7 @@
 			this.trafficLightSystemID = 0;   // Traffic Light System id the VRS is associated to
 			this.numOfTrafficScans = 0;
 			this.totalVehicles = 0;
-			this.scanTime = 0;
+			this.scanTimeInNanoSeconds = 0;
 			this.anomalies = 0;
 			this.tdc = new TrafficDataCollector();   // instantiate a Traffic Data Collector object
 		};
@@ -65,7 +65,7 @@
 			this.trafficLightID = trafficLightId;   // Traffic Light System id the VRS is associated to
 			this.numOfTrafficScans = 0;
 			this.totalVehicles = 0;
-			this.scanTime = 0;
+			this.scanTimeInNanoSeconds = 0;
 			this.anomalies = 0;
 			this.tdc = new TrafficDataCollector();   // instantiate a Traffic Data Collector object
 		}
@@ -76,8 +76,8 @@
 		/**
 		 * Set setCycleTime
 		 */
-		public void setCycleTime(int scanTime) {
-			this.scanTime = scanTime;
+		public void setCycleTime(int scanTimeInNanoSeconds) {
+			this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
 		}
 
 		/**
@@ -104,8 +104,8 @@
 		/**
 		* Set length of each micro traffic scan by seconds
 	    */
-	    public void setScanTime(int scanTime) {
-			this.scanTime = scanTime;
+	    public void setScanTime(int scanTimeInNanoSeconds) {
+			this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
 	    }
 		
 	    
@@ -158,8 +158,8 @@
 		* Get length(on seconds) of each micro Traffic Scan
 		* @return the scanTime
 		*/
-		public int getScanTime() {
-			return scanTime;
+		public int getScanTimeInNanoSeconds() {
+			return scanTimeInNanoSeconds;
 		}
 		
 		
@@ -170,16 +170,16 @@
 	    * - numOfTrafficScans is the number of micro scans per full scan cycle
 		* - scanTime is the length in seconds of each micro scan 
 	    */
-		public void configVisualRecognition(int numOfTrafficScans, int scanTime) {
+		public void configVisualRecognition(int numOfTrafficScans, int scanTimeInNanoSeconds) {
 			 this.numOfTrafficScans = numOfTrafficScans;
-		     this.scanTime = scanTime;
+		     this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
 		}
 		
 		/**
 		 * Methos responsible for startting visual recognition proccess
 		 * **/
 		public void startDataCollectorCycle() {
-			totalVehicles =  tdc.startDataCollector(this.numOfTrafficScans, this.scanTime);
+			totalVehicles =  tdc.startDataCollector(this.numOfTrafficScans, this.scanTimeInNanoSeconds);
 		}
 		
 		/**
@@ -194,7 +194,7 @@
 			String str = "";
 			str += "Current Traffic Control Configuration:";
 			str += "A traffic Scan cycle consists of " + this.getNumOfTrafficScans() 
-					   + " micco scans of " + this.getScanTime() + " seconds length each.";
+					   + " micco scans of " + this.getScanTimeInNanoSeconds() + " seconds length each.";
 					
 		     return str;
 		}	
