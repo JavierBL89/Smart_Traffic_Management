@@ -5,6 +5,8 @@ package trafficLightSystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import visualRecognitionSystem.VisualRecognitionSystem;
 
@@ -42,6 +44,8 @@ public class TrafficLightSystem {
 	/**
 	 * Method initialises the components of a Traffic Light System (TLS),
      * including Traffic Lights (TL) and Visual Recognition Systems (VRS).
+	 * 
+	 * Synchronous components initialitation.
 	 * 
 	 * This method ensures that every operational traffic light 
 	 * has a corresponding VRS(camera) associated with it through their id. 
@@ -96,7 +100,6 @@ public class TrafficLightSystem {
 			throw new Exception("Somethig went wrong and System components could not be initialized: " 
 		                + "\nInitialization error: " + e.getMessage() );
 		}
-		
 		
 	}
 	
@@ -182,17 +185,39 @@ public class TrafficLightSystem {
 			this.tlB.setState(newState);    // update state traffic Light B
 		};
 		
-			
 
 	/***
     * Method to start traffic data collection cycle
     * **/
 	public void startVRDataCollection() {
 		
+		// Create a thread pool with as many threads as there are VRS instances
+        ExecutorService executor = Executors.newFixedThreadPool(visualRecognitionSystems.size());
+        
 		    // Iterates over the list of Visual Recognition Systems associated to this Traffic Light System
-			for(VisualRecognitionSystem vrs : visualRecognitionSystems) {
-				vrs.startDataCollectorCycle();
+			for(VisualRecognitionSystem vrs : this.visualRecognitionSystems) {
+				 executor.submit(() -> {
+		                vrs.startDataCollectorCycle();
+		                System.out.println("Data collection finished...");
+		            });
+
+		        System.out.println("Data collection started...");
 			}
+			
+			// Shutdown the executor after starting all tasks
+	        executor.shutdown();
+	}
+	
+	
+	/***
+	* Method to print the last data collection report
+	* **/
+	public void reportDataCollection() {
+		
+		// Iterates over the list of Visual Recognition Systems associated to this Traffic Light System
+		for(VisualRecognitionSystem vrs : visualRecognitionSystems) {
+					vrs.printDetailedScanReport();
+		}
 	}
 	
 	/**

@@ -6,6 +6,9 @@ package trafficControlSystem;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import controlCenterSystem.TCSystemsListManager;
 import trafficLightSystem.TrafficLight;
@@ -30,24 +33,24 @@ public class TrafficControlSystem {
 		private List<TrafficLightSystem> listOfTrafficLightSystems;  
 		
 		// list list of traffic data collectors that associated with this Traffic Control System
-	    private List<VisualRecognitionSystem> listOfVisualRecognitionSystems;  
-	    
+	   
 	    
 		/**
 		 * Constructor to initialise Traffic Control System object
 		 * **/
 		public TrafficControlSystem() {
-	
 			this.isOperative = true;
 			this.listOfTrafficLightSystems = new ArrayList<>();
-			this.listOfVisualRecognitionSystems = new ArrayList<>();  // initialize a Visual Recognition System
 			//this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
+	        
 		}
 		
 		
 		/***
 		* Method initialise the 2 Traffic Light Systems associated to 
-		* this Traffic Control System 
+		* this Traffic Control System.
+		* 
+		* Synchronous TLSs initialitation process.
 		* 
 	    * @throws Exception if a TLS is not operative or if there's an issue initializing its components. 
 	    * 
@@ -89,21 +92,48 @@ public class TrafficControlSystem {
          /**
          * Method Configures the visual recognition parameters for all associated Visual Recognition Systems.
          * 
+         * It uses Executor to asynchronously configure of all VRS instances.
+         * Using a fixed thread pool to improve performance and reduce configuration time.
+         * 
+         * - The method logs the successful configuration of each VRS for tracking and verification purposes.
+         * - If the thread pool does not terminate within a specified timeout, it attempts to shut down immediately to release resources.
+         * 
          * @param scanFrequency The frequency at which each VRS should perform scans.
          * @param scanResolution The resolution or detail level each VRS should use for scans.
          */
-         public void configAllVisualRecognitionSystems(int numOfScans, int scanLength) {
+         public void configAllVisualRecognitionSystems(int numOfScans, int scanLengthInSeconds) {
         	 
-        	 this.numOfVisualRecognitionScans = numOfScans;
-        	 this.lengthOfVRScans = scanLength;    // in  seconds
+        	     this.numOfVisualRecognitionScans = numOfScans;
+        	     this.lengthOfVRScans = scanLengthInSeconds;    // in  seconds
         	 
-        	     for (VisualRecognitionSystem vrs : listOfVisualRecognitionSystems) {
-                 vrs.setNumOfTrafficScans(numOfVisualRecognitionScans);
-                 vrs.setScanTime(scanLength);
+        	     // Create a thread pool with as many threads as there are VRS instances
+             ExecutorService executor = Executors.newFixedThreadPool(listOfTrafficLightSystems.size());
+             
+             try {
+            	     // Iterate over the list of TLSs associated
+                 for (TrafficLightSystem tls : listOfTrafficLightSystems) {
+                	    // Iterate over the list of VRSs associated to each TLS
+                     for (VisualRecognitionSystem vrs : tls.getVisualRecognitionSystems()) {
+                         executor.submit(() -> {
+                             vrs.setNumOfTrafficScans(numOfScans);
+                             vrs.setScanTime(scanLengthInSeconds);
+                             System.out.println("Successfully configured VRS " + vrs.getSYSTEMID() + " in TLS " + tls.getSystemId());
+                         });
+                     }
+                 }
+             } finally {
+                 executor.shutdown();
+                 try {
+                     if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                         executor.shutdownNow();
+                     }
+                 } catch (InterruptedException ie) {
+                     executor.shutdownNow();
+                     Thread.currentThread().interrupt();
+                 }
              }
-        	     
-        	    
          }
+         
          
 		/***
 		 * Method to initialise the whole Traffic Control cycle.
@@ -120,8 +150,6 @@ public class TrafficControlSystem {
 			 * the Visual Recognition system and state the set cycle based on that data.
 			 * */
 			int cycleTimeInSeconds = (this.lengthOfVRScans * this.numOfVisualRecognitionScans) + 4;
-			startVRSDataCollection(); // start process of traffic data collection
-			
 			String newState = "green"; 
 			
 			
@@ -137,8 +165,14 @@ public class TrafficControlSystem {
                 System.out.println("\nGREEN PHASE");
                 System.out.println("\nTraffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
                 System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
-                Thread.sleep(greenPhaseLength * 1000); // Convert seconds to milliseconds
+                Thread.sleep((greenPhaseLength / 2) * 1000);
+    			    this.startVRSDataCollection(); // start process of traffic data collection
 
+
+                Thread.sleep((greenPhaseLength / 2) * 1000); // Convert seconds to milliseconds
+
+                this.analizeTrafficData();
+                
                 // Yellow phase
                 tls1.updateLightsState("yellow");
                 tls2.updateLightsState("red");
@@ -167,11 +201,18 @@ public class TrafficControlSystem {
 		 * **/
 		public void startVRSDataCollection() {
 			
-			//VRS are initialized and begin data collection.
+			// Create a thread pool with as many threads as there are TLS instances
+	        ExecutorService executor = Executors.newFixedThreadPool(listOfTrafficLightSystems.size());
+			
+	         // Iterates through the list of TLSs associated to this TCS
 			 for ( TrafficLightSystem tls :  listOfTrafficLightSystems) {
-	               tls.startVRDataCollection();
+				 executor.submit(() -> {
+	               tls.startVRDataCollection(); //VRS are initialized and begin data collection.
+				 });
 	        }
 			 
+			// Shutdown the executor after starting all tasks
+		        executor.shutdown();
 			 
 			 /***
 			  * 
@@ -190,17 +231,14 @@ public class TrafficControlSystem {
 			VisualRecognitionSystem dataVRS3;
 			VisualRecognitionSystem dataVRS4;
 			
-			// Iterarte over the list of all associated Visual Recognition Systems
-			 for (int i=0; i<=  listOfVisualRecognitionSystems.size();i++) {
-				 dataVRS1 = listOfVisualRecognitionSystems.get(0);
-				 dataVRS2 = listOfVisualRecognitionSystems.get(1);
-				 dataVRS3 = listOfVisualRecognitionSystems.get(2);
-				 dataVRS4 = listOfVisualRecognitionSystems.get(3);
-	        }
-			 
 			// loop through the list of Traffic Light Systems
 				for(TrafficLightSystem tls : listOfTrafficLightSystems) {
+					System.out.println("Traffic Light System " + tls.getSystemId() + "**REPORT**");
 					
+					for(VisualRecognitionSystem vrs : tls.getVisualRecognitionSystems()) {						
+						System.out.println("VRS " + vrs.getSYSTEMID() + "**Total vehicles last scan: **");
+						System.out.println("Total vehicles " + vrs.getTotalVehicles());
+					}
 					
 				}
 		

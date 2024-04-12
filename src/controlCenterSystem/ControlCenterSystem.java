@@ -47,7 +47,7 @@ public class ControlCenterSystem {
 		// Init Traffic Controll Systems Initializer class
 		 
 	    try {
-	    	tcsInitializer.initTrafficControlSystems();  // call static method of TrafficControllSystemsInitializer class
+	    	    tcsInitializer.initTrafficControlSystems();  // call static method of TrafficControllSystemsInitializer class
 				
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,12 +60,13 @@ public class ControlCenterSystem {
 	 * Mthod to configure the visual recognition parameters for all associated Visual Recognition Systems 
 	 * associated with the Traffic Control System that this Control Centre manages
 	 * **/
-	private static void configureVisualRecognitionSystem(int numOfScanCycles, int scanLenghtInNaSeconds) {
+	private static void configureVisualRecognitionSystem(int numOfScanCycles, int scanLenghtInSeconds) {
 		
 	    TCSystemsListManager listManager = TCSystemsListManager.getInstance();
+	    
 	    for(TrafficControlSystem tcs : listManager) {
 	 
-	       	tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInNaSeconds); // Configure visual recognition parameters
+	       	tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
 	    }
 	}
 	
@@ -118,6 +119,7 @@ public class ControlCenterSystem {
 		addTrafficControlSystem();
 		initializeTrafficControlSystems();
 		configureVisualRecognitionSystem(/*numOfScans*/  3, /*scanLengthInaNoSeconds*/  2);    //     
+	
 		startTrafficControlCycle();
 	}
 

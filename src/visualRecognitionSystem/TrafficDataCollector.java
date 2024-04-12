@@ -33,7 +33,7 @@ import java.util.Random;
  */
 public class TrafficDataCollector {
 	
-	private int scanTimeInNanoSeconds;
+	private int scanLengthInSeconds;
 	private int numOfTrafficScans;
 	private int totalVehicles;
 	private int carCounter;
@@ -49,7 +49,7 @@ public class TrafficDataCollector {
 	public TrafficDataCollector() {
 		
 		this.numOfTrafficScans = 0;
-		this.scanTimeInNanoSeconds = 0;
+		this.scanLengthInSeconds = 0;
 		this.totalVehicles = 0;
 		this.bikeCounter = 0;
 		this.carCounter = 0;
@@ -71,31 +71,34 @@ public class TrafficDataCollector {
 	 * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
 	 * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
 	 * **/
-	public int startDataCollector(int numOfTrafficScans, int scanTimeInNanoSeconds) {
+	public void startDataCollector(int numOfTrafficScans, int scanLengthInSeconds) {
 		
 		this.numOfTrafficScans = numOfTrafficScans;    // reset numOfTrafficScans value
-		this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;         // reset scanTime value
-		 
-		while(numOfTrafficScans >0) {
-			try {
-				Thread.sleep(scanTimeInNanoSeconds);    // delay traffic scan n seconds
-				
-					carCounter += getRandomNumber();
-					truckCounter += getRandomNumber();
-					bikeCounter += getRandomNumber();
-					busCounter += getRandomNumber();
+		this.scanLengthInSeconds = scanLengthInSeconds;         // reset scanTime value
 
+	
+	 	System.out.println(this.getNumOfTrafficScans());
+		while(numOfTrafficScans > 0) {
+			try {
+				Thread.sleep(scanLengthInSeconds * 1000);    // delay traffic scan n seconds
+				
+				this.carCounter += getRandomNumber();
+				this.truckCounter += getRandomNumber();
+				this.bikeCounter += getRandomNumber();
+				this.busCounter += getRandomNumber();
+
+	        //    System.out.println("Cycle: " + numOfTrafficScans + " - Cars: " + carCounter + ", Trucks: " + truckCounter + ", Bikes: " + bikeCounter + ", Buses: " + busCounter);
 
 			} catch (InterruptedException e) {
 				
 				System.err.println("Error occurred while collecting traffic data: " + e.getMessage());
-				break;
+				Thread.currentThread().interrupt();
+				return;
 			}
 			numOfTrafficScans--;   // decrease number of traffic scan
 		}
-
+		//System.out.println("THREAD CYCLE ENDS");
 		//getAnomalies();            // check traffic anomalies
-		return totalVehicles;
 	}
 	
 	
@@ -106,7 +109,7 @@ public class TrafficDataCollector {
 	 * **/
 	private int getRandomNumber() {
 		
-		int ranNumOfVehicles = randomNumber.nextInt(20);  // generate a random number between 0 and 20
+		int ranNumOfVehicles = randomNumber.nextInt(10);  // generate a random number between 0 and 20
 		return ranNumOfVehicles;
 	}
 	
@@ -130,6 +133,7 @@ public class TrafficDataCollector {
 		return anomalies;
 	}
 
+	
 	
 	/****
 	 * Method prints the total of vehicles counted during the traffic scan cycle.
@@ -155,28 +159,41 @@ public class TrafficDataCollector {
 	/**
 	 * Set setCycleTime
 	 */
-	public void setCycleTime(int scanTimeInNanoSeconds) {
-		this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
+	public void setScanTime(int scanLengthInSeconds) {
+		this.scanLengthInSeconds = scanLengthInSeconds;
 	}
 
-	
+	/**
+	 * Set setCycleTime
+	 */
 	public void setBusCounter(int busCounter) {
 		this.busCounter = busCounter;
 	}
 
-
+	/**
+	 * Set setCycleTime
+	 */
 	public void setNumOfTrafficScans(int numOfCycles) {
 		this.numOfTrafficScans = numOfCycles;
 	}
 	
+	/**
+	 * Set carCounter
+	 */
 	public void setCarCounter(int carCounter) {
 		this.carCounter = carCounter;
 	}
 	
+	/**
+	 * Set truckCounter
+	 */
 	public void setTruckCounter(int truckCounter) {
 		this.truckCounter = truckCounter;
 	}
 	
+	/**
+	 * Set bikeCounter
+	 */
 	public void setBikeCounter(int bikeCounter) {
 		this.bikeCounter = bikeCounter;
 	}
@@ -195,36 +212,36 @@ public class TrafficDataCollector {
 	/**
 	 * Get get scan time in nanoseconds
 	 */
-	public int getScanTimeInNanoSeconds() {
-		return scanTimeInNanoSeconds;
+	public int getScanTime() {
+		return scanLengthInSeconds;
 	}
 
 	/**
 	 * Get getBusCounter
 	 */
 	public int getBusCounter() {
-		return busCounter;
+		return this.busCounter;
 	}
 
 	/**
 	 * Get getCarCounter
 	 */
 	public int getCarCounter() {
-		return carCounter;
+		return this.carCounter;
 	}
 
 	/**
 	 * Get getTruckCounter
 	 */
 	public int getTruckCounter() {
-		return truckCounter;
+		return this.truckCounter;
 	}
 
 	/**
 	 * Get getBikeCounter
 	 */
 	public int getBikeCounter() {
-		return bikeCounter;
+		return this.bikeCounter;
 	}
 
 

@@ -36,12 +36,11 @@
 		private int trafficLightSystemID;
 		private int totalVehicles;
 		private int numOfTrafficScans;
-		private int scanTimeInNanoSeconds;
+		private int scanLengthInSeconds;
 		private int anomalies;
 
 		// objects
-		private TrafficDataCollector tdc;
-		
+		private TrafficDataCollector tdc;            // data collector
 		
 		// constructors
 		
@@ -50,7 +49,7 @@
 			this.trafficLightSystemID = 0;   // Traffic Light System id the VRS is associated to
 			this.numOfTrafficScans = 0;
 			this.totalVehicles = 0;
-			this.scanTimeInNanoSeconds = 0;
+			this.scanLengthInSeconds = 0;
 			this.anomalies = 0;
 			this.tdc = new TrafficDataCollector();   // instantiate a Traffic Data Collector object
 		};
@@ -65,20 +64,13 @@
 			this.trafficLightID = trafficLightId;   // Traffic Light System id the VRS is associated to
 			this.numOfTrafficScans = 0;
 			this.totalVehicles = 0;
-			this.scanTimeInNanoSeconds = 0;
+			this.scanLengthInSeconds = 0;
 			this.anomalies = 0;
 			this.tdc = new TrafficDataCollector();   // instantiate a Traffic Data Collector object
 		}
 		
 
 		//setters 
-		
-		/**
-		 * Set setCycleTime
-		 */
-		public void setCycleTime(int scanTimeInNanoSeconds) {
-			this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
-		}
 
 		/**
 		 * Set trafficLightID 
@@ -104,8 +96,8 @@
 		/**
 		* Set length of each micro traffic scan by seconds
 	    */
-	    public void setScanTime(int scanTimeInNanoSeconds) {
-			this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
+	    public void setScanTime(int scanLengthInSeconds) {
+			this.scanLengthInSeconds = scanLengthInSeconds;
 	    }
 		
 	    
@@ -129,8 +121,11 @@
 		/**
 		 * Get total of Vehicles per scan
 		 */
+
 		public int getTotalVehicles() {
-			return totalVehicles;
+			
+			this.totalVehicles = (tdc.getCarCounter() + tdc.getBikeCounter() + tdc.getBusCounter() + tdc.getTruckCounter());
+			return this.totalVehicles;
 		}
 		
 		/**
@@ -159,7 +154,7 @@
 		* @return the scanTime
 		*/
 		public int getScanTimeInNanoSeconds() {
-			return scanTimeInNanoSeconds;
+			return scanLengthInSeconds;
 		}
 		
 		
@@ -170,22 +165,23 @@
 	    * - numOfTrafficScans is the number of micro scans per full scan cycle
 		* - scanTime is the length in seconds of each micro scan 
 	    */
-		public void configVisualRecognition(int numOfTrafficScans, int scanTimeInNanoSeconds) {
+		public void configVisualRecognition(int numOfTrafficScans, int scanLengthInSeconds) {
 			 this.numOfTrafficScans = numOfTrafficScans;
-		     this.scanTimeInNanoSeconds = scanTimeInNanoSeconds;
+		     this.scanLengthInSeconds = scanLengthInSeconds;
 		}
 		
 		/**
 		 * Methos responsible for startting visual recognition proccess
 		 * **/
 		public void startDataCollectorCycle() {
-			totalVehicles =  tdc.startDataCollector(this.numOfTrafficScans, this.scanTimeInNanoSeconds);
+		
+	            tdc.startDataCollector(this.numOfTrafficScans, this.scanLengthInSeconds);
 		}
 		
 		/**
 		 * Methos responsible for startting visual recognition proccess
 		 * **/
-		public void printScanReport() {
+		public void printDetailedScanReport() {
 			  tdc.printVehiclesCount();
 		}
 		
@@ -194,7 +190,7 @@
 			String str = "";
 			str += "Current Traffic Control Configuration:";
 			str += "A traffic Scan cycle consists of " + this.getNumOfTrafficScans() 
-					   + " micco scans of " + this.getScanTimeInNanoSeconds() + " seconds length each.";
+					   + " micro scans of " + this.getScanTimeInNanoSeconds() + " seconds length each.";
 					
 		     return str;
 		}	
@@ -203,14 +199,19 @@
 		 * @param args
 		 */
 		public static void main(String[] args) {
-	        
-		/*	TrafficDataCollector tdc = new TrafficDataCollector();
+		/*	VisualRecognitionSystem vrs = new VisualRecognitionSystem();
+			vrs.configVisualRecognition(3, 2);
+			vrs.startDataCollectorCycle();
+			vrs.getAnomalies();
+			System.out.println(vrs.getTotalVehicles());
+			System.out.print("-----------------");
 			
-			tdc.startDataCollector();
-			tdc.getAnomalies();
-			tdc.printVehiclesCount();
-			*/
-
+			VisualRecognitionSystem vrs2 = new VisualRecognitionSystem();
+			vrs2.configVisualRecognition(3, 2);
+			vrs2.startDataCollectorCycle();
+			vrs2.getAnomalies();
+			System.out.println(vrs2.getTotalVehicles());  */
 		}
+	
 
 	}
