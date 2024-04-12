@@ -18,7 +18,8 @@ public class TrafficLightSystem {
 	
 	// vars
 	private static int nextSystemID = 304;
-	private  int systemID;
+	private int systemID;
+	private String state;
 	private List<TrafficLight> trafficLights;
 	private List<VisualRecognitionSystem> visualRecognitionSystems;
 	
@@ -37,6 +38,7 @@ public class TrafficLightSystem {
 	public TrafficLightSystem() {
 		this.systemID = ++nextSystemID;   // auto increment id
 		this.operative = true;
+		this.state = "";
 		this.trafficLights = new ArrayList<>();
 		this.visualRecognitionSystems = new ArrayList<>();
 	}
@@ -133,6 +135,13 @@ public class TrafficLightSystem {
 	public TrafficLight getTlB() {
 		return tlB;
 	}
+	
+	/**
+	 * Get Traffic Light System state
+	 * */
+	public String getState() {
+		return this.state;
+	}
 
 	/**
 	 * Get list of all Traffic Lights associated to this system
@@ -180,6 +189,7 @@ public class TrafficLightSystem {
 	 * Method updates the state of both traffic lights of the system
 	 * */
 		public void updateLightsState(String newState) {
+			this.state = newState;          // update Traffic Light System state 
 			
 			this.tlA.setState(newState);    // update state traffic Light A
 			this.tlB.setState(newState);    // update state traffic Light B

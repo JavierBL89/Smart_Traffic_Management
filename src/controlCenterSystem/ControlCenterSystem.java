@@ -29,7 +29,6 @@ public class ControlCenterSystem {
 		return systemID;
 	}
 
-	
 
 	 /*
 	 * Method initialises all Traffic Control Systems managed by the Traffic Control System.

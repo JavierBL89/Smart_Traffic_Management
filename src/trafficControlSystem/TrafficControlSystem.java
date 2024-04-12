@@ -1,5 +1,5 @@
 /**
- * 
+ * Javie Bastande
  */
 package trafficControlSystem;
 
@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import controlCenterSystem.TCSystemsListManager;
+import trafficLightSystem.StateRecord;
 import trafficLightSystem.TrafficLight;
 import trafficLightSystem.TrafficLightSystem;
 import visualRecognitionSystem.TrafficDataCollector;
@@ -30,12 +31,15 @@ public class TrafficControlSystem {
 		private boolean isOperative;
 		private int numOfVisualRecognitionScans;
 		private int lengthOfVRScans;     // in nanoseconds
-		
+		private int trafficCycleLoops;
+		private int cycleCount;
+		private int maxCycles;
 		// list holds the traffic light systems that are controlled by this Traffic Control System
 		private List<TrafficLightSystem> listOfTrafficLightSystems;  
 		
-		// list list of traffic data collectors that associated with this Traffic Control System
-	   
+		// list holds the history of the Traffic Light Sytems with a "green" state
+		private List<StateRecord> tlsStateHistory;
+			   
 	    
 		/**
 		 * Constructor to initialise Traffic Control System object
@@ -43,6 +47,10 @@ public class TrafficControlSystem {
 		public TrafficControlSystem() {
 			this.isOperative = true;
 			this.listOfTrafficLightSystems = new ArrayList<>();
+			this.tlsStateHistory = new ArrayList<>();
+			this.trafficCycleLoops = 0;
+			this.cycleCount = 0;
+			this.maxCycles = 3;
 			//this.initTrafficLightSystems();  // call method to integrate the Traffic Light Systems
 	        
 		}
@@ -146,57 +154,69 @@ public class TrafficControlSystem {
 		 * ***/
 		public void startTrafficControlCycle(String state) {
 			
+			// Check if the cycle limit has been reached
+	        if (cycleCount >= maxCycles) {
+	            System.out.println("Reached the maximum number of cycles.");
+	            return;
+	        }
+	        
 			/* time of traffic lights status cycle is the sum of the number of traffic scans 
 			 * by the length of each plus 2 seconds 
 			 * Those 2 extra seconds a safe time to collect and analize the data from 
 			 * the Visual Recognition system and state the set cycle based on that data.
 			 * */
+				
 			int cycleTimeInSeconds = (this.lengthOfVRScans * this.numOfVisualRecognitionScans) + 4;
-			String newState = "green"; 
 			
-			
+			 
+		        
             int greenPhaseLength = cycleTimeInSeconds - 4;  // green state length is equal to the cycle time less 2 seconds
             int yellowPhaseLength = greenPhaseLength + 2 ; // Yellow phase lasts for 2 seconds, and another 2 seconds remains before changin state
             
-            String str= "";
-            System.out.println("4- Start Traffic Controll Cycle with the initial predifined state...");
+            System.out.println("\nStart Traffic Controll Cycle " + (cycleCount += 1)  + " with the initial predifined state...");
 	        try{
                 // Green phase
-                tls1.updateLightsState("green");
-                tls2.updateLightsState("red");
+                tls1.updateLightsState(state);
+                tls2.updateLightsState(state.equals("green") ? "red" : "green");
                 System.out.println("\nGREEN PHASE");
                 System.out.println("\nTraffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
                 System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
+      
+               // add StateRecord object to list
+                tlsStateHistory.add(new StateRecord(tls1.getSystemId(), state));  
+                
                 Thread.sleep((greenPhaseLength / 2) * 1000);
     			    this.startVRSDataCollection(); // start process of traffic data collection
 
 
                 Thread.sleep((greenPhaseLength / 2) * 1000); // Convert seconds to milliseconds
 
-                this.analizeTrafficData();
+                this.analizeTrafficData();     // start data analysing process
                 
-                // Yellow phase
-                tls1.updateLightsState("yellow");
-                tls2.updateLightsState("red");
+              
+                // Yellow phase     
+                	tls1.updateLightsState(state.equals("green") ? "yellow" : "red");
+                tls2.updateLightsState(state.equals("green") ? "red" : "yellow");
                 System.out.println("\nYELLOW PHASE");
                 System.out.println("\nTraffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
                 System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
+          
                 Thread.sleep(yellowPhaseLength * 1000);
 
                 // Transition to next cycle (red-green phase)
-                tls1.updateLightsState("red");
-                tls2.updateLightsState("green");
+                tls1.updateLightsState(state.equals("green") ? "red" : "green");
+                tls2.updateLightsState(state.equals("green") ? "green" : "red");
                 System.out.println("\nRED-GREEN TRANSITION");
                 System.out.println("End of Cycle") ;
                 System.out.println("Traffic light System 1 state: " + "light 1 " + tls1.getTlA().getState() + "; light 2 " + tls1.getTlB().getState());      
                 System.out.println("Traffic light System 2 state:" + "light 1 " + tls2.getTlA().getState() + "; light 2 " + tls2.getTlB().getState());
-
+             
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-			System.out.println(str);
 	        
-	      }
+	}
+	    
 		
 		/**
 		 * Method start procces of traffic data collection of All Visual Recognition Systems
@@ -212,15 +232,8 @@ public class TrafficControlSystem {
 	               tls.startVRDataCollection(); //VRS are initialized and begin data collection.
 				 });
 	        }
-			 
 			// Shutdown the executor after starting all tasks
 		        executor.shutdown();
-			 
-			 /***
-			  * 
-			  * WHEN SHOULD ANALIZE DATA BE CALLED ????????????????????
-			  * 
-			  * */
 		}
 		
 		/**
@@ -260,7 +273,11 @@ public class TrafficControlSystem {
 		
 		/**
 		 * Method compares the traffic data of each of the Traffic Ligth Systems, 
-		 * and sets the next state of the Traffic Light Systems for the next traffic control cycle
+		 * and sets the next state of the Traffic Light Systems for the next traffic control cycle.
+		 * 
+		 * The method identifies which TLS has higher or lower vehicle traffic and performs actions based on these comparisons.
+		 * 
+		 * 
 		 * */
 		public void compareTLSTrafficData(Map<Integer, Integer> tlsVehicleCounts) {
 			
@@ -273,20 +290,56 @@ public class TrafficControlSystem {
 		    // store the Traffic Systems id form the map into an array
 		    Integer[] tlsIds = tlsVehicleCounts.keySet().toArray(new Integer[0]);
 		    
+		    int tls1id = tlsIds[0];
+		    int tls2id = tlsIds[1];
+		    
 		    // use the Traffic Ssystems IDs to grab and store their value pair from the map
 		    Integer vehiclesCountTLS1 = tlsVehicleCounts.get(tlsIds[0]);
 	        Integer vehiclesCountTLS2 = tlsVehicleCounts.get(tlsIds[1]);
 	        
 	        if(vehiclesCountTLS1 >= vehiclesCountTLS2) {
-	        	    
+	        	    setNextCycle(tls1id, "green");
 	        }else {
-	        	
-	        }
+	            setNextCycle(tls2id, "green");
+	        } 
 	        
 		}
 		
+		/***
+		* Methos takes 2 parameters
+		* - tlsId is the id of the TLS that should be green on next cycle
+		* - state is always green
+		* **/
+		public void setNextCycle(int nextTLSId, String nextState) {
 		
+			     int tlsStateHistorySize = tlsStateHistory.size();
+			     
+				// check if states history has more than 1 records stored
+				if(tlsStateHistory.size() >= 2) {
+					
+					// grab values of the last Traffic Light System with a green state 
+			        StateRecord currentRecord = tlsStateHistory.get(tlsStateHistorySize - 1);
+					
+					// grab values of the last Traffic Light System with a green state 
+			        StateRecord lastRecord = tlsStateHistory.get(tlsStateHistorySize - 2);
+					
+			        // Preventing three consecutive green states for the same TLS
+					if(currentRecord.getState().equals("green") && currentRecord.getTLSID() == lastRecord.getTLSID() &&
+						lastRecord.getState().equals("green")) {
+						startTrafficControlCycle("red");
+					}else {
+					    // Proceed with the proposed green state if no conflict
+					    startTrafficControlCycle(nextState);
+					}
+			    } else {
+				    // continue to next cycle with the previously defined state if not enough history records
+					startTrafficControlCycle(nextState);
+			}
+	}
+				
+				
 		
+
 		// setters
 		
 		/**

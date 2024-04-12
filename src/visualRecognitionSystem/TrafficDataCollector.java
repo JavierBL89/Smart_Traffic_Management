@@ -77,7 +77,6 @@ public class TrafficDataCollector {
 		this.scanLengthInSeconds = scanLengthInSeconds;         // reset scanTime value
 
 	
-	 	System.out.println(this.getNumOfTrafficScans());
 		while(numOfTrafficScans > 0) {
 			try {
 				Thread.sleep(scanLengthInSeconds * 1000);    // delay traffic scan n seconds
@@ -97,7 +96,6 @@ public class TrafficDataCollector {
 			}
 			numOfTrafficScans--;   // decrease number of traffic scan
 		}
-		//System.out.println("THREAD CYCLE ENDS");
 		//getAnomalies();            // check traffic anomalies
 	}
 	
