@@ -5,7 +5,9 @@ package trafficControlSystem;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -222,28 +224,40 @@ public class TrafficControlSystem {
 		}
 		
 		/**
+		 * Method starts the process of traffic data analysing, and reports detailing the traffic data collected 
+		 * by all Visual Recognition Systems (VRS) within each Traffic Light System (TLS).
+		 * 
+		 * It retrieves the data collected from each VRS associated to each of the TLS,
+		 * and stores data in a key-value structure Map<TLS_id, totalOfVehicles> to then pass it into compareTLSTrafficData()
 		 * 
 		 * **/
 		public void analizeTrafficData() {
 			
-			VisualRecognitionSystem dataVRS1;
-			VisualRecognitionSystem dataVRS2;
-			VisualRecognitionSystem dataVRS3;
-			VisualRecognitionSystem dataVRS4;
+		    Map<Integer, Integer> tlsVehicleCounts = new HashMap<>(); // map to store the total vehicles collected for each TLS id
+
+			int totalVehicles = 0;
 			
-			// loop through the list of Traffic Light Systems
+			    // loop through the list of Traffic Light Systems
 				for(TrafficLightSystem tls : listOfTrafficLightSystems) {
 					System.out.println("Traffic Light System " + tls.getSystemId() + "**REPORT**");
 					
-					for(VisualRecognitionSystem vrs : tls.getVisualRecognitionSystems()) {						
+					// loop through the list of Visual Recognition Ssystems associated to each TLS and retrieve total vehicles count
+					for(VisualRecognitionSystem vrs : tls.getVisualRecognitionSystems()) {
+
+			            totalVehicles += vrs.getTotalVehicles();   // grab total vehicle count in current VRS
+			             
 						System.out.println("VRS " + vrs.getSYSTEMID() + "**Total vehicles last scan: **");
 						System.out.println("Total vehicles " + vrs.getTotalVehicles());
 					}
 					
+					
+			       tlsVehicleCounts.put(tls.getSystemId(), totalVehicles);  // Store total vehicles count in map
 				}
-		
-				  
+				 
 		}
+		
+		
+		
 		
 		// setters
 		
