@@ -234,7 +234,7 @@ public class TrafficControlSystem {
 		public void analizeTrafficData() {
 			
 		    Map<Integer, Integer> tlsVehicleCounts = new HashMap<>(); // map to store the total vehicles collected for each TLS id
-
+                   
 			int totalVehicles = 0;
 			
 			    // loop through the list of Traffic Light Systems
@@ -254,8 +254,36 @@ public class TrafficControlSystem {
 			       tlsVehicleCounts.put(tls.getSystemId(), totalVehicles);  // Store total vehicles count in map
 				}
 				 
+				compareTLSTrafficData(tlsVehicleCounts);  // compare data retrieved
 		}
 		
+		
+		/**
+		 * Method compares the traffic data of each of the Traffic Ligth Systems, 
+		 * and sets the next state of the Traffic Light Systems for the next traffic control cycle
+		 * */
+		public void compareTLSTrafficData(Map<Integer, Integer> tlsVehicleCounts) {
+			
+			// check if  hashmap is empty or null
+		    if (tlsVehicleCounts == null || tlsVehicleCounts.isEmpty()) {
+		        System.out.println("No traffic data available to compare.");
+		        return;
+		    }
+		    
+		    // store the Traffic Systems id form the map into an array
+		    Integer[] tlsIds = tlsVehicleCounts.keySet().toArray(new Integer[0]);
+		    
+		    // use the Traffic Ssystems IDs to grab and store their value pair from the map
+		    Integer vehiclesCountTLS1 = tlsVehicleCounts.get(tlsIds[0]);
+	        Integer vehiclesCountTLS2 = tlsVehicleCounts.get(tlsIds[1]);
+	        
+	        if(vehiclesCountTLS1 >= vehiclesCountTLS2) {
+	        	    
+	        }else {
+	        	
+	        }
+	        
+		}
 		
 		
 		
