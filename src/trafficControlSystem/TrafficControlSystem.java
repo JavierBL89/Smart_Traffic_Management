@@ -20,7 +20,13 @@ import visualRecognitionSystem.TrafficDataCollector;
 import visualRecognitionSystem.VisualRecognitionSystem;
 
 /**
+ * The TrafficControlSystem class manages its associated Traffic Light Systems, 
+ * It orchestrates their operational cycles based on visual recognition data collected to optimize traffic flow.
  * 
+ * This class is responsible for:
+ * - Initializing Traffic Light Systems
+ * - Configure their visual recognition systems
+ * - Executing traffic control cycles to ensure efficient traffic management.
  */
 public class TrafficControlSystem {
 	
@@ -68,7 +74,18 @@ public class TrafficControlSystem {
 		public void initTrafficLightSystems() throws Exception {
 			
 			System.out.println("\n2- Initializing Traffic Light Systems...");
+             
+			this.initializeTLS1();   // init Traffic Light System 1
+			this.initializeTLS2();   // init Traffic Light System 2
 
+		}
+
+		
+		/***
+		 * Method initialises Traffic System 1
+		 * ***/
+		public void initializeTLS1() {
+			
 			try {
 			    // Initialize the first Traffic Light System and its components
 			    tls1 = new TrafficLightSystem();
@@ -82,26 +99,26 @@ public class TrafficControlSystem {
 			    } catch (Exception e) {
 			        System.err.println("Error initializing Traffic Light System 1: " + e.getMessage());
 			       
-			    }
-
-			    try {
-			        // Initialise the second Traffic Light System and its components
-			        tls2 = new TrafficLightSystem();
-			        if (!tls2.isOperative()) {
-			            throw new Exception("Traffic Light System 2 is not operative and could not be initialized.");
-			        }
-			        listOfTrafficLightSystems.add(tls2); // Add TLS 2 to the list
-			        tls2.initTLSComponents(); // Initialise associated components
-			        
-			    } catch (Exception e) {
-			        System.err.println("Error initializing Traffic Light System 2: " + e.getMessage());
-			    }
+			  }
 		}
-
 		
 		/***
 		 * Method initialises Traffic System 1
 		 * ***/
+		public void initializeTLS2() {
+			try {
+		        // Initialise the second Traffic Light System and its components
+		        tls2 = new TrafficLightSystem();
+		        if (!tls2.isOperative()) {
+		            throw new Exception("Traffic Light System 2 is not operative and could not be initialized.");
+		        }
+		        listOfTrafficLightSystems.add(tls2); // Add TLS 2 to the list
+		        tls2.initTLSComponents(); // Initialise associated components
+		        
+		    } catch (Exception e) {
+		        System.err.println("Error initializing Traffic Light System 2: " + e.getMessage());
+		    }
+		}
          
          /**
          * Method Configures the visual recognition parameters for all associated Visual Recognition Systems.
