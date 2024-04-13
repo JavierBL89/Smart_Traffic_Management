@@ -3,9 +3,10 @@
  */
 package trafficLightSystem;
 
-
 /**
- * 
+ * Class Represents the past state of Traffic Light Systems.
+ * It stores the state and system ID of a traffic light system at a specific time,
+ * allowing tracking of state changes over time for comparison and data analysing purposes.
  */
 public class StateRecord {
 
@@ -14,15 +15,16 @@ public class StateRecord {
 	private static String state;
 	private static StateRecord instance;
 	
-	// Private constructor
+	
+	//constructor
 	public StateRecord(int tlsID, String newState){
 		this.tlsID = tlsID;
 		this.state = newState;
 
 	}
 	
+	
 	// getters
-
 
 	/**
 	 * @return the tlsID
@@ -31,7 +33,6 @@ public class StateRecord {
 		return tlsID;
 	}
 
-	
 	/**
 	 * 
 	 * Get state

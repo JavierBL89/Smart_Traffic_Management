@@ -1,12 +1,18 @@
 /**
- * 
+ * Javier Bastande
  */
 package controlCenterSystem;
 
 import trafficControlSystem.TrafficControlSystem;
-import visualRecognitionSystem.VisualRecognitionSystem;
 
 /**
+ * Class ats as Control Center of the Traffic Light Management System.
+ * It is the starting point of system.
+ * It manages the initialization and operation of multiple Traffic Control Systems within a control center. 
+ * 
+ * This class is responsible for setting up traffic control systems, configuring visual recognition systems,
+ * and starting the traffic control cycle with predefined initial states.
+ * 
  * 
  */
 public class ControlCenterSystem {
@@ -23,17 +29,19 @@ public class ControlCenterSystem {
 	
 
 	/**
+	 * Get system id
+	 * 
 	 * @return the systemID
 	 */
 	public int getSystemID() {
 		return systemID;
 	}
 
-
+	// helper methods
+	
 	 /*
-	 * Method initialises all Traffic Control Systems managed by the Traffic Control System.
-	 * This method encapsulates the process of starting up the traffic control systems and 
-	 * initiating the traffic control cycle with predefined initial states. 
+	 * Method to initialize all Traffic Control Systems managed by the Traffic Control System.
+	 * It uses Traffic Control System Initializer to start the process.
 	 * 
 	 * The initialization process involves two primary actions:
 	 * 1. Initializing traffic control systems: Ensuring that all systems are set up and configured.
@@ -44,27 +52,31 @@ public class ControlCenterSystem {
 	private static void initializeTrafficControlSystems() {
 		
 		// Init Traffic Controll Systems Initializer class
-		 
 	    try {
 	    	    tcsInitializer.initTrafficControlSystems();  // call static method of TrafficControllSystemsInitializer class
 				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  
-	    // init all Traffic Control Systems
-	    
 	}
 	
 	/**
 	 * Mthod to configure the visual recognition parameters for all associated Visual Recognition Systems 
 	 * associated with the Traffic Control System that this Control Centre manages
+	 * 
+	 * * The configuration option include:
+	 * - The number of traffics scans withing a whole scan cycle.
+	 * - The length of each of those traffic scans.
+	 * 
+	 * @param numOfScanCycles
+	 * @param numOfScanCycles
 	 * **/
 	private static void configureVisualRecognitionSystem(int numOfScanCycles, int scanLenghtInSeconds) {
 		
-	    TCSystemsListManager listManager = TCSystemsListManager.getInstance();
+	    TCSystemsListManager listManager = TCSystemsListManager.getInstance();   // get instance of associated Traffic Control Systems list
 	    
+	    // iterate through list
 	    for(TrafficControlSystem tcs : listManager) {
-	 
 	       	tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
 	    }
 	}
@@ -72,42 +84,38 @@ public class ControlCenterSystem {
 	/***
 	 * Method adds a new Traffic Control System to the list of
 	 * Traffic Control Systems this Control Centre manages.
+	 * 
+	 * Thos method allow dinamci integration of new Traffic Control Systems which allows 
+	 * adding and removing Traffic Control Systems for maintenance.
+	 * 
 	 * **/
 	private static void addTrafficControlSystem() {
 		
-		TCSystemsListManager instance = TCSystemsListManager.getInstance(); // get instance of the list
+		TCSystemsListManager instance = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
 		instance.addTrafficContolSystem(new TrafficControlSystem());        // add new Traffic Control System
 		
 	}
 	
 	
 	/*
-    * Method initialises all Traffic Control Systems managed by the Traffic Control System.
-    * This method encapsulates the process of starting up the traffic control systems and 
-    * initiating the traffic control cycle with predefined initial states. 
+    * Method start the the process of Traffic Control cycles.
+    * It uses the Traffic Control Initializer class functionalities to trigger the process.
     * 
-	* The initialization process involves two primary actions:
-	* 1. Initializing traffic control systems: Ensuring that all systems are set up and configured.
-	*    
-	* 2. Starting the traffic control cycle: Kicking off the cycle that governs traffic light changes,
-	* starting with predefined initial states to then be modified by traffic density changes.
+    * Traffic Light Systems will start to collect and analize traffic data 
+    * to manage the traffic lights state based on that data.
 	*/
 	private static void startTrafficControlCycle() {
 			
-		// Init Traffic Controll Systems Initializer class
-		
+		// Init Traffic Control Systems Initializer class
 		try {
 			tcsInitializer.startTrafficControlCycle();    // init the Traffic Control Cycle with predefined initial states
 					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}  
-		// init all Traffic Control Systems
-		    
-		}
+	}
 		
-	
- 
+
 	/**
 	 * @param args
 	 */

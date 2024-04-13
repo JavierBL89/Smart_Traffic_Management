@@ -1,6 +1,5 @@
 package controlCenterSystem;
 
-import java.util.concurrent.ExecutorService;
 
 import trafficControlSystem.TrafficControlSystem;
 
@@ -25,9 +24,19 @@ public class TrafficControllSystemsInitializer {
 	
 	/**
 	 * Method initialise all Traffic Control Systems within the  network. 
+	 *  This method uses encapsulates the process of starting up the traffic control systems and 
+	 * initiating the traffic control cycle with predefined initial states. 
+	 * 
 	 * It iterates through each system in the list, checks their operational status,
 	 *  and initialises the Traffic Light Systems associated with each  Traffic Control System
-	 *  or prints and error message is the ar not operational
+	 *  or prints and error message is the are not operational
+	 *  
+	 * The initialization process involves two primary actions:
+	 * 1. Initializing traffic control systems: Ensuring that all systems are set up and configured.
+	 *    
+	 * 2. Starting the traffic control cycle: Kicking off the cycle that governs traffic light changes,
+	 *    starting with predefined initial states to then be modified by traffic density changes.
+	 *
 	 * @throws Exception 
 	 * **/
 	public  void initTrafficControlSystems() throws Exception {
@@ -51,11 +60,16 @@ public class TrafficControllSystemsInitializer {
 				+ ". This system is not operative");
 			}
 		}
-		
 		System.out.println(" ");
 	}
 	
 	
+	/***
+	 * Method to initialize proccess of Traffic Control.
+	 * 
+	 * Iterates over the list of associated Traffic Control Systems
+	 * and request to start the cycle with apredifined initial state.
+	 */
 	public void startTrafficControlCycle() {
 		
 		for(TrafficControlSystem tcs : listOfTrafficControlSystems) {

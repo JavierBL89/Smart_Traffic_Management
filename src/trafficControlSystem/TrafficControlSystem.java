@@ -98,6 +98,10 @@ public class TrafficControlSystem {
 			    }
 		}
 
+		
+		/***
+		 * Method initialises Traffic System 1
+		 * ***/
          
          /**
          * Method Configures the visual recognition parameters for all associated Visual Recognition Systems.
@@ -168,7 +172,6 @@ public class TrafficControlSystem {
 				
 			int cycleTimeInSeconds = (this.lengthOfVRScans * this.numOfVisualRecognitionScans) + 4;
 			
-			 
 		        
             int greenPhaseLength = cycleTimeInSeconds - 4;  // green state length is equal to the cycle time less 2 seconds
             int yellowPhaseLength = greenPhaseLength + 2 ; // Yellow phase lasts for 2 seconds, and another 2 seconds remains before changin state
@@ -185,12 +188,8 @@ public class TrafficControlSystem {
                // add StateRecord object to list
                 tlsStateHistory.add(new StateRecord(tls1.getSystemId(), state));  
                 
-                Thread.sleep((greenPhaseLength / 2) * 1000);
+                Thread.sleep((greenPhaseLength ) * 1000);
     			    this.startVRSDataCollection(); // start process of traffic data collection
-
-
-                Thread.sleep((greenPhaseLength / 2) * 1000); // Convert seconds to milliseconds
-
                 this.analizeTrafficData();     // start data analysing process
                 
               
@@ -306,7 +305,7 @@ public class TrafficControlSystem {
 		}
 		
 		/***
-		* Methos takes 2 parameters
+		* Method takes 2 parameters
 		* - tlsId is the id of the TLS that should be green on next cycle
 		* - state is always green
 		* **/
