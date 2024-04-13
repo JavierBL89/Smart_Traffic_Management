@@ -75,8 +75,12 @@ public class TrafficDataCollector {
 		
 		this.numOfTrafficScans = numOfTrafficScans;    // reset numOfTrafficScans value
 		this.scanLengthInSeconds = scanLengthInSeconds;         // reset scanTime value
-
-	
+        
+		carCounter = 0;
+		truckCounter = 0;
+		bikeCounter = 0;
+		busCounter = 0;
+		
 		while(numOfTrafficScans > 0) {
 			try {
 				Thread.sleep(scanLengthInSeconds * 1000);    // delay traffic scan n seconds
