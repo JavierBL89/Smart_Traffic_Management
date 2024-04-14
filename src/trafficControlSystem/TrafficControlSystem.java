@@ -201,7 +201,7 @@ public class TrafficControlSystem {
 	            tlsStateHistory.add(new StateRecord(tls1.getSystemId(), state));  
 	            
 	          	initYellowPhase( state,  yellowPhaseLength);   // yellow phase  
-	          	transitToNextCycle(state);                     // transit to netx cycle
+	          	initTransitToNextCycle(state);                     // transit to netx cycle
   
 	      }
 	    
@@ -260,7 +260,7 @@ public class TrafficControlSystem {
 		 * 
 		 * @param the current state
 		 * **/
-		private void transitToNextCycle(String state) {
+		private void initTransitToNextCycle(String state) {
 			
 			updateTrafficLightState(state.equals("green") ? "red" : "green", state.equals("green") ? "green" : "red");
 			
