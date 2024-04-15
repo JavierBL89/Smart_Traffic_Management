@@ -1,7 +1,7 @@
 /**
  * Javier Bastande
  */
-package controlCenterSystem;
+package controlCenterServer;
 
 import trafficControlSystem.TrafficControlSystem;
 
@@ -15,14 +15,14 @@ import trafficControlSystem.TrafficControlSystem;
  * 
  * 
  */
-public class ControlCenterSystem {
+public class controlCenterServer {
 	
 	// vars
 	private int systemID = 700;
 	private static TrafficControllSystemsInitializer tcsInitializer;
 	
 	/** Default constructor */
-	public ControlCenterSystem() {
+	public controlCenterServer() {
 		this.systemID++;
 		this.tcsInitializer = new TrafficControllSystemsInitializer();
 	}
