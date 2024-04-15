@@ -1,7 +1,7 @@
 /**
  * Javier Bastande
  */
-const TrafficControlSystem = require('./trafficControlSystem'); // Import TrafficControlSystem module
+const TrafficControlSystem = require('../trafficControlSystem'); // Import TrafficControlSystem module
 
 /**
  * Class ats as Control Center of the Traffic Light Management System.

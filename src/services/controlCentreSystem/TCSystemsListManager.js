@@ -1,5 +1,5 @@
 // Import necessary modules
-const TrafficControlSystem = require('./trafficControlSystem');
+const TrafficControlSystem = require('../trafficControlSystem');
 
 /**
  * Singleton class represents a list with all the Traffic Control Systems associated with each Traffic Control System.
