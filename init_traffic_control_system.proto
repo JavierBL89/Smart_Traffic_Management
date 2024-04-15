@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 // Package
-package ControlCentreSystem;
+package controlCentreSystem;
 
 
 
@@ -16,7 +16,7 @@ service InitTrafficControlSystem {
 
 // Numbers to be added
 message InitRequest{
-   
+   string service = 1;
 }
 
 // Response 

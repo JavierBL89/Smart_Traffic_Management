@@ -5,30 +5,20 @@ class VisualRecognitionSystem {
     // vars
     static nextSystemId = 9022;
 
-    // constructors
-
-    constructor() {
-        this.systemID = ++VisualRecognitionSystem.nextSystemId; // auto increment id
-        this.trafficLightSystemID = 0; // Traffic Light System id the VRS is associated to
-        this.numOfTrafficScans = 0;
-        this.totalVehicles = 0;
-        this.scanLengthInSeconds = 0;
-        this.anomalies = 0;
-        this.tdc = new TrafficDataCollector(); // instantiate a Traffic Data Collector object
-    };
+    // constructor
 
     /**
      * Initialises a new VisualRecognitionSystem object with custom parameters
      * **/
-    constructor(trafficLightId, trafficLightSystemID) {
-        this.systemID = ++VisualRecognitionSystem.nextSystemId; // auto increment id
-        this.trafficLightSystemID = trafficLightSystemID; // Traffic Light System id the VRS is associated to
-        this.trafficLightID = trafficLightId; // Traffic Light System id the VRS is associated to
-        this.numOfTrafficScans = 0;
+    constructor(trafficLightId, trafficLightSystemID = 0) {
+        this.systemID = ++nextSystemId;
+        this.trafficLightSystemID = trafficLightSystemID;
+        this.trafficLightID = trafficLightId;
         this.totalVehicles = 0;
+        this.numOfTrafficScans = 0;
         this.scanLengthInSeconds = 0;
         this.anomalies = 0;
-        this.tdc = new TrafficDataCollector(); // instantiate a Traffic Data Collector object
+        this.tdc = new TrafficDataCollector();
     }
 
     //setters 

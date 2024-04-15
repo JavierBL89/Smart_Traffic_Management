@@ -1,7 +1,7 @@
-const { TCSystemsListManager } = require('./TCSystemsListManager');
-const { TrafficLightSystem } = require('./TrafficLightSystem');
-const { VisualRecognitionSystem } = require('./VisualRecognitionSystem');
-const { StateRecord } = require('./StateRecord');
+const { TCSystemsListManager } = require('../controlCentreSystem/TCSystemsListManager');
+const { TrafficLightSystem } = require('../trafficLightSystem/TrafficLightSystem');
+const { VisualRecognitionSystem } = require('../visualRecognitionSystem/VisualRecognitionSystem');
+const { StateRecord } = require('../trafficLightSystem/StateRecord');
 
 /**
  * The TrafficControlSystem class manages its associated Traffic Light Systems,
