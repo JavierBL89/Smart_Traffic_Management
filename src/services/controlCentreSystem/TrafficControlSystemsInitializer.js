@@ -4,7 +4,7 @@ const TCSystemsListManager = require('./TCSystemsListManager');
  * Class responsible for initializing all Traffic Control Systems managed within the Control Centre network. 
  * It ensures that each Traffic Control System is operational.
  */
-class TrafficControllSystemsInitializer {
+class TrafficControlSystemsInitializer {
     /**
      * Constructor
      */
