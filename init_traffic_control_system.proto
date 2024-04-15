@@ -1,0 +1,26 @@
+/////////////////// Interface definition   ////////////////////
+// Syntax is proto3 (Protocol o be used)
+syntax = "proto3";
+
+// Package
+package ControlCentreSystem;
+
+
+
+// service definition
+service InitTrafficControlSystem {
+
+    rpc InitTrafficControlSystem(InitRequest) returns (InitResponse) {};    // response will include the payload in {}
+
+}
+
+// Numbers to be added
+message InitRequest{
+   
+}
+
+// Response 
+message InitResponse{
+     string status = 1;
+     string message = 2;
+}
