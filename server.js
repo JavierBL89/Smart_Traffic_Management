@@ -9,8 +9,8 @@ const initTrafficControlSystemProto = grpc.loadPackageDefinition(packageDefiniti
 const ControlCenterServer = require('./src/services/controlCentreSystem/ControlCentreSystem'); // Import ControlCenterServer module
 
 const server = new grpc.Server();
-
 server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.server, {
+
 
     InitTrafficControlSystem: (call, callback) => {
 
@@ -32,4 +32,6 @@ server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.server,
     },
 });
 
-server.InitTrafficControlSystem();
+const PORT = process.env.PORT || 50051;
+server.bind(`127.0.0.1:${PORT}`, grpc.ServerCredentials.createInsecure());
+console.log(`Server running on port ${PORT}`);

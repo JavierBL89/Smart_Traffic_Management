@@ -11,6 +11,12 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.10.6",
     "@grpc/proto-loader": "^0.7.12",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "protobufjs": "^7.2.6",
+    "protoc-gen-grpc": "^2.0.4",
+    "protoc-gen-js": "^3.19.8"
+  },
+  "devDependencies": {
+    "protoc-gen-js": "^3.19.8"
   }
 }
