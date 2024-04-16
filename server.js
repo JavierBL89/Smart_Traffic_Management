@@ -35,15 +35,19 @@ server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.service
             switch (service) {
                 case "init":
                     ControlCentreSystem.main();
-                    result = "System initialized";
+                    result = "Traffic Control Systems initialized";
                     break;
                 default:
                     callback(new Error("Invalid service"));
             }
             callback(null, { status: "OK", message: result });
         } catch (error) {
+
             console.error('An error occurred in InitTrafficControlSystem:', error);
-            callback(error); // Pass the error to the client
+            callback({           // Pass the error to the client
+                code: grpc.status.INTERNAL,
+                message: error.message
+            });
         }
     },
 });
