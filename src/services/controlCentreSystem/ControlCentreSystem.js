@@ -2,7 +2,8 @@
  * Javier Bastande
  */
 const TrafficControlSystem = require('../trafficControlSystem/TrafficControlSystem'); // Import TrafficControlSystem module
-
+const TrafficControllSystemsInitializer = require('./TrafficControlSystemsInitializer');
+const TCSystemsListManager = require('./TCSystemsListManager');
 /**
  * Class ats as Control Center of the Traffic Light Management System.
  * It is the starting point of system.
@@ -11,7 +12,7 @@ const TrafficControlSystem = require('../trafficControlSystem/TrafficControlSyst
  * This class is responsible for setting up traffic control systems, configuring visual recognition systems,
  * and starting the traffic control cycle with predefined initial states.
  */
-class ControlCenterServer {
+class ControlCentreSystem {
 
 
     constructor() {
@@ -63,7 +64,6 @@ class ControlCenterServer {
      */
     static configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
         const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
-
         // iterate through list
         for (const tcs of listManager) {
             tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
@@ -102,14 +102,13 @@ class ControlCenterServer {
      * @param {string[]} args
      */
     static main(args) {
-        const n = new ControlCenterSystem();
 
-        addTrafficControlSystem();
-        initializeTrafficControlSystems();
-        configureVisualRecognitionSystem(/*numOfScans*/ 3, /*scanLengthInaNoSeconds*/ 2);
+        ControlCentreSystem.addTrafficControlSystem();
+        ControlCentreSystem.initializeTrafficControlSystems();
+        ControlCentreSystem.configureVisualRecognitionSystem(/*numOfScans*/ 3, /*scanLengthInaNoSeconds*/ 2);
 
-        startTrafficControlCycle();
+        // startTrafficControlCycle();
     }
 }
 
-module.exports = ControlCenterServer; // Export ControlCenterServer class
+module.exports = ControlCentreSystem; // Export ControlCenterServer class

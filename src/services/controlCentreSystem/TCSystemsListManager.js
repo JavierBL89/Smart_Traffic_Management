@@ -53,4 +53,4 @@ class TCSystemsListManager {
 }
 
 // Export the TCSystemsListManager class
-module.exports = { TCSystemsListManager };
+module.exports = TCSystemsListManager;

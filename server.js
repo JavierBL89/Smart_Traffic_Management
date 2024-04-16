@@ -1,37 +1,53 @@
 
 
 const grpc = require("@grpc/grpc-js");
-const protoloader = require("@grpc/proto-loader");
-const packageDefinition = protoloader.loadSync('init_traffic_control_system.proto', {});
-const initTrafficControlSystemProto = grpc.loadPackageDefinition(packageDefinition).init_traffic_control_system;
+const protoLoader = require("@grpc/proto-loader");
 
 // Import necessary modules
-const ControlCenterServer = require('./src/services/controlCentreSystem/ControlCentreSystem'); // Import ControlCenterServer module
+const ControlCentreSystem = require('./src/services/controlCentreSystem/ControlCentreSystem'); // Import ControlCenterServer module
+
+
+var PROTO_PATH = __dirname + '/init_traffic_control_system.proto';
+let packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true
+});
+
+var protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
+const initTrafficControlSystemProto = protoDescriptor.init_traffic_control_system;
+
 
 const server = new grpc.Server();
-server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.server, {
+
+
+server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.service, {
 
 
     InitTrafficControlSystem: (call, callback) => {
 
         // Instantiate ControlCenterServer
-        const controlCenter = new ControlCenterServer();
-
         const { service } = call.request;
-
         let result;
         switch (service) {
             case "init":
                 // Call main method of ControlCenterServer to start traffic control
-                ControlCenterServer.main();
-
+                ControlCentreSystem.main();
+                result = "System initialized"
                 break;
+
             default: return callback(new Error("Invalid service"));
+
         }
-        callback(null, {});
+        callback(null, { status: "OK", message: result });
     },
 });
 
-const PORT = process.env.PORT || 50051;
-server.bind(`127.0.0.1:${PORT}`, grpc.ServerCredentials.createInsecure());
-console.log(`Server running on port ${PORT}`);
+// We now have to bind the server to some endpoint 
+//...so that using hat endpoint the client can make use of the service
+server.bindAsync("127.0.0.1:50051", grpc.ServerCredentials.createInsecure(), () => {
+
+    console.log("Server running at port http://127.0.0.1:50051");
+});

@@ -7,11 +7,10 @@ syntax = "proto3";
 package init_traffic_control_system;
 
 
-
 // service definition
 service InitTrafficControlSystem {
 
-    rpc InitTControlSystem (InitRequest) returns (InitResponse) {};    // response will include the payload in {}
+    rpc InitTrafficControlSystem (InitRequest) returns (InitResponse) {};    // response will include the payload in {}
 
 }
 

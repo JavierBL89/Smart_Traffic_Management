@@ -1,7 +1,7 @@
-const { TCSystemsListManager } = require('../controlCentreSystem/TCSystemsListManager');
-const { TrafficLightSystem } = require('../trafficLightSystem/TrafficLightSystem');
-const { VisualRecognitionSystem } = require('../visualRecognitionSystem/VisualRecognitionSystem');
-const { StateRecord } = require('../trafficLightSystem/StateRecord');
+const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManager');
+const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
+const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
+const StateRecord = require('../trafficLightSystem/StateRecord');
 
 /**
  * The TrafficControlSystem class manages its associated Traffic Light Systems,
@@ -20,7 +20,7 @@ class TrafficControlSystem {
         this.systemID = 2012;
         this.tls1 = null;
         this.tls2 = null;
-        this.isOperative = true;
+        this.operative = true;
         this.numOfVisualRecognitionScans = 0;
         this.lengthOfVRScans = 0; // in nanoseconds
         this.trafficCycleLoops = 0;
@@ -127,8 +127,22 @@ class TrafficControlSystem {
         }
     }
 
-    // Other methods...
+    /**
+     * Method to check if the Traffic Control System is operative.
+     * @returns {boolean} True if operative, false otherwise.
+     */
+    isOperative() {
+        return this.operative;
+    }
+
+    /**
+     * Method to return Traffic Control System id.
+     * @returns {integer}
+     */
+    getSystemId() {
+        return this.systemID;
+    }
 }
 
 // Export the TrafficControlSystem class
-module.exports = { TrafficControlSystem };
+module.exports = TrafficControlSystem;
