@@ -9,7 +9,7 @@ package init_traffic_control_system;
 // service definition
 service InitTrafficControlSystem {
 
-    rpc InitTrafficControlSystem (InitRequest) returns (InitResponse) {};    // response will include the payload in {}
+    rpc InitTrafficControlSystem (InitRequest) returns (stream InitResponse) {};    // response will include the payload in {}
 
 }
 
