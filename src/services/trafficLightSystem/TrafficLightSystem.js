@@ -1,9 +1,15 @@
+
+const TrafficLight = require('./TrafficLight');
+const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
+const StateRecord = require('./StateRecord');
+
 /**
  * 
  */
 class TrafficLightSystem {
     // vars
     static nextSystemID = 304;
+
     constructor() {
         this.systemID = ++TrafficLightSystem.nextSystemID;   // auto increment id
         this.operative = true;
@@ -89,9 +95,11 @@ class TrafficLightSystem {
 
         try {
             // Init 2 traffic lights
-            this.tlA = new TrafficLight(this.systemID);
-            this.tlB = new TrafficLight(this.systemID);
+            const tlA = new TrafficLight(this.systemID);
+            const tlB = new TrafficLight(this.systemID);
 
+            this.tlA = tlA;
+            this.tlB = tlB;
             console.log(`Traffic Light with id ${this.tlA.getTrafficLightID()} ${this.tlA.getPosition()} is up and running`);
             console.log(`Traffic Light with id ${this.tlB.getTrafficLightID()} ${this.tlB.getPosition()} is up and running`);
 
@@ -113,7 +121,7 @@ class TrafficLightSystem {
             this.trafficLights.push(this.tlA, this.tlB);
             this.visualRecognitionSystems.push(this.vrsA, this.vrsB);
         } catch (error) {
-            throw new Error(`Something went wrong and System components could not be initialized:\nInitialization error: ${error.message}`);
+            throw new Error(`Something went wrong and System components could not be initialized:\n Initialization error: ${error.message}`);
         }
     }
 
@@ -163,5 +171,5 @@ class TrafficLightSystem {
     }
 }
 
-// Export the TrafficControlSystem class
+// Export the TrafficLightSystem class
 module.exports = TrafficLightSystem;

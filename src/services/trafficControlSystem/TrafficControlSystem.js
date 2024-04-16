@@ -2,7 +2,7 @@ const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManage
 const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
 const StateRecord = require('../trafficLightSystem/StateRecord');
-
+const async = require('async');
 /**
  * The TrafficControlSystem class manages its associated Traffic Light Systems,
  * It orchestrates their operational cycles based on visual recognition data collected to optimize traffic flow.
@@ -27,7 +27,6 @@ class TrafficControlSystem {
         this.maxCycles = 3;
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
-        // this.initTrafficLightSystems(); // call method to integrate the Traffic Light Systems
     }
 
     // setters
@@ -196,31 +195,31 @@ class TrafficControlSystem {
         this.lengthOfVRScans = scanLengthInSeconds; // in seconds
 
         // Create a thread pool with as many threads as there are VRS instances
-        const executor = Executors.newFixedThreadPool(this.listOfTrafficLightSystems.size());
+        const promisesQueue = [];
 
-        try {
-            // Iterate over the list of TLSs associated
-            for (let tls of this.listOfTrafficLightSystems) {
-                // Iterate over the list of VRSs associated to each TLS
-                for (let vrs of tls.getVisualRecognitionSystems()) {
-                    executor.submit(() => {
-                        vrs.setNumOfTrafficScans(numOfScans);
-                        vrs.setScanTime(scanLengthInSeconds);
-                        console.log(`Successfully configured VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
-                    });
-                }
-            }
-        } finally {
-            executor.shutdown();
-            try {
-                if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
-                    executor.shutdownNow();
-                }
-            } catch (ie) {
-                executor.shutdownNow();
-                Thread.currentThread().interrupt();
-            }
+
+        // Iterate over the list of TLSs associated
+        for (let tls of this.listOfTrafficLightSystems) {
+            // Iterate over the list of VRSs associated to each TLS
+            for (let vrs of tls.getVisualRecognitionSystems()) {
+                promisesQueue.push((callback) => {
+                    vrs.setNumOfTrafficScans(numOfScans);
+                    vrs.setScanTime(scanLengthInSeconds);
+                    console.log(`Successfully configured VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
+                    callback(); // Call the callback function to indicate completion
+                })
+
+            };
         }
+
+        // Execute all promises in promisesQueue asynchronously
+        Promise.all(promisesQueue)
+            .then(() => {
+                console.log('All VRS configured successfully.');
+            })
+            .catch((err) => {
+                console.error('Error configuring VRS:', err);
+            });
     }
 
 }

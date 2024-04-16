@@ -32,7 +32,7 @@ class TrafficDataCollector {
         this.truckCounter = 0;
         this.busCounter = 0;
         this.anomalies = 0;
-        this.randomNumber = new Random();
+        this.randomNumber = 0;
     }
 
     // helper methods
@@ -213,3 +213,6 @@ class TrafficDataCollector {
         return this.bikeCounter;
     }
 }
+
+// Export the VisualRecognitionSystem class
+module.exports = TrafficDataCollector;

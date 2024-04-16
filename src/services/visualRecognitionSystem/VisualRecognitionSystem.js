@@ -1,19 +1,22 @@
+const TrafficDataCollector = require('./TrafficDataCollector');
+
+
 /**
  * 
  */
 class VisualRecognitionSystem {
     // vars
-    static nextSystemId = 9022;
+    static nextSystemID = 9022;
 
     // constructor
 
     /**
      * Initialises a new VisualRecognitionSystem object with custom parameters
      * **/
-    constructor(trafficLightId, trafficLightSystemID = 0) {
-        this.systemID = ++nextSystemId;
+    constructor(nextSystemID, trafficLightSystemID) {
+        this.systemID = ++VisualRecognitionSystem.nextSystemId;
         this.trafficLightSystemID = trafficLightSystemID;
-        this.trafficLightID = trafficLightId;
+        this.trafficLightID = 0;
         this.totalVehicles = 0;
         this.numOfTrafficScans = 0;
         this.scanLengthInSeconds = 0;
@@ -160,3 +163,6 @@ class VisualRecognitionSystem {
 
 
 }
+
+// Export the VisualRecognitionSystem class
+module.exports = VisualRecognitionSystem;

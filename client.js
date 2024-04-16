@@ -37,9 +37,9 @@ async function main() {
         case ("init"):
             client.InitTrafficControlSystem({ service: "init" }, (error, response) => {
                 if (error) {
-                    console.error("Error:", error);
+                    console.error("Error: PUTAAAAA", error);
                 } else {
-                    console.log("System Initialized:", response);
+                    console.log(response.message);
                 }
                 r1.close();
             });

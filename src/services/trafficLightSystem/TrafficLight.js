@@ -4,24 +4,14 @@
 class TrafficLight {
     // vars
     static nextSystemID = 804;
-    trafficLightID;
-    trafficLightSystemID; // Traffic Light System id the VRS is associated to
-    state;
-    position;
-    status;
 
-    // default constructor
-    constructor(trafficLightSystemID) {
-        this.status = true;
-        this.trafficLightID = ++TrafficLight.nextSystemID; // auto increment id
-        this.trafficLightSystemID = trafficLightSystemID; // Traffic Light System id the TL is associated to
-        this.position = "";
-    }
-
-    constructor(state) {
+    // constructor
+    constructor(trafficLightSystemID, state = null) {
+        this.trafficLightID = ++TrafficLight.nextSystemID;
+        this.trafficLightSystemID = trafficLightSystemID;
         this.state = state;
+        this.position = "";
         this.status = true;
-        this.trafficLightID = ++TrafficLight.nextSystemID; // auto increment id
     }
 
     // setters
@@ -84,3 +74,6 @@ class TrafficLight {
         return this.status;
     }
 }
+
+// Export the TrafficLight class
+module.exports = TrafficLight;

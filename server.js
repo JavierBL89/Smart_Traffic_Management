@@ -31,17 +31,20 @@ server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.service
         // Instantiate ControlCenterServer
         const { service } = call.request;
         let result;
-        switch (service) {
-            case "init":
-                // Call main method of ControlCenterServer to start traffic control
-                ControlCentreSystem.main();
-                result = "System initialized"
-                break;
-
-            default: return callback(new Error("Invalid service"));
-
+        try {
+            switch (service) {
+                case "init":
+                    ControlCentreSystem.main();
+                    result = "System initialized";
+                    break;
+                default:
+                    callback(new Error("Invalid service"));
+            }
+            callback(null, { status: "OK", message: result });
+        } catch (error) {
+            console.error('An error occurred in InitTrafficControlSystem:', error);
+            callback(error); // Pass the error to the client
         }
-        callback(null, { status: "OK", message: result });
     },
 });
 
