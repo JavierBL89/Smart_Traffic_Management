@@ -23,13 +23,105 @@ class TrafficControlSystem {
         this.operative = true;
         this.numOfVisualRecognitionScans = 0;
         this.lengthOfVRScans = 0; // in nanoseconds
-        this.trafficCycleLoops = 0;
         this.cycleCount = 0;
         this.maxCycles = 3;
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
         // this.initTrafficLightSystems(); // call method to integrate the Traffic Light Systems
     }
+
+    // setters
+
+    // Set  tls1
+    setTls1(value) {
+        this.tls1 = value;
+    }
+
+    // Set  tls2
+    setTls2(value) {
+        this.tls2 = value;
+    }
+
+    // Set operative
+    setIsOperative(value) {
+        this.operative = value;
+    }
+
+    // Set numOfVisualRecognitionScans
+    setNumOfVisualRecognitionScans(value) {
+        this.numOfVisualRecognitionScans = value;
+    }
+
+    // set lengthOfVRScans
+    setLengthOfVRScans(value) {
+        this.lengthOfVRScans = value;
+    }
+
+
+    // Set maxCycles
+    setMaxCycles(value) {
+        this.maxCycles = value;
+    }
+
+    // Set tlsStateHistory
+    setTlsStateHistory(value) {
+        this.tlsStateHistory = value;
+    }
+
+    // getters 
+
+    // Get systemID
+    getSystemID() {
+        return this.systemID;
+    }
+
+    // Get tls1
+    getTls1() {
+        return this.tls1;
+    }
+
+    // Get for tls2
+    getTls2() {
+        return this.tls2;
+    }
+
+    // Get numOfVisualRecognitionScans
+    getNumOfVisualRecognitionScans() {
+        return this.numOfVisualRecognitionScans;
+    }
+
+    // Get operative
+    isOperative() {
+        return this.operative;
+    }
+
+    // Get lengthOfVRScans
+    getLengthOfVRScans() {
+        return this.lengthOfVRScans;
+    }
+
+    // Get maxCycles
+    getMaxCycles() {
+        return this.maxCycles;
+    }
+
+    // Get trafficCycleLoops
+    getTrafficCycleLoops() {
+        return this.trafficCycleLoops;
+    }
+
+    // Get listOfTrafficLightSystems
+    getListOfTrafficLightSystems() {
+        return this.listOfTrafficLightSystems;
+    }
+
+    // Get tlsStateHistory
+    geTlsStateHistory() {
+        return this.tlsStateHistory;
+    }
+
+
+    // helper methods
 
     /**
      * Method initialise the 2 Traffic Light Systems associated to
@@ -42,8 +134,8 @@ class TrafficControlSystem {
     async initTrafficLightSystems() {
         console.log("\n2- Initializing Traffic Light Systems...");
 
-        this.initializeTLS1(); // init Traffic Light System 1
-        this.initializeTLS2(); // init Traffic Light System 2
+        await this.initializeTLS1(); // init Traffic Light System 1
+        await this.initializeTLS2(); // init Traffic Light System 2
     }
 
     /**
@@ -52,12 +144,14 @@ class TrafficControlSystem {
     initializeTLS1() {
         try {
             // Initialize the first Traffic Light System and its components
-            this.tls1 = new TrafficLightSystem();
-            if (!this.tls1.isOperative()) {
+            const tls1 = new TrafficLightSystem(); // Create a new instance
+            if (!tls1.isOperative()) {
                 throw new Error("Traffic Light System 1 is not operative and could not be initialized.");
             }
 
-            this.listOfTrafficLightSystems.push(this.tls1); // Add TLS 1 to the list
+            this.tls1 = tls1; // Assign the created instance to tls1 property
+            console.log(this.tls1);
+            this.listOfTrafficLightSystems.push(tls1); // Add TLS 1 to the list
             this.tls1.initTLSComponents(); // Initialise associated components
 
         } catch (e) {
@@ -70,16 +164,18 @@ class TrafficControlSystem {
      */
     initializeTLS2() {
         try {
-            // Initialise the second Traffic Light System and its components
-            this.tls2 = new TrafficLightSystem();
-            if (!this.tls2.isOperative()) {
+            // Initialize the first Traffic Light System and its components
+            const tls2 = new TrafficLightSystem(); // Create a new instance
+            if (!tls2.isOperative()) {
                 throw new Error("Traffic Light System 2 is not operative and could not be initialized.");
             }
-            this.listOfTrafficLightSystems.push(this.tls2); // Add TLS 2 to the list
+
+            this.tls2 = tls2; // Assign the created instance to tls1 property
+            this.listOfTrafficLightSystems.push(tls2); // Add TLS 1 to the list
             this.tls2.initTLSComponents(); // Initialise associated components
 
         } catch (e) {
-            console.error("Error initializing Traffic Light System 2:", e.message);
+            console.error("Error initializing Traffic Light System 1:", e.message);
         }
     }
 
@@ -125,101 +221,6 @@ class TrafficControlSystem {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-
-    // setters
-
-    // Set systemID
-    set systemID(value) {
-        this._systemID = value;
-    }
-
-    // Set  tls1
-    set tls1(value) {
-        this._tls1 = value;
-    }
-
-    // Set  tls2
-    set tls2(value) {
-        this._tls2 = value;
-    }
-
-    // Set operative
-    set operative(value) {
-        this._operative = value;
-    }
-
-    // Get numOfVisualRecognitionScans
-    get numOfVisualRecognitionScans() {
-        return this._numOfVisualRecognitionScans;
-    }
-
-    // Set numOfVisualRecognitionScans
-    set numOfVisualRecognitionScans(value) {
-        this._numOfVisualRecognitionScans = value;
-    }
-
-    // set lengthOfVRScans
-    set lengthOfVRScans(value) {
-        this._lengthOfVRScans = value;
-    }
-
-    // Set trafficCycleLoops
-    set trafficCycleLoops(value) {
-        this._trafficCycleLoops = value;
-    }
-
-    // Set maxCycles
-    set maxCycles(value) {
-        this._maxCycles = value;
-    }
-
-
-    // getters 
-
-    // Get systemID
-    get systemID() {
-        return this._systemID;
-    }
-
-    // Get tls1
-    get tls1() {
-        return this._tls1;
-    }
-
-    // Get for tls2
-    get tls2() {
-        return this._tls2;
-    }
-
-    // Get operative
-    get operative() {
-        return this._operative;
-    }
-    // Get lengthOfVRScans
-    get lengthOfVRScans() {
-        return this._lengthOfVRScans;
-    }
-
-    // Get maxCycles
-    get maxCycles() {
-        return this._maxCycles;
-    }
-
-    // Get trafficCycleLoops
-    get trafficCycleLoops() {
-        return this._trafficCycleLoops;
-    }
-
-    // Get listOfTrafficLightSystems
-    get listOfTrafficLightSystems() {
-        return this._listOfTrafficLightSystems;
-    }
-
-    // Get tlsStateHistory
-    get tlsStateHistory() {
-        return this._tlsStateHistory;
     }
 
 }

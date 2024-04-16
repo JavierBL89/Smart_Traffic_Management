@@ -12,6 +12,61 @@ class TrafficLightSystem {
         this.visualRecognitionSystems = [];
     }
 
+    // getters
+
+    /**
+     * Get Traffic Light System status
+     */
+    getSystemId() {
+        return this.systemID;
+    }
+
+    /**
+     * Get Traffic Light System status
+     */
+    isOperative() {
+        return this.operative;
+    }
+
+    /**
+     * Get Traffic Light A
+     */
+    get getTlA() {
+        return this._tlA;
+    }
+
+    /**
+     * Get Traffic Light B
+     */
+    get getTlB() {
+        return this._tlB;
+    }
+
+    /**
+     * Get Traffic Light System state
+     */
+    get getState() {
+        return this._state;
+    }
+
+    /**
+     * Get list of all Traffic Lights associated to this system
+     * @returns {Array} trafficLights list
+     */
+    getTrafficLights() {
+        return this.trafficLights;
+    }
+
+    /**
+     * Get list of all Visual Recognition Systems associated to this system
+     * @returns {Array} visualRecognitionSystems list
+     */
+    getVisualRecognitionSystems() {
+        return this.visualRecognitionSystems;
+    }
+
+    // helper methods
+
     /**
      * Method initialises the components of a Traffic Light System (TLS),
      * including Traffic Lights (TL) and Visual Recognition Systems (VRS).
@@ -62,61 +117,6 @@ class TrafficLightSystem {
         }
     }
 
-    // getters
-
-    /**
-     * Get Traffic Light System status
-     */
-    getSystemId() {
-        return this.systemID;
-    }
-
-    /**
-     * Get Traffic Light System status
-     */
-    isOperative() {
-        return this.operative;
-    }
-
-    /**
-     * Get Traffic Light A
-     */
-    getTlA() {
-        return this.tlA;
-    }
-
-    /**
-     * Get Traffic Light B
-     */
-    getTlB() {
-        return this.tlB;
-    }
-
-    /**
-     * Get Traffic Light System state
-     */
-    getState() {
-        return this.state;
-    }
-
-    /**
-     * Get list of all Traffic Lights associated to this system
-     * @returns {Array} trafficLights list
-     */
-    getTrafficLights() {
-        return this.trafficLights;
-    }
-
-    /**
-     * Get list of all Visual Recognition Systems associated to this system
-     * @returns {Array} visualRecognitionSystems list
-     */
-    getVisualRecognitionSystems() {
-        return this.visualRecognitionSystems;
-    }
-
-    // helper methods
-
     /***
      * Method adds a new traffic light to the list of associated TL to this system
      */
@@ -163,3 +163,5 @@ class TrafficLightSystem {
     }
 }
 
+// Export the TrafficControlSystem class
+module.exports = TrafficLightSystem;
