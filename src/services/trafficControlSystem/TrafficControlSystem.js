@@ -127,21 +127,101 @@ class TrafficControlSystem {
         }
     }
 
-    /**
-     * Method to check if the Traffic Control System is operative.
-     * @returns {boolean} True if operative, false otherwise.
-     */
-    isOperative() {
-        return this.operative;
+
+    // setters
+
+    // Set systemID
+    set systemID(value) {
+        this._systemID = value;
     }
 
-    /**
-     * Method to return Traffic Control System id.
-     * @returns {integer}
-     */
-    getSystemId() {
-        return this.systemID;
+    // Set  tls1
+    set tls1(value) {
+        this._tls1 = value;
     }
+
+    // Set  tls2
+    set tls2(value) {
+        this._tls2 = value;
+    }
+
+    // Set operative
+    set operative(value) {
+        this._operative = value;
+    }
+
+    // Get numOfVisualRecognitionScans
+    get numOfVisualRecognitionScans() {
+        return this._numOfVisualRecognitionScans;
+    }
+
+    // Set numOfVisualRecognitionScans
+    set numOfVisualRecognitionScans(value) {
+        this._numOfVisualRecognitionScans = value;
+    }
+
+    // set lengthOfVRScans
+    set lengthOfVRScans(value) {
+        this._lengthOfVRScans = value;
+    }
+
+    // Set trafficCycleLoops
+    set trafficCycleLoops(value) {
+        this._trafficCycleLoops = value;
+    }
+
+    // Set maxCycles
+    set maxCycles(value) {
+        this._maxCycles = value;
+    }
+
+
+    // getters 
+
+    // Get systemID
+    get systemID() {
+        return this._systemID;
+    }
+
+    // Get tls1
+    get tls1() {
+        return this._tls1;
+    }
+
+    // Get for tls2
+    get tls2() {
+        return this._tls2;
+    }
+
+    // Get operative
+    get operative() {
+        return this._operative;
+    }
+    // Get lengthOfVRScans
+    get lengthOfVRScans() {
+        return this._lengthOfVRScans;
+    }
+
+    // Get maxCycles
+    get maxCycles() {
+        return this._maxCycles;
+    }
+
+    // Get trafficCycleLoops
+    get trafficCycleLoops() {
+        return this._trafficCycleLoops;
+    }
+
+    // Get listOfTrafficLightSystems
+    get listOfTrafficLightSystems() {
+        return this._listOfTrafficLightSystems;
+    }
+
+    // Get tlsStateHistory
+    get tlsStateHistory() {
+        return this._tlsStateHistory;
+    }
+
 }
 
 // Export the TrafficControlSystem class
