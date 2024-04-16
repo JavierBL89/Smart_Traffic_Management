@@ -22,10 +22,34 @@ let packageDefinition = grpc.loadPackageDefinition(
 
 const client = new packageDefinition.init_traffic_control_system.InitTrafficControlSystem('127.0.0.1:50051', grpc.credentials.createInsecure());
 
+/*****
+ * Method handles some potentiantial error during communication.
+ * 
+ * It allows code reusability, modularity 
+ */
+function handleError(error, response) {
+    if (error) {
+        if (error == grpc.status.DEADLINE_EXCEEDED) {
+            console.error("Request limit time out. Please check your network connection or resboot application");
+        } else if (error == grpc.status.UNAVAILABLE) {
+            console.error("Server is shutting down or unavailable... Please try again later");
+        } else {
+            console.error(error)
+        }
+
+    } else {
+        console.log(response.message);
+    }
+}
+
+/***
+ * 
+ */
 function askQuestion(query) {
 
     return new Promise(resolve => r1.question(query, resolve));
 };
+
 
 async function main() {
 
@@ -36,18 +60,7 @@ async function main() {
     switch (userIn) {
         case ("init"):
             client.InitTrafficControlSystem({ service: "init" }, (error, response) => {
-                if (error) {
-                    if (error == grpc.status.DEADLINE_EXCEEDED) {
-                        console.error("Request limit time out. Please check your network connection or resboot application");
-                    } else if (error == grpc.status.UNAVAILABLE) {
-                        console.error("Server is shutting down or unavailable... Please try again later");
-                    } else {
-                        console.error(error)
-                    }
-
-                } else {
-                    console.log(response.message);
-                }
+                handleError(error, response); // error handling
                 r1.close();
             });
             break;
