@@ -130,11 +130,11 @@ class TrafficControlSystem {
      *
      * @throws Exception if a TLS is not operative or if there's an issue initializing its components.
      */
-    async initTrafficLightSystems() {
+    initTrafficLightSystems() {
         console.log("\n2- Initializing Traffic Light Systems...");
 
-        await this.initializeTLS1(); // init Traffic Light System 1
-        await this.initializeTLS2(); // init Traffic Light System 2
+        this.initializeTLS1(); // init Traffic Light System 1
+        this.initializeTLS2(); // init Traffic Light System 2
     }
 
     /**
@@ -149,7 +149,6 @@ class TrafficControlSystem {
             }
 
             this.tls1 = tls1; // Assign the created instance to tls1 property
-            console.log(this.tls1);
             this.listOfTrafficLightSystems.push(tls1); // Add TLS 1 to the list
             this.tls1.initTLSComponents(); // Initialise associated components
 

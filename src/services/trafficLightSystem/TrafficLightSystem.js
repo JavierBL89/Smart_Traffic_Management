@@ -74,24 +74,35 @@ class TrafficLightSystem {
     // helper methods
 
     /**
-     * Method initialises the components of a Traffic Light System (TLS),
+     * Method init the initialization procces of  the components of a Traffic Light System (TLS),
      * including Traffic Lights (TL) and Visual Recognition Systems (VRS).
      * 
      * Synchronous components initialitation.
-     * 
-     * This method ensures that every operational traffic light 
-     * has a corresponding VRS(camera) associated with it through their id. 
-     * 
-     * Exception Handling:
-     * The method includes error handling to manage any issues that may arise during the initialization 
-     * of Traffic Lights and Visual Recognition Systems. In the event of a failure, a detailed exception is thrown,
-     * indicating what went wrong during the process.
      */
-    async initTLSComponents() {
-        await new Promise(resolve => setTimeout(resolve, 500));
+    initTLSComponents() {
+
+        setTimeout(() => { }, 500);// delay
         console.log(`\n***Initialiting Traffic Light System ${this.getSystemId()}***`);
-        await new Promise(resolve => setTimeout(resolve, 500));
-        console.log("\nInit Traffic Lights");
+
+        setTimeout(() => { }, 500); // delay
+        this.initTLSTrafficLights();      // init traffic lights systems
+
+        setTimeout(() => { }, 500); // delay
+        this.initTLSVisualRecognitionSystems();   // init visual recognition systems
+    }
+
+    /**
+   * Method initialises the Traffic Lights (TL) components of a Traffic Light System (TLS),
+   * 
+   * Synchronous components initialitation.
+   * 
+   * Exception Handling:
+   * The method includes error handling to manage any issues that may arise during the initialization 
+   * of Traffic Lights. In the event of a failure, a detailed exception is thrown,
+   * indicating what went wrong during the process.
+   */
+    initTLSTrafficLights() {
+        console.log("\nInit Traffic Lights for TLS " + this.getSystemId());
 
         try {
             // Init 2 traffic lights
@@ -103,9 +114,38 @@ class TrafficLightSystem {
             console.log(`Traffic Light with id ${this.tlA.getTrafficLightID()} ${this.tlA.getPosition()} is up and running`);
             console.log(`Traffic Light with id ${this.tlB.getTrafficLightID()} ${this.tlB.getPosition()} is up and running`);
 
-            await new Promise(resolve => setTimeout(resolve, 500));
-            console.log("\nInit Visual Recognition Systems");
-            await new Promise(resolve => setTimeout(resolve, 500));
+            setTimeout(() => { }, 500);  // delay
+
+            console.log("\nInit Visual Recognition Systems for TLS " + this.getSystemId());
+
+            setTimeout(() => { }, 500);  // delay
+
+            // Add the TL and VRS to their respective lists, this lists will allow scalability and better accessibility
+            this.trafficLights.push(this.tlA, this.tlB);
+        } catch (error) {
+            throw new Error(`Something went wrong and System components could not be initialized:\n Initialization error: ${error.message}`);
+        }
+    }
+
+    /**
+     * Method initialises the Visual Recognition Systems (VRS) components of a Traffic Light System (TLS),
+     * 
+     * Synchronous components initialitation.
+     * 
+     * Exception Handling:
+     * The method includes error handling to manage any issues that may arise during the initialization 
+     * of Traffic Lights. In the event of a failure, a detailed exception is thrown,
+     * indicating what went wrong during the process.
+     * 
+     * * This method ensures that every operational traffic light 
+     * has a corresponding VRS(camera) associated with it through their id. 
+     */
+    initTLSVisualRecognitionSystems() {
+
+        console.log("\nInit Visual Recognition Systems for TLS " + this.getSystemId());
+
+        try {
+            setTimeout(() => { }, 500);  // delay
 
             // Init 2 visual recognition systems associated to each traffic light
             this.vrsA = new VisualRecognitionSystem(this.tlA.getTrafficLightID(), this.systemID);
@@ -118,7 +158,6 @@ class TrafficLightSystem {
             console.log("\n------------------------------------------------------------------------------------------");
 
             // Add the TL and VRS to their respective lists, this lists will allow scalability and better accessibility
-            this.trafficLights.push(this.tlA, this.tlB);
             this.visualRecognitionSystems.push(this.vrsA, this.vrsB);
         } catch (error) {
             throw new Error(`Something went wrong and System components could not be initialized:\n Initialization error: ${error.message}`);

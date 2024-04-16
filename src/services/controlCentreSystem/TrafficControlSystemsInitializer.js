@@ -28,18 +28,18 @@ class TrafficControlSystemsInitializer {
      * 2. Starting the traffic control cycle: Kicking off the cycle that governs traffic light changes,
      *    starting with predefined initial states to then be modified by traffic density changes.
      */
-    async initTrafficControlSystems() {
+    initTrafficControlSystems() {
         console.log("1- Initializing Traffic Control System...");
 
         // Iterate through each Traffic Control System in the list
         for (let tcs of this.listOfTrafficControlSystems) {
             if (tcs.isOperative()) {
                 // Confirm that it has been successfully initialized
-                console.log(`\nTraffic Control System ${tcs.getSystemID()} is up and running.`);
+                console.log(`\nTraffic Control System with id ${tcs.getSystemID()} is up and running.`);
                 console.log("\n--------");
 
                 // Initialize the Traffic Light Systems associated with the Traffic Control System
-                await tcs.initTrafficLightSystems();
+                tcs.initTrafficLightSystems();
             } else {
                 // Print an error message if Traffic Control System is not operative
                 console.log(`Error at initializing Traffic Control System with id ${tcs.getSystemID()}. This system is not operative`);

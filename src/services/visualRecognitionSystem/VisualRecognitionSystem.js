@@ -13,10 +13,10 @@ class VisualRecognitionSystem {
     /**
      * Initialises a new VisualRecognitionSystem object with custom parameters
      * **/
-    constructor(nextSystemID, trafficLightSystemID) {
-        this.systemID = ++VisualRecognitionSystem.nextSystemId;
+    constructor(trafficLightID, trafficLightSystemID) {
+        this.systemID = ++VisualRecognitionSystem.nextSystemID;
         this.trafficLightSystemID = trafficLightSystemID;
-        this.trafficLightID = 0;
+        this.trafficLightID = trafficLightID;
         this.totalVehicles = 0;
         this.numOfTrafficScans = 0;
         this.scanLengthInSeconds = 0;
@@ -147,18 +147,6 @@ class VisualRecognitionSystem {
      * @param args
      */
     static main(args) {
-        /*	VisualRecognitionSystem vrs = new VisualRecognitionSystem();
-            vrs.configVisualRecognition(3, 2);
-            vrs.startDataCollectorCycle();
-            vrs.getAnomalies();
-            console.log(vrs.getTotalVehicles());
-            console.log("-----------------");
-            
-            VisualRecognitionSystem vrs2 = new VisualRecognitionSystem();
-            vrs2.configVisualRecognition(3, 2);
-            vrs2.startDataCollectorCycle();
-            vrs2.getAnomalies();
-            console.log(vrs2.getTotalVehicles());  */
     }
 
 
