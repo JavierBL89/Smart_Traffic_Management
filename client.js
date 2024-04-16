@@ -8,7 +8,7 @@ const r1 = readLine.createInterface({
     output: process.stdout
 });
 
-var PROTO_PATH = __dirname + '/init_traffic_control_system.proto';
+var PROTO_PATH = __dirname + '/protos/init_traffic_control_system.proto';
 
 let packageDefinition = grpc.loadPackageDefinition(
     protoLoader.loadSync(PROTO_PATH, {

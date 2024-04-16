@@ -1,6 +1,5 @@
 /////////////////// Interface definition   ////////////////////
 
-
 syntax = "proto3";
 
 // Package

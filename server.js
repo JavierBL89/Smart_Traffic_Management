@@ -7,7 +7,7 @@ const protoLoader = require("@grpc/proto-loader");
 const ControlCentreSystem = require('./src/services/controlCentreSystem/ControlCentreSystem'); // Import ControlCenterServer module
 
 
-var PROTO_PATH = __dirname + '/init_traffic_control_system.proto';
+var PROTO_PATH = __dirname + '/protos/init_traffic_control_system.proto';
 let packageDefinition = protoLoader.loadSync(PROTO_PATH, {
     keepCase: true,
     longs: String,
