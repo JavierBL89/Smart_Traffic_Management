@@ -37,7 +37,14 @@ async function main() {
         case ("init"):
             client.InitTrafficControlSystem({ service: "init" }, (error, response) => {
                 if (error) {
-                    console.error("Error: PUTAAAAA", error);
+                    if (error == grpc.status.DEADLINE_EXCEEDED) {
+                        console.error("Request limit time out. Please check your network connection or resboot application");
+                    } else if (error == grpc.status.UNAVAILABLE) {
+                        console.error("Server is shutting down or unavailable... Please try again later");
+                    } else {
+                        console.error(error)
+                    }
+
                 } else {
                     console.log(response.message);
                 }
