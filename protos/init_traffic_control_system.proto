@@ -2,6 +2,9 @@
 
 syntax = "proto3";
 
+// Import the definitions from the other proto file
+import "./config_visual_control_systems.proto";
+
 // Package
 package init_traffic_control_system;
 

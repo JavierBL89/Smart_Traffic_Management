@@ -32,6 +32,7 @@ class TrafficControlSystemsInitializer {
         console.log("1- Initializing Traffic Control System...");
 
         // Iterate through each Traffic Control System in the list
+        console.log(this.listOfTrafficControlSystems);
         for (let tcs of this.listOfTrafficControlSystems) {
             if (tcs.isOperative()) {
                 // Confirm that it has been successfully initialized

@@ -42,9 +42,11 @@ class ControlCentreSystem {
      * 2. Starting the traffic control cycle: Kicking off the cycle that governs traffic light changes,
      *    starting with predefined initial states to then be modified by traffic density changes.
      */
-    static initializeTrafficControlSystems() {
-        const tcsInitializer = new TrafficControllSystemsInitializer();
+    initializeTrafficControlSystems() {
+
         try {
+            this.addTrafficControlSystem();
+            const tcsInitializer = new TrafficControllSystemsInitializer();
             tcsInitializer.initTrafficControlSystems(); // call static method of TrafficControllSystemsInitializer class
         } catch (error) {
             console.error(error);
@@ -62,7 +64,7 @@ class ControlCentreSystem {
      * @param {number} numOfScanCycles
      * @param {number} scanLenghtInSeconds
      */
-    static configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
+    configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
         const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
         for (const tcs of listManager) {
@@ -77,7 +79,7 @@ class ControlCentreSystem {
      * This method allows dynamic integration of new Traffic Control Systems which allows 
      * adding and removing Traffic Control Systems for maintenance.
      */
-    static addTrafficControlSystem() {
+    addTrafficControlSystem() {
         const instance = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         instance.addTrafficContolSystem(new TrafficControlSystem()); // add new Traffic Control System
     }
@@ -89,7 +91,7 @@ class ControlCentreSystem {
      * Traffic Light Systems will start to collect and analyze traffic data 
      * to manage the traffic lights state based on that data.
      */
-    static startTrafficControlCycle() {
+    startTrafficControlCycle() {
         const tcsInitializer = new TrafficControllSystemsInitializer();
         try {
             tcsInitializer.startTrafficControlCycle(); // init the Traffic Control Cycle with predefined initial states
@@ -103,9 +105,9 @@ class ControlCentreSystem {
      */
     static main(args) {
 
-        ControlCentreSystem.addTrafficControlSystem();
-        ControlCentreSystem.initializeTrafficControlSystems();
-        ControlCentreSystem.configureVisualRecognitionSystem(/*numOfScans*/ 3, /*scanLengthInaNoSeconds*/ 2);
+        // ControlCentreSystem.addTrafficControlSystem();
+        // ControlCentreSystem.initializeTrafficControlSystems();
+        // ControlCentreSystem.configureVisualRecognitionSystem(/*numOfScans*/ 3, /*scanLengthInSeconds*/ 2);
 
         // startTrafficControlCycle();
     }
