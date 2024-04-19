@@ -1,0 +1,40 @@
+/////////////////// Interface definition ////////////////////
+
+syntax = "proto3";
+
+// Package
+package config_vrs;
+
+
+/****
+* Service allows a user to configure Visual REcognition Systems . 
+* The user specifies parameters for traffic scans and their length,  
+* which are then sent to the server, proccess them independantly, 
+* and reports user with a stream of messages.
+**/
+
+
+// Service definition
+service ConfigVisualRecognitionSystems {
+    
+    rpc ConfigVisualRecognitionSystems (stream ConfigRequest) returns (stream ConfigResponse) {};
+}
+
+// Numbers to be added
+message ConfigRequest {
+
+    // The number of traffic scans within a scan cycle
+    int32 numOfScans = 1;
+
+    // The length of each traffic scan in seconds
+    int32 scanLengthInSeconds = 2;
+}
+
+// Response
+message ConfigResponse {
+    // Configuration update confirmation
+    bool status = 1;
+    
+    // Confirmation message for each parameter update
+    string message = 2;
+}

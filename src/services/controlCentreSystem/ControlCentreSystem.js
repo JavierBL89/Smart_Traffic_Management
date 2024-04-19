@@ -73,6 +73,52 @@ class ControlCentreSystem {
     }
 
     /**
+     * Method to configure the visual recognition parameters for all associated Visual Recognition Systems 
+     * associated with the Traffic Control System that this Control Centre manages.
+     * 
+     * The configuration options include:
+     * - The number of traffic scans within a whole scan cycle.
+     * - The length of each of those traffic scans.
+     * 
+     * @param {number} numOfScanCycles
+     * @param {number} scanLenghtInSeconds
+     */
+    configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
+        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        // iterate through list
+        for (const tcs of listManager) {
+            tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
+        }
+    }
+
+    /**
+     * 
+     * Method Configures the visual recognition (numOfScans) parameter for all associated Visual Recognition Systems.
+     * 
+     * @param numOfScans number of mirco scans per scan cycle
+     */
+    configNumOfScanCyclesVRS(numOfScanCycles) {
+        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        // iterate through list
+        for (const tcs of listManager) {
+            tcs.configNumOfScanCyclesVRS(numOfScanCycles); // Configure visual recognition parameters
+        }
+    }
+
+    /**
+     * Method Configures the visual recognition (scanLengthInSeconds) parameter for all associated Visual Recognition Systems.
+     * 
+     * @param scanLengthInSeconds length of micro scans.
+     */
+    configScanLengthInSecondsVRS(scanLengthInSeconds) {
+        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        // iterate through list
+        for (const tcs of listManager) {
+            tcs.configNumOfScanCyclesVRS(scanLengthInSeconds); // Configure visual recognition parameters
+        }
+    }
+
+    /**
      * Method adds a new Traffic Control System to the list of
      * Traffic Control Systems this Control Centre manages.
      * 

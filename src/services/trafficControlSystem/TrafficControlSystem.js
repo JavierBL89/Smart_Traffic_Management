@@ -180,14 +180,11 @@ class TrafficControlSystem {
     /**
      * Method Configures the visual recognition parameters for all associated Visual Recognition Systems.
      *
-     * It uses Executor to asynchronously configure all VRS instances.
-     * Using a fixed thread pool to improve performance and reduce configuration time.
-     *
      * - The method logs the successful configuration of each VRS for tracking and verification purposes.
-     * - If the thread pool does not terminate within a specified timeout, it attempts to shut down immediately to release resources.
+     * - Array creates a thread pool to store a queue of tasks
      *
-     * @param scanFrequency The frequency at which each VRS should perform scans.
-     * @param scanResolution The resolution or detail level each VRS should use for scans.
+     * @param numOfScans number of mirco scans per scan cycle
+     * @param scanLengthInSeconds length of micro scans.
      */
     configAllVisualRecognitionSystems(numOfScans, scanLengthInSeconds) {
         this.numOfVisualRecognitionScans = numOfScans;
@@ -219,6 +216,72 @@ class TrafficControlSystem {
             .catch((err) => {
                 console.error('Error configuring VRS:', err);
             });
+    }
+
+
+
+    /**
+     * Method Configures the visual recognition (numOfScans) parameter for all associated Visual Recognition Systems.
+     * - The method logs the successful configuration of each VRS 
+     * 
+     * - Array creates a thread pool to store a queue of tasks
+     * 
+     * @param numOfScans number of mirco scans per scan cycle
+     */
+    configNumOfScanCyclesVRS(numOfScans) {
+        this.numOfVisualRecognitionScans = numOfScans;
+        // Create a thread pool with as many threads as there are VRS instances
+        const promisesQueue = [];
+        // Iterate over the list of TLSs associated
+        for (let tls of this.listOfTrafficLightSystems) {
+            // Iterate over the list of VRSs associated to each TLS
+            for (let vrs of tls.getVisualRecognitionSystems()) {
+                try {
+                    promisesQueue.push((callback) => {
+                        vrs.setNumOfTrafficScans(numOfScans);
+                        console.log(`Successfully configured number of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
+                        callback(); // Call the callback function to indicate completion
+                    })
+                } catch (error) {
+                    onsole.error(`Error configuring VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}:`, error);
+                    callback(error); // Pass the error to indicate failure
+                }
+
+            };
+        }
+
+    }
+
+    /**
+     * Method Configures the visual recognition (scanLengthInSeconds) parameter for all associated Visual Recognition Systems.
+     * - The method logs the successful configuration of each VRS 
+     * 
+     * - Array creates a thread pool to store a queue of tasks
+     * 
+     * @param scanLengthInSeconds length of micro scans.
+     */
+    configScanLengthInSecondsVRS(scanLengthInSeconds) {
+        this.scanLengthInSeconds = scanLengthInSeconds;
+        // Create a thread pool with as many threads as there are VRS instances
+        const promisesQueue = [];
+        // Iterate over the list of TLSs associated
+        for (let tls of this.listOfTrafficLightSystems) {
+            // Iterate over the list of VRSs associated to each TLS
+            for (let vrs of tls.getVisualRecognitionSystems()) {
+                try {
+                    promisesQueue.push((callback) => {
+                        vrs.setNumOfTrafficScans(scanLengthInSeconds);
+                        console.log(`Successfully configured the lengthInSeconds of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
+                        callback(); // Call the callback function to indicate completion
+                    })
+                } catch (error) {
+                    onsole.error(`Error configuring VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}:`, error);
+                    callback(error); // Pass the error to indicate failure
+                }
+
+            };
+        }
+
     }
 
 }

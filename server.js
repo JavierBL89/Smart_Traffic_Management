@@ -7,8 +7,11 @@ const protoLoader = require("@grpc/proto-loader");
 const ControlCentreSystem = require('./src/services/controlCentreSystem/ControlCentreSystem'); // Import ControlCenterServer module
 
 
+// import gRPC generated classes
+const { ConfigRequest, ConfigResponse } = require('./protos/config_vrs_pb');
+
 var PROTO_PATH_1 = __dirname + '/protos/init_traffic_control_system.proto';
-var PROTO_PATH_2 = __dirname + '/protos/config_visual_control_systems.proto';
+var PROTO_PATH_2 = __dirname + '/protos/config_vrs.proto';
 
 let packageDefinition1 = protoLoader.loadSync(PROTO_PATH_1, {
     keepCase: true,
@@ -28,24 +31,111 @@ let packageDefinition2 = protoLoader.loadSync(PROTO_PATH_2, {
 var protoDescriptor1 = grpc.loadPackageDefinition(packageDefinition1);
 var protoDescriptor2 = grpc.loadPackageDefinition(packageDefinition2);
 
+console.log(protoDescriptor2);
 const initTrafficControlSystemProto = protoDescriptor1.init_traffic_control_system;
-const configVisualRecognitionSystemsProto = protoDescriptor2.config_visual_control_systems;
+const configVisualRecognitionSystemsProto = protoDescriptor2.config_vrs;
 
 
 const server = new grpc.Server();
 let controlCenterInstance;
 
+
+
+/****
+* Service allows a user to initialize all systems Traffic Control Systems
+* associated to this server
+* The user sends the request, the server proccess it, inits systems, 
+* and reports user with a single response.
+*
+**** URINARY COMMUNICATION *****
+**/
 server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.service, {
 
+    InitTrafficControlSystem: (call, callback) => {
 
-    InitTrafficControlSystem: (call) => {
-        const feedback = initTrafficControlSystems();  // init
-        call.write({ message: feedback })  // send initialization feedback to the user
-        call.end();
+        try {
+            const feedback = initTrafficControlSystems();  // init
+            call.write({ message: feedback })  // send initialization feedback to the user
+            call.end();
+
+        } catch (error) { // error handling
+            console.error('Error in InitTrafficControlSystem:', error);
+            callback({
+                code: grpc.status.INTERNAL,
+                message: error.message,
+            });
+
+        }
     }
-
-
 });
+
+
+/****
+* Service allows a user to configure Visual Recognition Systems . 
+* The user specifies parameters for traffic scans and their length,  
+* which are then sent to the server, proccess them independantly, 
+* and reports user with a stream of messages.
+*
+**** BIDIRECTIONAL CLIENT STREAM-SERVER STREAM COMMUNICATION *****
+**/
+server.addService(configVisualRecognitionSystemsProto.ConfigVisualRecognitionSystems.service, {
+
+    ConfigVisualRecognitionSystems: (call) => {
+
+        call.on('data', (request) => {
+            const numOfScans = request.numOfScans;
+            const scanLengthInSeconds = request.scanLengthInSeconds;
+            console.log(`Received numOfScans: ${numOfScans}, scanLengthInSeconds: ${scanLengthInSeconds}`);
+
+            /*** handle each parameter independatly ***/
+
+            // process and report the number of scans
+            try {
+                controlCenterInstance.configNumOfScanCyclesVRS(request.numOfScans);
+                call.write({ status: true, message: `Number of scans set to ${request.numOfScans}` });
+            } catch (error) {
+                call.write({ status: false, message: `Error setting number of scans: ${error.message}` });
+            }
+
+            // process and report the scan length in seconds
+            try {
+                controlCenterInstance.configScanLengthInSecondsVRS(request.scanLengthInSeconds);
+                call.write({ status: true, message: `Scan length set to ${request.scanLengthInSeconds} seconds` });
+            } catch (error) {
+                call.write({ status: false, message: `Error setting scan length: ${error.message}` });
+            }
+
+            call.on('end', () => {
+                call.end(); // close stream
+            });
+        });
+    }
+});
+
+/** 
+ * Method responsible for configuring the Visusal Recognition Systems (VRS)
+ * It configures:
+ * 
+ * @param {number} numOfScans - The number of micro traffic scans in a scan cycle for each visual recognition system.
+ * @param {number} scanLengthInSeconds - The duration of micro scan each scan in seconds.
+ * @returns {string} A message indicating the result of the configuration proccess.
+ */
+const configVisualRecognitionSystems = (numOfScans, scanLengthInSeconds) => {
+
+    try {
+        // Instantiate ControlCenterServer
+        controlCenterInstance.configureVisualRecognitionSystem(numOfScans, scanLengthInSeconds);
+
+        return "\nhjhcdVisual recognition systems have been configured successfully."
+            + "\nNumber of scans per scan cycle: " + numOfScans
+            + "\nScans length in seconds: " + scanLengthInSeconds;
+
+    } catch (error) {
+        console.error('An error occurred during visual recognition configuration:', error);
+        return "Failed to configure visual recognition systems: " + error.message;
+
+    }
+}
 
 
 /*****

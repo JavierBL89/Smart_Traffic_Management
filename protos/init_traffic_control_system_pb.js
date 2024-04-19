@@ -13,13 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global =
-    (typeof globalThis !== 'undefined' && globalThis) ||
-    (typeof window !== 'undefined' && window) ||
-    (typeof global !== 'undefined' && global) ||
-    (typeof self !== 'undefined' && self) ||
-    (function () { return this; }).call(null) ||
-    Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 goog.exportSymbol('proto.init_traffic_control_system.InitRequest', null, global);
 goog.exportSymbol('proto.init_traffic_control_system.InitResponse', null, global);
@@ -97,7 +97,7 @@ proto.init_traffic_control_system.InitRequest.prototype.toObject = function(opt_
  */
 proto.init_traffic_control_system.InitRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    service: jspb.Message.getFieldWithDefault(msg, 1, "")
+
   };
 
   if (includeInstance) {
@@ -134,10 +134,6 @@ proto.init_traffic_control_system.InitRequest.deserializeBinaryFromReader = func
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setService(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -167,31 +163,6 @@ proto.init_traffic_control_system.InitRequest.prototype.serializeBinary = functi
  */
 proto.init_traffic_control_system.InitRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getService();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
-};
-
-
-/**
- * optional string service = 1;
- * @return {string}
- */
-proto.init_traffic_control_system.InitRequest.prototype.getService = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.init_traffic_control_system.InitRequest} returns this
- */
-proto.init_traffic_control_system.InitRequest.prototype.setService = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -227,8 +198,7 @@ proto.init_traffic_control_system.InitResponse.prototype.toObject = function(opt
  */
 proto.init_traffic_control_system.InitResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    status: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    message: jspb.Message.getFieldWithDefault(msg, 2, "")
+    message: jspb.Message.getFieldWithDefault(msg, 1, "")
   };
 
   if (includeInstance) {
@@ -267,10 +237,6 @@ proto.init_traffic_control_system.InitResponse.deserializeBinaryFromReader = fun
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setStatus(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
       msg.setMessage(value);
       break;
     default:
@@ -302,17 +268,10 @@ proto.init_traffic_control_system.InitResponse.prototype.serializeBinary = funct
  */
 proto.init_traffic_control_system.InitResponse.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getStatus();
-  if (f.length > 0) {
-    writer.writeString(
-      1,
-      f
-    );
-  }
   f = message.getMessage();
   if (f.length > 0) {
     writer.writeString(
-      2,
+      1,
       f
     );
   }
@@ -320,10 +279,10 @@ proto.init_traffic_control_system.InitResponse.serializeBinaryToWriter = functio
 
 
 /**
- * optional string status = 1;
+ * optional string message = 1;
  * @return {string}
  */
-proto.init_traffic_control_system.InitResponse.prototype.getStatus = function() {
+proto.init_traffic_control_system.InitResponse.prototype.getMessage = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -332,26 +291,8 @@ proto.init_traffic_control_system.InitResponse.prototype.getStatus = function() 
  * @param {string} value
  * @return {!proto.init_traffic_control_system.InitResponse} returns this
  */
-proto.init_traffic_control_system.InitResponse.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
-};
-
-
-/**
- * optional string message = 2;
- * @return {string}
- */
-proto.init_traffic_control_system.InitResponse.prototype.getMessage = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.init_traffic_control_system.InitResponse} returns this
- */
 proto.init_traffic_control_system.InitResponse.prototype.setMessage = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
