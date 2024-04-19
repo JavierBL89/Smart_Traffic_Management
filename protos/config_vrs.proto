@@ -32,6 +32,7 @@ message ConfigRequest {
 
 // Response
 message ConfigResponse {
+    
     // Configuration update confirmation
     bool status = 1;
     

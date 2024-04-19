@@ -1,0 +1,31 @@
+syntax = "proto3"
+
+// package
+package "traffic_metrics_report";
+
+/**
+*
+*
+*
+**
+service TrafficReportingService {
+    rpc SetTrafficDataReportMetrics( stream SetTrafficDataReportRequest) returns (SetTrafficDataReportResponse);
+
+}
+
+// Request message
+message SetTrafficDataReportRequest{
+
+    // metrics such as 'vehicle_count', 'average_speed', 'congestion_level', etc.
+    repeated string metrics = 1; 
+}
+
+// Response message
+ message SetTrafficDataReportResponse{
+
+    // update confirmation
+    bool success = 1;
+
+    // a summary message
+    string message = 2;  
+ }
