@@ -76,7 +76,7 @@ class TrafficDataCollector {
 
 
     /***
-     * Method generates a random number.
+     * Method generates a random number to simulate vehicle counting.
      * 
      * It uses an instance of the Random class
      * **/
@@ -121,6 +121,13 @@ class TrafficDataCollector {
         str += "\nBuses " + this.busCounter;
         str += "\nTraffic anomalies " + this.anomalies;
         console.log(str);
+    }
+
+    /***
+     * Method simulates the operation of calculating the vehicles speed average
+     */
+    getSpeedAverage() {
+        return Math.floor(Math.random() * 70); // generate a random number between 0 and 70
     }
 
     //setters 
