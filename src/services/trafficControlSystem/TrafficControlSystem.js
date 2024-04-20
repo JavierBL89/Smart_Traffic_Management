@@ -2,6 +2,9 @@ const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManage
 const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
 const StateRecord = require('../trafficLightSystem/StateRecord');
+
+const TrafficDataReportManager = require('./TrafficDataReportManager');
+
 const async = require('async');
 /**
  * The TrafficControlSystem class manages its associated Traffic Light Systems,
@@ -27,6 +30,7 @@ class TrafficControlSystem {
         this.maxCycles = 3;
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
+        this.trafficReportManager = new TrafficDataReportManager(listOfTrafficLightSystems);
     }
 
     // setters

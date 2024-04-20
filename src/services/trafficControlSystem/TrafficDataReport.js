@@ -80,10 +80,11 @@ class TrafficDataReport {
     };
 
     /**
-         * set TotalVehicles
-         */
+    * set TotalVehicles
+    */
     setTotalVehicles(totalVehicles) {
-        this.totalVehicles = totalVehicles;
+        checkNegativeValue(totalVehicles, "totalVehicles");
+        this.totalVehicles += totalVehicles;
 
     };
 
@@ -91,51 +92,81 @@ class TrafficDataReport {
      * set TotalBikes
      */
     setTotalBikes(totalBikes) {
-        this.totalBikes = totalBikes;
+
+        checkNegativeValue(totalBikes, "totalBikes");
+        this.totalBikes += totalBikes;
     };
 
     /**
      * set totalCars
      */
     setTotalCars(totalCars) {
-        this.totalCars = totalCars;
+
+        checkNegativeValue(totalCars, "totalCars");
+        this.totalCars += totalCars;
     };
 
     /**
      * set totalTrucks
      */
     setTotalTrucks(totalTrucks) {
-        this.totalTrucks = totalTrucks;
+
+        checkNegativeValue(totalTrucks, "totalTrucks");
+        this.totalTrucks += totalTrucks;
     };
 
     /**
      * set totalBuses
      */
     setTotalBuses(totalBuses) {
-        this.totalBuses = totalBuses;
+
+        checkNegativeValue(totalBuses, "totalBuses");
+        this.totalBuses += totalBuses;
     };
 
     /**
      * set totalAnomalies
      */
     setTotalAnomalies(totalAnomalies) {
-        this.totalAnomalies = totalAnomalies;
+
+        checkNegativeValue(totalAnomalies, "totalAnomalies");
+        this.totalAnomalies += totalAnomalies;
     };
 
     /**
      * set speedAverage
      */
-    setTspeedAverage(speedAverage) {
-        this.setTspeedAverage = speedAverage;
+    setSpeedAverage(speedAverage) {
+
+        checkNegativeValue(speedAverage, "speedAverage");
+        this.speedAverage += speedAverage;
     };
 
     /**
      * set trafficDensityLevel
      */
     setTrafficDensityLevel(trafficDensityLevel) {
-        this.setTrafficDensityLevel = trafficDensityLevel;
+
+        checkNegativeValue(trafficDensityLevel, "trafficDensityLevel");
+        this.trafficDensityLevel += trafficDensityLevel;
     };
 
+
+
+    // helper methods
+
+
+    /**
+     * Method checks for negative values
+     * 
+     * @param {*} value 
+     * @param {*} fieldName 
+     */
+    checkNegativeValue(value, fieldName) {
+        if (value < 0) {
+            throw new Error(`Invalid data type for ${fieldName}. Must be a positive number.`);
+        }
+    }
 
 }
 
