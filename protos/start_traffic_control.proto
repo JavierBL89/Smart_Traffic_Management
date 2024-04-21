@@ -1,0 +1,29 @@
+/////////////////// Interface definition   ////////////////////
+
+syntax = "proto3";
+
+// Package
+package start_traffic_control;
+
+
+// service definition
+service StartTrafficControl {
+
+    rpc StartTrafficControl (StartRequest) returns ( stream StartResponse) {};    // response will include the payload in {}
+
+}
+
+// Numbers to be added
+message StartRequest{
+    // Empty
+}
+
+// Response 
+message StartResponse{
+    
+    // initialitation status
+    bool status = 1;
+    
+    // Confirmation message 
+    string message = 2;
+}
