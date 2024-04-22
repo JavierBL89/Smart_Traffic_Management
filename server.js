@@ -1,5 +1,4 @@
 
-
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 
@@ -59,7 +58,109 @@ server.addService(startTrafficControlProtoProto.StartTrafficControl.service, {
 
         const request = call.request;
 
+        const tcs = null;
+        const trafficManager = null;
 
+        try {
+            controlCenterInstance.startTrafficControlCycle();
+            tcs = controlCenterInstance.getListTCSManager();
+            trafficManager = tcs.getTrafficControlManager()
+        } catch (error) { // error handling
+            console.error('Error in while starting traffic control cycle:', error);
+            callback({
+                code: grpc.status.INTERNAL,
+                message: error.message,
+            });
+        }
+
+        /*** handle traffic control events ***/
+        trafficManager.on('maxumOfCyclesReached', (data) => {
+            call.write({ message: data.message });
+            call.end();  // end call
+        });
+
+        trafficManager.on('cycleStart', (data) => {
+            call.write({ message: `Cycle number ${data.cycleNumber} started.` });
+        });
+
+        trafficManager.on('greenPhaseStart', (data) => {
+            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
+        });
+
+        trafficManager.on('greenPhaseEnd', (data) => {
+            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
+        });
+
+        trafficManager.on('resetCycle', (data) => {
+            call.write({ message: `${data.cycleNumber}` });
+        });
+
+        /***  Handle data collection events ***/
+        trafficManager.on('dataCollectionStart', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('dataCollectionStart', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('dataCollectionEnd', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        /*** Handle data analyze events ***/
+        trafficManager.on('dataAnalizeStart', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('reportTitle', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('scanReport', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('trafficDensity', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('noDataToCompare', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        trafficManager.on('dataAnalizeEnd', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        // Handle yellow phase events ***/
+        trafficManager.on('yellowPhaseStart', (data) => {
+            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
+        });
+
+        trafficManager.on('yellowPhaseEnd', (data) => {
+            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
+        });
+
+        /*** Handle state update  events ***/
+        trafficManager.on('updateState', (data) => {
+            call.write({
+                message: `State for TLS  ${data.tls1} updated to ${toUpperCase(data.tls1State)}.
+                 \nState for TLS  ${data.tls2} updated to ${toUpperCase(data.tls2State)}.`
+            });
+        });
+
+        /*** Handle state update  events ***/
+        trafficManager.on('notTLSFoundError', (data) => {
+            call.write({ message: `${data.message}` });
+        });
+
+        /*** Listen for error events from the trafficManager ***/
+        trafficManager.on('error', (err) => {
+            console.error('Error during the traffic control cycle:', err);
+            call.write({ status: false, message: `Error: ${err.message}` });
+            call.end();  // end call
+        });
     }
 
 });

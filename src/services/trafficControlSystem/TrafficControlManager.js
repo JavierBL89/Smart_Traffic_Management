@@ -1,4 +1,7 @@
+// event emtiter for server communication
+const EventEmitter = require('events');
 
+// import the require clases
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
 const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManager');
 const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
@@ -17,12 +20,13 @@ const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
 *- Cycle Count Management: Ensures the traffic control system does not exceed a predefined number of cycles, preventing system overruns.
 *- Data Collection and Analysis: Initiates and manages the data collection process from the Visual Recognition Systems and analyses this data to determine traffic light adjustments.
  */
-class TrafficControlManager {
+class TrafficControlManager extends EventEmitter {
 
     /**
      * Constructor to initialise TrafficControlManager object with default values
      */
     constructor(listOfTrafficLightSystems) {
+        super(); // call eventEmitter constructor
         this.tls1 = null;
         this.tls2 = null;
 
@@ -219,27 +223,41 @@ class TrafficControlManager {
         /**  prevent the app from run indefinetly. */
         if (this.cycleCount > this.maxCycles) {
             console.log("\nReached the maximum number of cycles.");
+            // server stream message
+
+            this.emit("maxumOfCyclesReached", { message: "Reached the maximum number of cycles." });
             return; // halts next cycle execution
         }
 
-        this.currentGreenPhaseTime = 0;  // reset current Green Phase Timer
+        // reset current Green Phase Timer
+        this.currentGreenPhaseTime = 0;
 
-        let greenPhaseLength = this.standardCycleTimeInSeconds;  // set green Phase Length
-        let yellowPhaseLength = 2;   // set yellow Phase Length
+        // set green Phase Length
+        let greenPhaseLength = this.standardCycleTimeInSeconds;
+        // set yellow Phase Length 
+        let yellowPhaseLength = 2;
 
         /** this ensures the transition to a differente state for the next cycle
          *  when the green state has reached its maximun extention time (max time it remains in green)
          */
         if (state === "green" && resetCycle) {
-
             console.log("Reset cycle due to max time of green statate reached");
+            // server stream message
+            this.emit("resetCycle", { message: "Reset cycle due to max time of green statate reached" });
 
             console.log(`\nTRAFFIC CONTROL CYCLE NUMBER ${this.cycleCount}`);
+
+            // server stream message
+            this.emit("cycleStart", { cycleNumber: this.cycleCount, state, tlsId });
+
             await this.initGreenPhase(tlsId, state, greenPhaseLength);
 
             // transition to yellow phase 
             await this.initYellowPhase(tlsId, state, yellowPhaseLength);
             this.cycleCount++;    // increment cycle count
+
+            // server stream message
+            this.emit("cycleEnd", { cycleNumber: this.cycleCount, state, tlsId });
 
         } else {  // manage the normal cycle
 
@@ -251,7 +269,10 @@ class TrafficControlManager {
 
         // Check again after increment if the next cycle should initiated
         if (this.cycleCount >= this.maxCycles) {
+
             console.log("Reached the maximum number of cycles after completing this cycle.");
+            // server stream message
+            this.emit("maxumOfCyclesReached", { message: "Reached the maximum number of cycles. No more cycles after  completing this cycle" });
         }
     };
 
@@ -261,9 +282,12 @@ class TrafficControlManager {
     * @param state
     * @param greenPhaseLength
     * **/
-    async initGreenPhase(tslId, state, greenPhaseLength) {
+    async initGreenPhase(tlsId, state, greenPhaseLength) {
 
-        this.updateTrafficLightState(tslId, state, state === "green" ? "red" : "green"); // update traffic light systems state
+        this.updateTrafficLightState(tlsId, state, state === "green" ? "red" : "green"); // update traffic light systems state
+
+        // server stream message
+        this.emit("greenPhaseStart", { phase: "green", tlsId });
 
         console.log("\nGREEN PHASE");
         console.log(`\nTraffic light System ${this.tls1.getSystemId()} state is '${this.tls1.getState()}': light 1 is '${this.tls1.getTlA().getState()}'; light 2 is '${this.tls1.getTlB().getState()}'`);
@@ -271,15 +295,33 @@ class TrafficControlManager {
 
         await new Promise(resolve => setTimeout(resolve, greenPhaseLength * 1000));  // delay 
 
-        // Data collection and analysis
-        this.startVRSDataCollection(); // start data collection
+
+
+        /**************** Data collection and analysis ******************/
+
+        /*** data colect process ***/
         console.log("\nData collection started...");
+        // server stream message
+        this.emit('dataCollectionStart', { message: "Collecting traffic data..." })
+
+        this.startVRSDataCollection(); // start data collection
         await new Promise(resolve => setTimeout(resolve, 500));  // delay helps data retreiving completition
 
         console.log("Data collection finished...");
+        // server stream message
+        this.emit("dataCollectionEnd", { message: "Traffic data collection complete" });
+
+
+        /*** data analyze process ***/
+        console.log("Analyzing traffic data...");
+        // server stream message
+        this.emit("dataAnalizeStart", "Analyzing traffic data...");
 
         this.analyzeTrafficData();     // analyze data
+
         console.log("Data is been analized.");
+        // server stream message
+        this.emit("dataAnalizeEnd", "Data is been analized.");
 
     };
 
@@ -289,14 +331,20 @@ class TrafficControlManager {
     * @param state
     * @param greenPhaseLength
     * **/
-    async initYellowPhase(tslId, state, yellowPhaseLength) {
-        this.updateTrafficLightState(tslId, state === "green" ? "yellow" : "red", state === "green" ? "red" : "yellow");
+    async initYellowPhase(tlsId, state, yellowPhaseLength) {
+
+        this.updateTrafficLightState(tlsId, state === "green" ? "yellow" : "red", state === "green" ? "red" : "yellow");
+
+        // server stream message
+        this.emit('yellowPhaseStart', { phase: state, tlsId });
 
         console.log("\nYELLOW PHASE");
         console.log(`\nTraffic light System ${this.tls1.getSystemId()} state: light 1 ${this.tls1.getTlA().getState()}; light 2 ${this.tls1.getTlB().getState()}`);
         console.log(`Traffic light System ${this.tls2.getSystemId()} state: light 1 ${this.tls2.getTlA().getState()}; light 2 ${this.tls2.getTlB().getState()}`);
 
         await new Promise(resolve => setTimeout(resolve, yellowPhaseLength * 1000));
+        // server stream message
+        this.emit('yellowPhaseEnd', { phase: state, tlsId });
     };
 
 
@@ -309,12 +357,23 @@ class TrafficControlManager {
             this.tls1.setState(newState);
             this.tls2.setState(oposedState);
             console.log(`Updated TLS ${this.tls1.getSystemId()} to ${newState} and TLS ${this.tls2.getSystemId()} to ${oposedState}`);
+
+            // server stream message
+            this.emit('updateState', { tls1: `${this.tls1.getSystemId()}`, tls1State: `${newState}`, tls2: `${this.tls2.getSystemId()}`, tls2State: `${oposedState}` });
+
         } else if (tlsId === this.tls2.getSystemId()) {
             this.tls2.setState(newState);
             this.tls1.setState(oposedState);
             console.log(`Updated TLS ${this.tls2.getSystemId()} to ${newState} and TLS ${this.tls1.getSystemId()} to ${oposedState}`);
+
+            // server stream message
+            this.emit('updateState', { tls2: `${this.tls2.getSystemId()}`, tls2State: `${newState}`, tls1: `${this.tls1.getSystemId()}`, tls1State: `${oposedState}` });
+
         } else {
             console.log("Error: No matching TLS found for the given ID.");
+            // server stream message
+            this.emit('notTLSFoundError', { message: "Error: No matching TLS found for the given ID." });
+
         }
 
         console.log(`\nCurrent states - TLS ${this.tls1.getSystemId()}: ${this.tls1.getState()}, TLS ${this.tls2.getSystemId()}: ${this.tls2.getState()}`);
@@ -357,12 +416,23 @@ class TrafficControlManager {
 
             console.log(`\n**LAST SCAN REPORT** from Traffic Light System ${tls.getSystemId()}`);
 
+
+            // server stream message
+            this.emit('reportTitle', { message: `**LAST SCAN REPORT** from Traffic Light System ${tls.getSystemId()}` });
+
             let totalVehicles = 0;
             // iterate list of VRS associated to each TLS (2 per TLS)
             tls.getVisualRecognitionSystems().forEach(vrs => {
                 totalVehicles += vrs.getTotalVehicles();
                 console.log(`*VRS ${vrs.getSYSTEMID()} assocciated to TL ${vrs.getTrafficLightID()} reports:`);
                 console.log(`- Total vehicles: ${vrs.getTotalVehicles()}\n`);
+
+                // server stream message
+                this.emit('scanReport', {
+                    message: `*VRS ${vrs.getSYSTEMID()} assocciated to TL ${vrs.getTrafficLightID()}
+                           reports: ${vrs.getTotalVehicles()} total vehicles`
+                });
+
             });
 
             tlsVehicleCounts.set(tls.getSystemId(), totalVehicles);
@@ -387,6 +457,9 @@ class TrafficControlManager {
 
         if (!tlsVehicleCounts || tlsVehicleCounts.size === 0) {
             console.log("No traffic data available to compare.");
+
+            // server stream message
+            this.emit("noDataToCompare", { messsage: " No traffic data available to compare" });
             return;
         }
 
@@ -397,10 +470,19 @@ class TrafficControlManager {
 
         if (vehiclesCountTLS1 >= vehiclesCountTLS2) {
             console.log(`\n****Traffic Light System ${tlsIds[0]} reports HIGHER traffic density****`)
+
+            // server stream message
+            this.emit("trafficDensity", { message: "*Traffic Light System ${tlsIds[0]} reports HIGHER traffic density*" });
+
             this.smartCycle(tlsIds[0], vehiclesCountTLS1, "green");
 
         } else {
-            console.log(`\n****Traffic Light System ${tlsIds[0]} reports HIGHER traffic density****`)
+            console.log(`\n****Traffic Light System ${tlsIds[1]} reports HIGHER traffic density****`)
+
+            // server stream message
+            // server stream message
+            this.emit('trafficDensity', `*Traffic Light System ${tlsIds[1]} reports HIGHER traffic density*`);
+
 
             this.smartCycle(tlsIds[1], vehiclesCountTLS2);
         }
@@ -415,6 +497,9 @@ class TrafficControlManager {
             let extensionTime = 5; // Extend by 5 seconds, not exceeding max
 
             console.log(`\nExtending green phase for TLS ${tlsId} by ${extensionTime} seconds due to high traffic density.`);
+            // server stream message
+            this.emit('extendGreenPhase', `Extending green phase for TLS ${tlsId} by ${extensionTime} seconds due to high traffic density.`);
+
             this.currentGreenPhaseTime += extensionTime;
             //  console.log(this.currentGreenPhaseTime + "");
 
@@ -422,14 +507,31 @@ class TrafficControlManager {
             // this.startTrafficControlCycle(tlsId, "green");
             // this.startTrafficControlCycle(tlsId, "green", this.resetCycle = false);
 
-            console.log("\nData collection started...");
+            /**************** Data collection and analysis ******************/
+
+            /*** data collection process ***/
+            console.log("\nData collection started...")
+            // server stream message
+            this.emit('dataCollectionStart', "Collecting traffic data...");
+
+            this.startVRSDataCollection();   // collect data
             new Promise(resolve => setTimeout(resolve, 500));  // delay helps data retreiving completition
 
-            console.log("Data collection finished...")
+            console.log("Data collection finished.")
+            // server stream message
+            this.emit("dataCollectionEnd", "Data collection finished.");
+
+
+            /*** data analitycs process ***/
+            console.log("Analyzing traffic data...")
+            // server stream message
+            this.emit("dataAnalizeStart", "Analyzing traffic data...");
 
             this.analyzeTrafficData();    //  analyze data
-            console.log("Data is been analized.");
 
+            console.log("Data is been analized.");
+            // server stream message
+            this.emit("dataAnalizeEnd", "Data is been analized.");
 
             // this.startVRSDataCollection();
             // this.analyzeTrafficData()

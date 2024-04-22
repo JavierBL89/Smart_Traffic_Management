@@ -1,3 +1,5 @@
+
+// import the require classes
 const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManager');
 const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
@@ -32,7 +34,7 @@ class TrafficControlSystem {
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
         this.trafficReportManager = new TrafficDataReportManager(listOfTrafficLightSystems);
-        this.trafficControlManger = new TrafficControlManager(listOfTrafficLightSystems);
+        this.trafficControlManager = new TrafficControlManager(listOfTrafficLightSystems);
     }
 
     // setters
@@ -125,6 +127,10 @@ class TrafficControlSystem {
         return this.tlsStateHistory;
     }
 
+    //
+    getTrafficControlManager() {
+        return this.trafficControlManager
+    }
 
     // helper methods
 
@@ -235,7 +241,7 @@ class TrafficControlSystem {
     configTCSGreenCycleLength(greenCycleLength) {
 
         try {
-            this.trafficControlManger.setStandardCycleTime(greenCycleLength)
+            this.trafficControlManager.setStandardCycleTime(greenCycleLength)
             console.log(`Successfully configured length in seconds of green cycle.`);
         } catch (error) {
             onsole.error(`Error configuring TCS`, error);
@@ -254,7 +260,7 @@ class TrafficControlSystem {
     configTCSNumOfTotalCycles(numbOfTotalCycles) {
 
         try {
-            this.trafficControlManger.setMaxCycles(numbOfTotalCycles);
+            this.trafficControlManager.setMaxCycles(numbOfTotalCycles);
             console.log(`Successfully configured the lengthInSeconds of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
 
         } catch (error) {

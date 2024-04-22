@@ -19,6 +19,7 @@ class ControlCentreSystem {
         this.systemID = 700;
         this.tcsInitializer = new TrafficControllSystemsInitializer();
         this.systemID++;
+        this.listTCSManager = null;
     }
 
     /**
@@ -30,6 +31,10 @@ class ControlCentreSystem {
         return this.systemID;
     }
 
+
+    getListTCSManager() {
+        return this.listTCSManager;
+    }
     // helper methods
 
     /**
@@ -65,9 +70,9 @@ class ControlCentreSystem {
      * @param {number} scanLenghtInSeconds
      */
     configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
-        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listManager) {
+        for (const tcs of listTCSManager) {
             tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
         }
     }
@@ -84,9 +89,9 @@ class ControlCentreSystem {
      * @param {number} scanLenghtInSeconds
      */
     configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
-        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listManager) {
+        for (const tcs of listTCSManager) {
             tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
         }
     }
@@ -98,9 +103,9 @@ class ControlCentreSystem {
      * @param numOfScans number of mirco scans per scan cycle
      */
     configTCSGreenCycleLength(greenCycleLength) {
-        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listManager) {
+        for (const tcs of listTCSManager) {
             tcs.configTCSGreenCycleLength(greenCycleLength); // Configure visual recognition parameters
         }
     }
@@ -111,9 +116,9 @@ class ControlCentreSystem {
      * @param scanLengthInSeconds length of micro scans.
      */
     configTCSNumOfTotalCycles(numbOfTotalCycles) {
-        const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listManager) {
+        for (const tcs of listTCSManager) {
             tcs.configTCSNumOfTotalCycles(numbOfTotalCycles); // Configure visual recognition parameters
         }
     }
@@ -126,8 +131,8 @@ class ControlCentreSystem {
      * adding and removing Traffic Control Systems for maintenance.
      */
     addTrafficControlSystem() {
-        const instance = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
-        instance.addTrafficContolSystem(new TrafficControlSystem()); // add new Traffic Control System
+        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        listTCSManager.addTrafficContolSystem(new TrafficControlSystem()); // add new Traffic Control System
     }
 
     /**
