@@ -1,15 +1,21 @@
+// event emtiter for server communication
+const EventEmitter = require('events');
+
+// import required classes
 const TCSystemsListManager = require('./TCSystemsListManager');
 const TrafficControlSystem = require('../trafficControlSystem/TrafficControlSystem'); // Import TrafficControlSystem module
+
 
 /**
  * Class responsible for initializing all Traffic Control Systems managed within the Control Centre network. 
  * It ensures that each Traffic Control System is operational.
  */
-class TrafficControlSystemsInitializer {
+class TrafficControlSystemsInitializer extends EventEmitter {
     /**
      * Constructor
      */
     constructor() {
+        super();
         // Get list of Traffic Control Systems associated with Control Centre
         this.listOfTrafficControlSystems = TCSystemsListManager.getInstance();
     }
@@ -54,9 +60,15 @@ class TrafficControlSystemsInitializer {
      * It iterates over the list of associated Traffic Control Systems
      * and starts the cycle with a predefined initial state.
      */
-    startTrafficControlCycle() {
+    async startTrafficControlCycle() {
+
+
         for (let tcs of this.listOfTrafficControlSystems) {
-            tcs.startTrafficControlCycle("green");
+            // server stream message
+            this.emit("cycleStart", { cycleNumber: 1, state: "green", tls: tcs.getTls1().getSystemId() });
+
+            await new Promise(resolve => setTimeout(resolve, 500));  // delay to catch up emit messa before method runs
+            tcs.startTrafficControlCycle(tcs.getTls1().getSystemId(), "green", "red", false);
         }
     }
 }

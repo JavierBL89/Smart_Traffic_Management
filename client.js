@@ -4,7 +4,7 @@ const { response } = require("express");
 const readLine = require('readline');
 
 // import gRPC generated classes
-const { ConfigRequest, ConfigResponse } = require('./protos/config_vrs_pb');
+const { ConfigRequest, ConfigResponse } = require('./protos/config_tcs_pb');
 
 const r1 = readLine.createInterface({
 
@@ -13,7 +13,8 @@ const r1 = readLine.createInterface({
 });
 
 var PROTO_PATH_1 = __dirname + '/protos/init_traffic_control_system.proto';
-var PROTO_PATH_2 = __dirname + '/protos/config_vrs.proto';
+var PROTO_PATH_2 = __dirname + '/protos/config_tcs.proto';
+var PROTO_PATH_3 = __dirname + '/protos/start_traffic_control.proto'
 
 let packageDefinition1 = grpc.loadPackageDefinition(
     protoLoader.loadSync(PROTO_PATH_1, {
@@ -35,8 +36,20 @@ let packageDefinition2 = grpc.loadPackageDefinition(
     })
 );
 
+let packageDefinition3 = grpc.loadPackageDefinition(
+    protoLoader.loadSync(PROTO_PATH_3, {
+        keepCase: true,
+        longs: String,
+        enums: String,
+        defaults: true,
+        oneofs: true
+    })
+);
+
+
 const client_service_1 = new packageDefinition1.init_traffic_control_system.InitTrafficControlSystem('127.0.0.1:50051', grpc.credentials.createInsecure());
-const client_service_2 = new packageDefinition2.config_vrs.ConfigVisualRecognitionSystems('127.0.0.1:50051', grpc.credentials.createInsecure());
+const client_service_2 = new packageDefinition2.config_tcs.ConfigTrafficControlSytem('127.0.0.1:50051', grpc.credentials.createInsecure());
+var client_service_3 = new packageDefinition3.start_traffic_control.StartTrafficControl('127.0.0.1:50051', grpc.credentials.createInsecure());
 
 
 /****
@@ -48,8 +61,9 @@ const client_service_2 = new packageDefinition2.config_vrs.ConfigVisualRecogniti
     console.log('\nPlease select an option');
     //console.log('1: Add a new Traffic Control System to the network (Urinary) (AddTrafficControlSystem)');
     console.log('1: Initialize Traffic Control Systems (Urinary) (InitTrafficControlSystem service)');
-    console.log("2: Configure Visual Recognition Systems 'Systems must be previously initialized' (Server Stream) (ConfigureVisualRecognitionSystems)");
-    console.log("3: Exit");
+    console.log("2: Configure Visual Recognition Systems 'Systems must be previously initialized' (Bidirectional client stream - server stream) (ConfigureVisualRecognitionSystems service)");
+    console.log("3: Start traffic control cycle' (Server Stream) (StartTrafficControl service)");
+    console.log("4: Exit");
     const userIn = await askQuestion("\nEnter an option ");
     controller(userIn);
 }
@@ -80,7 +94,12 @@ async function controller(userIn) {
             appMenu();   // display menu
             break;
 
-        case ("exit"):
+        case ("3"):  // SERVER STREAM COMMUNICATION
+            await handleStartControlCycle(); // error handling
+            appMenu();
+            break;
+
+        case ("4"):
             console.log("Exiting application");
             running = false;
             break;
@@ -93,6 +112,27 @@ async function controller(userIn) {
 
 }
 
+/****
+  Initiates the StartTrafficControl call to the server and handles the stream of responses.
+ * 
+ * The function ensures communication feedback from the traffic control system  
+ * with real-time updates and handling any communication errors.
+ * */
+async function handleStartControlCycle() {
+    let call = client_service_3.StartTrafficControl({});
+
+    call.on('data', (response) => {
+        console.log('\nReceived from server:', response.message);
+    })
+    call.on('error', (error) => {
+        console.error('\nError from server:', error.message);
+        appMenu();
+    })
+    call.on('end', (response) => {
+        console.log('\nServer ended stream');
+        appMenu();
+    })
+}
 
 /*****
  * Method handles some potentiantial error during communication.
@@ -100,7 +140,6 @@ async function controller(userIn) {
  * It allows code reusability, modularity 
  */
 function handleError(error, response) {
-
     if (error) {
         if (error == grpc.status.DEADLINE_EXCEEDED) {
             console.error("Request limit time out. Please check your network connection or resboot application");
@@ -118,7 +157,7 @@ function handleError(error, response) {
  * Method encapsulates client-stream server-stream communication
 *  Handle stream proccess in a single fucntion for readability,
 * and synchronized app menu display only after stream connection ends.
-
+*
 * I takes configuration parameters for traffic scans and their length,  
 * which are then sent to the server, proccess them independantly, 
 * and reports user with a stream of messages.
@@ -129,14 +168,14 @@ async function handleConfigTCS(error, response) {
     return new Promise(async (resolve, reject) => {
         try {
             const greenCycleLength = await askQuestion("\nEnter the max length in seconds of the green phase for a traffic light system: ");
-            const numbOfTotalCycles = await askQuestion("Enter the max number of total traffic control cycles:");
+            const numbOfTotalCycles = await askQuestion("Enter the max number of total traffic control cycles: ");
 
             // Create a new ConfigRequest instance and init the streamming call
             const configRequestStream = client_service_2.ConfigTrafficControlSytem();
 
             // delay to display app menu after task completition
             setTimeout(() => {
-                console.log("Configuration completed.");
+                console.log("\nConfiguration completed.");
                 resolve(true); // Resolve true indicates success
             }, 1000);
 

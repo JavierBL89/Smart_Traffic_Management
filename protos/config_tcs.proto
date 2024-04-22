@@ -24,10 +24,10 @@ service ConfigTrafficControlSytem {
 message ConfigRequest {
 
     // The number of traffic scans within a scan cycle
-    int32 numOfScans = 1;
+    int32 greenCycleLength = 1;
 
     // The length of each traffic scan in seconds
-    int32 scanLengthInSeconds = 2;
+    int32 numbOfTotalCycles = 2;
 }
 
 // Response

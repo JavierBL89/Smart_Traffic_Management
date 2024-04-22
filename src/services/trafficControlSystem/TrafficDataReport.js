@@ -171,4 +171,4 @@ class TrafficDataReport {
 }
 
 // Export the VisualRecognitionSystem class
-module.exports = TrafficDataCollector;
+module.exports = TrafficDataReport;

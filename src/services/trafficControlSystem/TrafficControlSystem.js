@@ -33,8 +33,8 @@ class TrafficControlSystem {
         this.maxCycles = 3;
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
-        this.trafficReportManager = new TrafficDataReportManager(listOfTrafficLightSystems);
-        this.trafficControlManager = new TrafficControlManager(listOfTrafficLightSystems);
+        this.trafficReportManager = new TrafficDataReportManager(this.listOfTrafficLightSystems);
+        this.trafficControlManager = new TrafficControlManager(this.listOfTrafficLightSystems);
     }
 
     // setters
@@ -127,9 +127,9 @@ class TrafficControlSystem {
         return this.tlsStateHistory;
     }
 
-    //
+    // get trafficControlManager
     getTrafficControlManager() {
-        return this.trafficControlManager
+        return this.trafficControlManager;
     }
 
     // helper methods
@@ -161,6 +161,7 @@ class TrafficControlSystem {
             }
 
             this.tls1 = tls1; // Assign the created instance to tls1 property
+            this.trafficControlManager.setTls1(this.tls1);  // set tls1 in traffic control manager
             this.listOfTrafficLightSystems.push(tls1); // Add TLS 1 to the list
             this.tls1.initTLSComponents(); // Initialise associated components
 
@@ -181,6 +182,7 @@ class TrafficControlSystem {
             }
 
             this.tls2 = tls2; // Assign the created instance to tls1 property
+            this.trafficControlManager.setTls2(this.tls2);  // set tls1 in traffic control manager
             this.listOfTrafficLightSystems.push(tls2); // Add TLS 1 to the list
             this.tls2.initTLSComponents(); // Initialise associated components
 
@@ -261,13 +263,20 @@ class TrafficControlSystem {
 
         try {
             this.trafficControlManager.setMaxCycles(numbOfTotalCycles);
-            console.log(`Successfully configured the lengthInSeconds of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
+            console.log(`Successfully configured the max number of traffic light cycles to ${numbOfTotalCycles}`);
 
         } catch (error) {
-            console.error(`Error configuring VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}:`, error);
+            console.error(`Error configuring max number of traffic light cycles`, error);
 
         }
 
+    }
+
+    startTrafficControlCycle(tlsId, initialState, oposedState, resetCycle) {
+
+        this.trafficControlManager.updateTrafficLightState(tlsId, initialState, oposedState);
+        // start traffic control cycle with predifined values
+        this.trafficControlManager.startTrafficControlCycle(tlsId, initialState, resetCycle);
     }
 }
 

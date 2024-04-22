@@ -124,7 +124,7 @@ class VisualRecognitionSystem {
      * Methos responsible for startting visual recognition proccess
      * **/
     startDataCollectorCycle() {
-        this.tdc.startDataCollector(this.numOfTrafficScans, this.scanLengthInSeconds);
+        this.tdc.startDataCollector();
     }
 
     /**

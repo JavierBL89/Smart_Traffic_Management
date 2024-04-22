@@ -58,24 +58,6 @@ class ControlCentreSystem {
         }
     }
 
-    /**
-     * Method to configure the visual recognition parameters for all associated Visual Recognition Systems 
-     * associated with the Traffic Control System that this Control Centre manages.
-     * 
-     * The configuration options include:
-     * - The number of traffic scans within a whole scan cycle.
-     * - The length of each of those traffic scans.
-     * 
-     * @param {number} numOfScanCycles
-     * @param {number} scanLenghtInSeconds
-     */
-    configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
-        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
-        // iterate through list
-        for (const tcs of listTCSManager) {
-            tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
-        }
-    }
 
     /**
      * Method to configure the visual recognition parameters for all associated Visual Recognition Systems 
@@ -89,9 +71,9 @@ class ControlCentreSystem {
      * @param {number} scanLenghtInSeconds
      */
     configureVisualRecognitionSystem(numOfScanCycles, scanLenghtInSeconds) {
-        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        this.listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listTCSManager) {
+        for (const tcs of this.listTCSManager) {
             tcs.configAllVisualRecognitionSystems(numOfScanCycles, scanLenghtInSeconds); // Configure visual recognition parameters
         }
     }
@@ -103,9 +85,9 @@ class ControlCentreSystem {
      * @param numOfScans number of mirco scans per scan cycle
      */
     configTCSGreenCycleLength(greenCycleLength) {
-        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        this.listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listTCSManager) {
+        for (const tcs of this.listTCSManager) {
             tcs.configTCSGreenCycleLength(greenCycleLength); // Configure visual recognition parameters
         }
     }
@@ -116,9 +98,9 @@ class ControlCentreSystem {
      * @param scanLengthInSeconds length of micro scans.
      */
     configTCSNumOfTotalCycles(numbOfTotalCycles) {
-        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        this.listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
-        for (const tcs of listTCSManager) {
+        for (const tcs of this.listTCSManager) {
             tcs.configTCSNumOfTotalCycles(numbOfTotalCycles); // Configure visual recognition parameters
         }
     }
@@ -131,8 +113,8 @@ class ControlCentreSystem {
      * adding and removing Traffic Control Systems for maintenance.
      */
     addTrafficControlSystem() {
-        listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
-        listTCSManager.addTrafficContolSystem(new TrafficControlSystem()); // add new Traffic Control System
+        this.listTCSManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
+        this.listTCSManager.addTrafficContolSystem(new TrafficControlSystem()); // add new Traffic Control System
     }
 
     /**

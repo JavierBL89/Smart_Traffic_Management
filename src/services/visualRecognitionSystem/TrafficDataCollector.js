@@ -47,33 +47,27 @@ class TrafficDataCollector {
      * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
      * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
      * **/
-    startDataCollector(numOfTrafficScans, scanLengthInSeconds) {
-        this.numOfTrafficScans = numOfTrafficScans; // reset numOfTrafficScans value
-        this.scanLengthInSeconds = scanLengthInSeconds; // reset scanTime value
+    startDataCollector() {
 
         this.carCounter = 0;
         this.truckCounter = 0;
         this.bikeCounter = 0;
         this.busCounter = 0;
 
-        while (numOfTrafficScans > 0) {
-            try {
-                setTimeout(() => {
-                    this.carCounter += this.getRandomNumber();
-                    this.truckCounter += this.getRandomNumber();
-                    this.bikeCounter += this.getRandomNumber();
-                    this.busCounter += this.getRandomNumber();
-                }, scanLengthInSeconds * 1000);
+        try {
 
-            } catch (e) {
-                console.error("Error occurred while collecting traffic data: " + e.message);
-                return;
-            }
-            numOfTrafficScans--; // decrease number of traffic scan
+            this.carCounter += this.getRandomNumber();
+            this.truckCounter += this.getRandomNumber();
+            this.bikeCounter += this.getRandomNumber();
+            this.busCounter += this.getRandomNumber();
+
+        } catch (e) {
+            console.error("Error occurred while collecting traffic data: " + e.message);
+            return;
         }
+
         //getAnomalies();            // check traffic anomalies
     }
-
 
     /***
      * Method generates a random number to simulate vehicle counting.

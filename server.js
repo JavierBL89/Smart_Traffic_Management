@@ -6,11 +6,13 @@ const protoLoader = require("@grpc/proto-loader");
 const ControlCentreSystem = require('./src/services/controlCentreSystem/ControlCentreSystem'); // Import ControlCenterServer module
 
 
-// import gRPC generated classes
-const { ConfigRequest, ConfigResponse } = require('./protos/config_vrs_pb');
+// import gRPC service generated classes
+//const { InitRequest, InitResponse } = require('./protos/init_traffic_control_system_pb');
+const { ConfigRequest, ConfigResponse } = require('./protos/config_tcs_pb');
+//const { StartRequest, StartResponse } = require('./protos/start_traffic_control_pb');
 
 var PROTO_PATH_1 = __dirname + '/protos/init_traffic_control_system.proto';
-var PROTO_PATH_2 = __dirname + '/protos/config_vrs.proto';
+var PROTO_PATH_2 = __dirname + '/protos/config_tcs.proto';
 var PROTO_PATH_3 = __dirname + '/protos/start_traffic_control.proto'
 
 let packageDefinition1 = protoLoader.loadSync(PROTO_PATH_1, {
@@ -38,132 +40,163 @@ let packageDefinition3 = protoLoader.loadSync(PROTO_PATH_3, {
 
 var protoDescriptor1 = grpc.loadPackageDefinition(packageDefinition1);
 var protoDescriptor2 = grpc.loadPackageDefinition(packageDefinition2);
-var protoDescriptor3 = grpc.loadPackageDefinition(packageDefinitio3);
+var protoDescriptor3 = grpc.loadPackageDefinition(packageDefinition3);
 
 
 const initTrafficControlSystemProto = protoDescriptor1.init_traffic_control_system;
-const configVisualRecognitionSystemsProto = protoDescriptor2.config_vrs;
+const configTrafficControlSystemProto = protoDescriptor2.config_tcs;
 const startTrafficControlProtoProto = protoDescriptor3.start_traffic_control;
 
 const server = new grpc.Server();
 let controlCenterInstance;
 
 /****
-*
 **** SERVER STREAM COMMUNICATION *****
-**/
+* Defines a gRPC service method called`StartTrafficControl` 
+* within the `startTrafficControlProtoProto.StartTrafficControl.service`.
+* This method is responsible for handling the start of a traffic control cycle. 
+*/
 server.addService(startTrafficControlProtoProto.StartTrafficControl.service, {
 
     StartTrafficControl: (call) => {
 
-        const request = call.request;
-
-        const tcs = null;
-        const trafficManager = null;
-
         try {
+            let trafficManager;
             controlCenterInstance.startTrafficControlCycle();
-            tcs = controlCenterInstance.getListTCSManager();
-            trafficManager = tcs.getTrafficControlManager()
+            // iterate through the list of traffic control systems associated to Control Center System
+            for (let tcs of controlCenterInstance.getListTCSManager()) {
+                trafficManager = tcs.getTrafficControlManager();
+            }
+            handleTrafficControlCycle(trafficManager, call);
         } catch (error) { // error handling
-            console.error('Error in while starting traffic control cycle:', error);
-            callback({
-                code: grpc.status.INTERNAL,
-                message: error.message,
-            });
+            console.error('Error  while starting traffic control cycle:', error);
+            call.write({ message: `Error: ${error.message}` });
+            call.end();
         }
 
-        /*** handle traffic control events ***/
-        trafficManager.on('maxumOfCyclesReached', (data) => {
-            call.write({ message: data.message });
-            call.end();  // end call
-        });
-
-        trafficManager.on('cycleStart', (data) => {
-            call.write({ message: `Cycle number ${data.cycleNumber} started.` });
-        });
-
-        trafficManager.on('greenPhaseStart', (data) => {
-            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
-        });
-
-        trafficManager.on('greenPhaseEnd', (data) => {
-            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
-        });
-
-        trafficManager.on('resetCycle', (data) => {
-            call.write({ message: `${data.cycleNumber}` });
-        });
-
-        /***  Handle data collection events ***/
-        trafficManager.on('dataCollectionStart', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('dataCollectionStart', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('dataCollectionEnd', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        /*** Handle data analyze events ***/
-        trafficManager.on('dataAnalizeStart', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('reportTitle', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('scanReport', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('trafficDensity', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('noDataToCompare', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        trafficManager.on('dataAnalizeEnd', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        // Handle yellow phase events ***/
-        trafficManager.on('yellowPhaseStart', (data) => {
-            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
-        });
-
-        trafficManager.on('yellowPhaseEnd', (data) => {
-            call.write({ message: `State for TLS  ${data.tlsId} ${toUpperCase(data.phase)}.` });
-        });
-
-        /*** Handle state update  events ***/
-        trafficManager.on('updateState', (data) => {
-            call.write({
-                message: `State for TLS  ${data.tls1} updated to ${toUpperCase(data.tls1State)}.
-                 \nState for TLS  ${data.tls2} updated to ${toUpperCase(data.tls2State)}.`
-            });
-        });
-
-        /*** Handle state update  events ***/
-        trafficManager.on('notTLSFoundError', (data) => {
-            call.write({ message: `${data.message}` });
-        });
-
-        /*** Listen for error events from the trafficManager ***/
-        trafficManager.on('error', (err) => {
-            console.error('Error during the traffic control cycle:', err);
-            call.write({ status: false, message: `Error: ${err.message}` });
-            call.end();  // end call
-        });
     }
-
 });
+
+
+/**
+ * This fucntion sets up event listeners for various traffic control and
+ * data analysis events and writes corresponding messages to a call stream.
+ * @param trafficManager - The `trafficManager` parameter is an event emitter 
+ * that emits various events related to traffic control cycles, data collection,
+ * data analysis, state updates, and error handling in a traffic management system. The function sets
+ * up event listeners for different types of events emitted by
+ * @param call - The `call` parameter is a communication channel used to send messages or data. 
+ * In this function, various events related to traffic control cycles, data collection, 
+ * data analysis, state updates, and error handling are being listened to,
+ */
+async function handleTrafficControlCycle(trafficManager, call) {
+    /*** handle traffic control events ***/
+    trafficManager.on('maximOfCyclesReached', (data) => {
+        call.write({ message: data.message });
+    });
+
+    trafficManager.on('cycleStart', (data) => {
+        call.write({ message: `Cycle number ${data.cycleNumber} started` });
+    });
+
+    trafficManager.on('cycleEnds', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('resetCycle', (data) => {
+        call.write({ message: `${data.cycleNumber}` });
+    });
+
+    // Handle green phase events ***/
+    trafficManager.on('greenPhaseStart', (data) => {
+        call.write({
+            message: `Green phase starts:
+         State for TLS ${data.tls1.id} ${data.tls1.state}.
+         State for TLS ${data.tls2.id} ${data.tls2.state}.`
+        });
+    });
+
+    trafficManager.on('extendGreenPhase', (data) => {
+        call.write({ message: `${data.message}.` });
+    });
+
+    // Handle yellow phase events ***/
+    trafficManager.on('yellowPhaseStart', (data) => {
+        call.write({
+            message: `Yellow phase starts`
+        })
+    });
+
+    trafficManager.on('yellowPhaseEnd', (data) => {
+        call.write({
+            message: `
+        Yellow phase ended.` });
+    });
+
+
+    /***  Handle data collection events ***/
+    trafficManager.on('dataCollectionStart', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('dataCollectionEnd', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    /*** Handle data analyze events ***/
+    trafficManager.on('dataAnalizeStart', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('dataAnalizeEnd', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('reportTitle', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('scanReport', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('trafficDensity', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    trafficManager.on('noDataToCompare', (data) => {
+        call.write({ message: `${data.message}` });
+    });
+
+    /*** Handle state update  events ***/
+    trafficManager.on('updateState', (data) => {
+        call.write({
+            message: `New state update:
+            State for TLS ${data.tls1.id} ${data.tls1.state}.
+            State for TLS ${data.tls2.id} ${data.tls2.state}.`
+        });
+    });
+
+    /*** Handle state update  events ***/
+    trafficManager.on('notTLSFoundError', (data) => {
+        call.write({ message: `${data.message}` });
+        call.end();
+    });
+
+    /*** Listen for error events from the trafficManager ***/
+    trafficManager.on('error', (err) => {
+        console.error('Error during the traffic control cycle:', err);
+        call.write({ status: false, message: `Error: ${err.message}` });
+        call.end();  // end call
+    });
+
+    trafficManager.on('end', () => {
+        call.end();
+    });
+}
+
+
+
 
 /****
 * Service allows a user to initialize all systems Traffic Control Systems
@@ -202,7 +235,7 @@ server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.service
 *
 **** BIDIRECTIONAL CLIENT STREAM-SERVER STREAM COMMUNICATION *****
 **/
-server.addService(configVisualRecognitionSystemsProto.ConfigTrafficControlSytem.service, {
+server.addService(configTrafficControlSystemProto.ConfigTrafficControlSytem.service, {
 
     ConfigTrafficControlSytem: (call) => {
 
@@ -216,52 +249,31 @@ server.addService(configVisualRecognitionSystemsProto.ConfigTrafficControlSytem.
             // process and report the number of scans
             try {
                 controlCenterInstance.configTCSGreenCycleLength(request.greenCycleLength);
-                call.write({ status: true, message: `Number of scans set to ${request.greenCycleLength}` });
+                call.write({ status: true, message: `Length of green light phase set for ${request.greenCycleLength} seconds` });
             } catch (error) {
-                call.write({ status: false, message: `Error setting number of scans: ${error.message}` });
+                call.write({ status: false, message: `Error setting length of green ligh phase: ${error.message}` });
             }
 
             // process and report the scan length in seconds
             try {
                 controlCenterInstance.configTCSNumOfTotalCycles(request.numbOfTotalCycles);
-                call.write({ status: true, message: `Scan length set to ${request.numbOfTotalCycles} seconds` });
+                call.write({ status: true, message: `Max number of traffic control cycles set to ${request.numbOfTotalCycles} whole cycles` });
             } catch (error) {
-                call.write({ status: false, message: `Error setting scan length: ${error.message}` });
+                call.write({ status: false, message: `Error setting the num of max traffic control cycles: ${error.message}` });
             }
 
             call.on('end', () => {
+                call.end(); // close stream
+            });
+
+            call.on('error', (error) => {
+                call.write({ status: false, message: `Error puta: ${error.message}` });
                 call.end(); // close stream
             });
         });
     }
 });
 
-
-
-/** 
- * Method responsible for configuring the Visusal Recognition Systems (VRS)
- * It configures:
- * 
- * @param {number} numOfScans - The number of micro traffic scans in a scan cycle for each visual recognition system.
- * @param {number} scanLengthInSeconds - The duration of micro scan each scan in seconds.
- * @returns {string} A message indicating the result of the configuration proccess.
- */
-const configVisualRecognitionSystems = (numOfScans, scanLengthInSeconds) => {
-
-    try {
-        // Instantiate ControlCenterServer
-        controlCenterInstance.configureVisualRecognitionSystem(numOfScans, scanLengthInSeconds);
-
-        return "\nhjhcdVisual recognition systems have been configured successfully."
-            + "\nNumber of scans per scan cycle: " + numOfScans
-            + "\nScans length in seconds: " + scanLengthInSeconds;
-
-    } catch (error) {
-        console.error('An error occurred during visual recognition configuration:', error);
-        return "Failed to configure visual recognition systems: " + error.message;
-
-    }
-}
 
 
 /*****
@@ -294,3 +306,5 @@ server.bindAsync("127.0.0.1:50051", grpc.ServerCredentials.createInsecure(), () 
 
     console.log("Server running at port http://127.0.0.1:50051");
 });
+
+

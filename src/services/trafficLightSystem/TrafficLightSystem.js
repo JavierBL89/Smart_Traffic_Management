@@ -18,6 +18,17 @@ class TrafficLightSystem {
         this.visualRecognitionSystems = [];
     }
 
+    // setters
+
+    /**
+     * Set TLS state and the state of its traffic lights
+     * @param {*} newState 
+     */
+    setState(newState) {
+        this.state = newState;
+        this.updateLightsState(this.state);
+    }
+
     // getters
 
     /**
@@ -35,25 +46,27 @@ class TrafficLightSystem {
     }
 
     /**
+     * Get TLS state 
+     */
+    getState() {
+        return this.state;
+    }
+
+    /**
      * Get Traffic Light A
      */
-    get getTlA() {
-        return this._tlA;
+    getTlA() {
+        return this.tlA;
     }
 
     /**
      * Get Traffic Light B
      */
-    get getTlB() {
-        return this._tlB;
+    getTlB() {
+        return this.tlB;
     }
 
-    /**
-     * Get Traffic Light System state
-     */
-    get getState() {
-        return this._state;
-    }
+
 
     /**
      * Get list of all Traffic Lights associated to this system
