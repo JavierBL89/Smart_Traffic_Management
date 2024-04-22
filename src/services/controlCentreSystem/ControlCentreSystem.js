@@ -97,11 +97,11 @@ class ControlCentreSystem {
      * 
      * @param numOfScans number of mirco scans per scan cycle
      */
-    configNumOfScanCyclesVRS(numOfScanCycles) {
+    configTCSGreenCycleLength(greenCycleLength) {
         const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
         for (const tcs of listManager) {
-            tcs.configNumOfScanCyclesVRS(numOfScanCycles); // Configure visual recognition parameters
+            tcs.configTCSGreenCycleLength(greenCycleLength); // Configure visual recognition parameters
         }
     }
 
@@ -110,11 +110,11 @@ class ControlCentreSystem {
      * 
      * @param scanLengthInSeconds length of micro scans.
      */
-    configScanLengthInSecondsVRS(scanLengthInSeconds) {
+    configTCSNumOfTotalCycles(numbOfTotalCycles) {
         const listManager = TCSystemsListManager.getInstance(); // get instance of associated Traffic Control Systems list
         // iterate through list
         for (const tcs of listManager) {
-            tcs.configNumOfScanCyclesVRS(scanLengthInSeconds); // Configure visual recognition parameters
+            tcs.configTCSNumOfTotalCycles(numbOfTotalCycles); // Configure visual recognition parameters
         }
     }
 

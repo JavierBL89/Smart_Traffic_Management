@@ -12,10 +12,10 @@ const { ConfigRequest, ConfigResponse } = require('./protos/config_vrs_pb');
 
 var PROTO_PATH_1 = __dirname + '/protos/init_traffic_control_system.proto';
 var PROTO_PATH_2 = __dirname + '/protos/config_vrs.proto';
+var PROTO_PATH_3 = __dirname + '/protos/start_traffic_control.proto'
 
 let packageDefinition1 = protoLoader.loadSync(PROTO_PATH_1, {
-    keepCase: true,
-    longs: String,
+    keepCase: true, longs: String,
     enums: String,
     defaults: true,
     oneofs: true
@@ -28,18 +28,41 @@ let packageDefinition2 = protoLoader.loadSync(PROTO_PATH_2, {
     defaults: true,
     oneofs: true
 });
+
+let packageDefinition3 = protoLoader.loadSync(PROTO_PATH_3, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true
+});
+
 var protoDescriptor1 = grpc.loadPackageDefinition(packageDefinition1);
 var protoDescriptor2 = grpc.loadPackageDefinition(packageDefinition2);
+var protoDescriptor3 = grpc.loadPackageDefinition(packageDefinitio3);
 
-console.log(protoDescriptor2);
+
 const initTrafficControlSystemProto = protoDescriptor1.init_traffic_control_system;
 const configVisualRecognitionSystemsProto = protoDescriptor2.config_vrs;
-
+const startTrafficControlProtoProto = protoDescriptor3.start_traffic_control;
 
 const server = new grpc.Server();
 let controlCenterInstance;
 
+/****
+*
+**** SERVER STREAM COMMUNICATION *****
+**/
+server.addService(startTrafficControlProtoProto.StartTrafficControl.service, {
 
+    StartTrafficControl: (call) => {
+
+        const request = call.request;
+
+
+    }
+
+});
 
 /****
 * Service allows a user to initialize all systems Traffic Control Systems
@@ -78,29 +101,29 @@ server.addService(initTrafficControlSystemProto.InitTrafficControlSystem.service
 *
 **** BIDIRECTIONAL CLIENT STREAM-SERVER STREAM COMMUNICATION *****
 **/
-server.addService(configVisualRecognitionSystemsProto.ConfigVisualRecognitionSystems.service, {
+server.addService(configVisualRecognitionSystemsProto.ConfigTrafficControlSytem.service, {
 
-    ConfigVisualRecognitionSystems: (call) => {
+    ConfigTrafficControlSytem: (call) => {
 
         call.on('data', (request) => {
-            const numOfScans = request.numOfScans;
-            const scanLengthInSeconds = request.scanLengthInSeconds;
-            console.log(`Received numOfScans: ${numOfScans}, scanLengthInSeconds: ${scanLengthInSeconds}`);
+            const greenCycleLength = request.greenCycleLength;
+            const numbOfTotalCycles = request.numbOfTotalCycles;
+            console.log(`Received greenCycleLength: ${greenCycleLength}, numbOfTotalCycles: ${numbOfTotalCycles}`);
 
             /*** handle each parameter independatly ***/
 
             // process and report the number of scans
             try {
-                controlCenterInstance.configNumOfScanCyclesVRS(request.numOfScans);
-                call.write({ status: true, message: `Number of scans set to ${request.numOfScans}` });
+                controlCenterInstance.configTCSGreenCycleLength(request.greenCycleLength);
+                call.write({ status: true, message: `Number of scans set to ${request.greenCycleLength}` });
             } catch (error) {
                 call.write({ status: false, message: `Error setting number of scans: ${error.message}` });
             }
 
             // process and report the scan length in seconds
             try {
-                controlCenterInstance.configScanLengthInSecondsVRS(request.scanLengthInSeconds);
-                call.write({ status: true, message: `Scan length set to ${request.scanLengthInSeconds} seconds` });
+                controlCenterInstance.configTCSNumOfTotalCycles(request.numbOfTotalCycles);
+                call.write({ status: true, message: `Scan length set to ${request.numbOfTotalCycles} seconds` });
             } catch (error) {
                 call.write({ status: false, message: `Error setting scan length: ${error.message}` });
             }
@@ -111,6 +134,8 @@ server.addService(configVisualRecognitionSystemsProto.ConfigVisualRecognitionSys
         });
     }
 });
+
+
 
 /** 
  * Method responsible for configuring the Visusal Recognition Systems (VRS)

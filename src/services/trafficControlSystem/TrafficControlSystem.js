@@ -6,6 +6,7 @@ const StateRecord = require('../trafficLightSystem/StateRecord');
 const TrafficDataReportManager = require('./TrafficDataReportManager');
 
 const async = require('async');
+const TrafficControlManager = require('./TrafficControlManager');
 /**
  * The TrafficControlSystem class manages its associated Traffic Light Systems,
  * It orchestrates their operational cycles based on visual recognition data collected to optimize traffic flow.
@@ -31,6 +32,7 @@ class TrafficControlSystem {
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
         this.trafficReportManager = new TrafficDataReportManager(listOfTrafficLightSystems);
+        this.trafficControlManger = new TrafficControlManager(listOfTrafficLightSystems);
     }
 
     // setters
@@ -89,7 +91,7 @@ class TrafficControlSystem {
     }
 
     // Get numOfVisualRecognitionScans
-    getNumOfVisualRecognitionScans() {
+    getGreenCycleLength() {
         return this.numOfVisualRecognitionScans;
     }
 
@@ -225,69 +227,42 @@ class TrafficControlSystem {
 
 
     /**
-     * Method Configures the visual recognition (numOfScans) parameter for all associated Visual Recognition Systems.
+     * Method Configures traffic control (greenCycleLength) parameter for all associated Traffic Light Systems.
      * - The method logs the successful configuration of each VRS 
      * 
-     * - Array creates a thread pool to store a queue of tasks
-     * 
-     * @param numOfScans number of mirco scans per scan cycle
+     * @param greenCycleLength 
      */
-    configNumOfScanCyclesVRS(numOfScans) {
-        this.numOfVisualRecognitionScans = numOfScans;
-        // Create a thread pool with as many threads as there are VRS instances
-        const promisesQueue = [];
-        // Iterate over the list of TLSs associated
-        for (let tls of this.listOfTrafficLightSystems) {
-            // Iterate over the list of VRSs associated to each TLS
-            for (let vrs of tls.getVisualRecognitionSystems()) {
-                try {
-                    promisesQueue.push((callback) => {
-                        vrs.setNumOfTrafficScans(numOfScans);
-                        console.log(`Successfully configured number of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
-                        callback(); // Call the callback function to indicate completion
-                    })
-                } catch (error) {
-                    onsole.error(`Error configuring VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}:`, error);
-                    callback(error); // Pass the error to indicate failure
-                }
+    configTCSGreenCycleLength(greenCycleLength) {
 
-            };
+        try {
+            this.trafficControlManger.setStandardCycleTime(greenCycleLength)
+            console.log(`Successfully configured length in seconds of green cycle.`);
+        } catch (error) {
+            onsole.error(`Error configuring TCS`, error);
         }
+
+
 
     }
 
     /**
-     * Method Configures the visual recognition (scanLengthInSeconds) parameter for all associated Visual Recognition Systems.
-     * - The method logs the successful configuration of each VRS 
-     * 
-     * - Array creates a thread pool to store a queue of tasks
-     * 
-     * @param scanLengthInSeconds length of micro scans.
+     * Method Configures traffic control (numbOfTotalCycles) parameter for all associated Traffic Light Systems.
+     * - The method logs the successful configuration
+     *
+     * @param numbOfTotalCycles .
      */
-    configScanLengthInSecondsVRS(scanLengthInSeconds) {
-        this.scanLengthInSeconds = scanLengthInSeconds;
-        // Create a thread pool with as many threads as there are VRS instances
-        const promisesQueue = [];
-        // Iterate over the list of TLSs associated
-        for (let tls of this.listOfTrafficLightSystems) {
-            // Iterate over the list of VRSs associated to each TLS
-            for (let vrs of tls.getVisualRecognitionSystems()) {
-                try {
-                    promisesQueue.push((callback) => {
-                        vrs.setNumOfTrafficScans(scanLengthInSeconds);
-                        console.log(`Successfully configured the lengthInSeconds of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
-                        callback(); // Call the callback function to indicate completion
-                    })
-                } catch (error) {
-                    onsole.error(`Error configuring VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}:`, error);
-                    callback(error); // Pass the error to indicate failure
-                }
+    configTCSNumOfTotalCycles(numbOfTotalCycles) {
 
-            };
+        try {
+            this.trafficControlManger.setMaxCycles(numbOfTotalCycles);
+            console.log(`Successfully configured the lengthInSeconds of scans for VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}`);
+
+        } catch (error) {
+            console.error(`Error configuring VRS ${vrs.getSYSTEMID()} in TLS ${tls.getSystemId()}:`, error);
+
         }
 
     }
-
 }
 
 // Export the TrafficControlSystem class

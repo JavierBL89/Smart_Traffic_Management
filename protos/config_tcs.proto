@@ -3,7 +3,7 @@
 syntax = "proto3";
 
 // Package
-package config_vrs;
+package config_tcs;
 
 
 /****
@@ -15,9 +15,9 @@ package config_vrs;
 
 
 // Service definition
-service ConfigVisualRecognitionSystems {
+service ConfigTrafficControlSytem {
     
-    rpc ConfigVisualRecognitionSystems (stream ConfigRequest) returns (stream ConfigResponse) {};
+    rpc ConfigTrafficControlSytem (stream ConfigRequest) returns (stream ConfigResponse) {};
 }
 
 // Numbers to be added

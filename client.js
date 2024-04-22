@@ -76,7 +76,7 @@ async function controller(userIn) {
 
         case ("2"):  // BIDIRECTIONAL CLIENT STREAM-SERVER STREAM COMMUNICATION
 
-            await handleConfigVRS(); // wait till finishes to jump to next line
+            await handleConfigTCS(); // wait till finishes to jump to next line
             appMenu();   // display menu
             break;
 
@@ -123,16 +123,16 @@ function handleError(error, response) {
 * which are then sent to the server, proccess them independantly, 
 * and reports user with a stream of messages.
 **/
-async function handleConfigVRS(error, response) {
+async function handleConfigTCS(error, response) {
 
     // promise wrapper for async execution so that app menu is displayed only after task comppletition
     return new Promise(async (resolve, reject) => {
         try {
-            const numOfScans = await askQuestion("Enter the number of traffic scans per scan cycle: ");
-            const scanLengthInSeconds = await askQuestion("\nEnter the length in seconds of each traffic scan per scan cycle: ");
+            const greenCycleLength = await askQuestion("\nEnter the max length in seconds of the green phase for a traffic light system: ");
+            const numbOfTotalCycles = await askQuestion("Enter the max number of total traffic control cycles:");
 
             // Create a new ConfigRequest instance and init the streamming call
-            const configRequestStream = client_service_2.ConfigVisualRecognitionSystems();
+            const configRequestStream = client_service_2.ConfigTrafficControlSytem();
 
             // delay to display app menu after task completition
             setTimeout(() => {
@@ -161,17 +161,17 @@ async function handleConfigVRS(error, response) {
 
             // send stream of data entered after stream setup
             configRequestStream.write({
-                numOfScans: parseInt(numOfScans),
-                scanLengthInSeconds: parseInt(scanLengthInSeconds)
+                greenCycleLength: parseInt(greenCycleLength),
+                numbOfTotalCycles: parseInt(numbOfTotalCycles)
             });
 
             // listen for more commands during connection to send or end the stream
             r1.on('line', (input) => {
-                const [command, scans, length] = input.split(' ');
+                const [command, greenCycleLength, numbOfTotalCycles] = input.split(' ');
                 if (command === 'send') {
                     configRequestStream.write({
-                        numOfScans: parseInt(scans),
-                        scanLengthInSeconds: parseInt(length)
+                        greenCycleLength: parseInt(greenCycleLength),
+                        numbOfTotalCycles: parseInt(numbOfTotalCycles)
                     });
                 } else if (command === 'end') {
                     configRequestStream.end();
