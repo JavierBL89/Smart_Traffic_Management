@@ -131,6 +131,10 @@ class TrafficControlSystem {
         return this.trafficControlManager;
     }
 
+    // get trafficControlManager
+    getTrafficReportManager() {
+        return this.trafficReportManager;
+    }
     // helper methods
 
     /**

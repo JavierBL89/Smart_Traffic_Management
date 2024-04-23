@@ -7,13 +7,20 @@ const ControlCentreSystem = require('./src/services/controlCentreSystem/ControlC
 
 
 // import gRPC service generated classes
-//const { InitRequest, InitResponse } = require('./protos/init_traffic_control_system_pb');
+
+const { InitRequest, InitResponse } = require('./protos/init_traffic_control_system_pb');
+
 const { ConfigRequest, ConfigResponse } = require('./protos/config_tcs_pb');
-//const { StartRequest, StartResponse } = require('./protos/start_traffic_control_pb');
+
+const { StartRequest, StartResponse } = require('./protos/start_traffic_control_pb');
+const { ReportConfig, ReportResponse } = require('./protos/traffic_report_pb');
+
 
 var PROTO_PATH_1 = __dirname + '/protos/init_traffic_control_system.proto';
 var PROTO_PATH_2 = __dirname + '/protos/config_tcs.proto';
-var PROTO_PATH_3 = __dirname + '/protos/start_traffic_control.proto'
+var PROTO_PATH_3 = __dirname + '/protos/start_traffic_control.proto';
+var PROTO_PATH_4 = __dirname + '/protos/traffic_report.proto';
+
 
 let packageDefinition1 = protoLoader.loadSync(PROTO_PATH_1, {
     keepCase: true, longs: String,
@@ -38,22 +45,109 @@ let packageDefinition3 = protoLoader.loadSync(PROTO_PATH_3, {
     oneofs: true
 });
 
+let packageDefinition4 = protoLoader.loadSync(PROTO_PATH_4, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true
+});
+
 var protoDescriptor1 = grpc.loadPackageDefinition(packageDefinition1);
 var protoDescriptor2 = grpc.loadPackageDefinition(packageDefinition2);
 var protoDescriptor3 = grpc.loadPackageDefinition(packageDefinition3);
-
+var protoDescriptor4 = grpc.loadPackageDefinition(packageDefinition4);
 
 const initTrafficControlSystemProto = protoDescriptor1.init_traffic_control_system;
 const configTrafficControlSystemProto = protoDescriptor2.config_tcs;
 const startTrafficControlProtoProto = protoDescriptor3.start_traffic_control;
+const configureTrafficReportProto = protoDescriptor3.traffic_report.proto;
 
 const server = new grpc.Server();
 let controlCenterInstance;
 
+/*****
+* CLENT STREAM RPC
+*  Service handles traffic report requests. 
+* It iterates through a list of traffic control systems associated with a Control Center
+* System, retrieves the traffic report manager instance for each system, and then calls a function
+* `handleTrafficReport` passing the traffic report manager, the gRPC call object, and a callbac function. 
+* If an error occurs during the process, it logs the error and sends an error message back
+* to the client through the gRPC call object.
+ */
+server.addService(configureTrafficReportProto.TrafficReport.service, {
+
+    TrafficReport: (call, callback) => {
+        try {
+
+            let trafficDataReportManager;
+            // iterate through the list of traffic control systems associated to Control Center System
+            for (let tcs of controlCenterInstance.getListTCSManager()) {
+                trafficDataReportManager = tcs.getTrafficReportManager();  // grab instance of the Traffic Control Manager class          
+            }
+            handleTrafficReport(trafficDataReportManager, call, callback);
+        } catch (error) {
+            console.error('Error while configuring traffic report parameters:', error);
+            call.write({ message: `Error: ${error.message}` });
+            call.end();
+        }
+    }
+});
+
+
+/**
+ * Method handles incoming data requests from client for different types of traffic
+ * reports and updates the traffic data report manager accordingly.
+ * 
+ * @param trafficDataReportManager - is an object that manages the traffic data reports.The function `handleTrafficReport` listens
+ * @param call - The `call` parameter is a gRPC call object that allows bidirectional streaming of data between the client and server.
+ * The `on` method is used to listen for events on the call object
+ * @param callback - is a function that will be called once the processing of the traffic data report is complete. 
+ * It sends a response back to the client or caller to indicate the status of the operation
+ */
+function handleTrafficReport(trafficDataReportManager, call, callback) {
+
+    call.on('data', (request) => {
+        try {
+            switch (request.reportType) {
+                case 'cars':
+                    trafficDataReportManager.reportCars(request.enable);
+                    break;
+                case 'buses':
+                    trafficDataReportManager.reportBuses(request.enable);
+                    break;
+                case 'bikes':
+                    trafficDataReportManager.reportBikes(request.enable);
+                    break;
+                case 'trucks':
+                    trafficDataReportManager.reportTrucks(request.enable);
+                    break;
+                case 'totalVehicles':
+                    trafficDataReportManager.reportTotalVehicles(request.enable);
+                    break;
+                case 'speedAverage':
+                    trafficDataReportManager.reportSpeedverage(request.enable);
+                    break;
+                case 'anomalies':
+                    trafficDataReportManager.reportAnomalies(request.enable);
+                    break;
+                default:
+                    console.error(`Unsupported report type: ${request.reportType}`);
+            }
+        } catch (error) {
+            console.error(`Error handling request for ${request.reportType}: ${error}`);
+            call.write({ success: false, message: `Error configuring ${request.reportType}: ${error.message}` });
+        }
+    });
+
+    call.on('end', () => {
+        callback(null, { success: true, message: 'Configuration for traffic report data succesful.' });
+    });
+};
+
 /****
-**** SERVER STREAM COMMUNICATION *****
-* Defines a gRPC service method called`StartTrafficControl` 
-* within the `startTrafficControlProtoProto.StartTrafficControl.service`.
+**** SERVER STREAM RPC *****
+*
 * This method is responsible for handling the start of a traffic control cycle. 
 */
 server.addService(startTrafficControlProtoProto.StartTrafficControl.service, {
@@ -65,7 +159,7 @@ server.addService(startTrafficControlProtoProto.StartTrafficControl.service, {
             controlCenterInstance.startTrafficControlCycle();
             // iterate through the list of traffic control systems associated to Control Center System
             for (let tcs of controlCenterInstance.getListTCSManager()) {
-                trafficManager = tcs.getTrafficControlManager();
+                trafficManager = tcs.getTrafficControlManager();   // grab instance of the Traffic Control Manager class
             }
             handleTrafficControlCycle(trafficManager, call);
         } catch (error) { // error handling
@@ -81,13 +175,13 @@ server.addService(startTrafficControlProtoProto.StartTrafficControl.service, {
 /**
  * This fucntion sets up event listeners for various traffic control and
  * data analysis events and writes corresponding messages to a call stream.
- * @param trafficManager - The `trafficManager` parameter is an event emitter 
- * that emits various events related to traffic control cycles, data collection,
+ * 
+ * @param trafficManager - is an event emitter that emits various events related to traffic control cycles, data collection,
  * data analysis, state updates, and error handling in a traffic management system. The function sets
  * up event listeners for different types of events emitted by
- * @param call - The `call` parameter is a communication channel used to send messages or data. 
+ * @param call - is a communication channel used to send messages or data. 
  * In this function, various events related to traffic control cycles, data collection, 
- * data analysis, state updates, and error handling are being listened to,
+ * data analysis, state updates, and error handling are being listened to
  */
 async function handleTrafficControlCycle(trafficManager, call) {
     /*** handle traffic control events ***/
