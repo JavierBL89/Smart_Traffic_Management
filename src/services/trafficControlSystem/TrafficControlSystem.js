@@ -4,11 +4,10 @@ const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManage
 const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
 const StateRecord = require('../trafficLightSystem/StateRecord');
-
 const TrafficDataReportManager = require('./TrafficDataReportManager');
-
 const async = require('async');
 const TrafficControlManager = require('./TrafficControlManager');
+const TrafficDataReport = require('./TrafficDataReport');
 /**
  * The TrafficControlSystem class manages its associated Traffic Light Systems,
  * It orchestrates their operational cycles based on visual recognition data collected to optimize traffic flow.
@@ -155,7 +154,7 @@ class TrafficControlSystem {
     initializeTLS1() {
         try {
             // Initialize the first Traffic Light System and its components
-            const tls1 = new TrafficLightSystem(); // Create a new instance
+            const tls1 = new TrafficLightSystem(new TrafficDataReport()); // Create a new instance
             if (!tls1.isOperative()) {
                 throw new Error("Traffic Light System 1 is not operative and could not be initialized.");
             }
@@ -176,7 +175,7 @@ class TrafficControlSystem {
     initializeTLS2() {
         try {
             // Initialize the first Traffic Light System and its components
-            const tls2 = new TrafficLightSystem(); // Create a new instance
+            const tls2 = new TrafficLightSystem(new TrafficDataReport()); // Create a new instance
             if (!tls2.isOperative()) {
                 throw new Error("Traffic Light System 2 is not operative and could not be initialized.");
             }

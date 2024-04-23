@@ -1,3 +1,4 @@
+
 /**
  * The TrafficDataReport class encapsulates all the relevant data related
  * to traffic analysis in a centralized report format. 
@@ -17,7 +18,17 @@ class TrafficDataReport {
         this.totalBuses = 0;
         this.totalAnomalies = 0;
         this.speedAverage = 0;
-        this.trafficDensityLevel = 0;
+        this.trafficDensityLevel = "";
+        this.tls1 = null;
+        this.tls2 = null;
+        this.cars = false;
+        this.bikes = false;
+        this.trucks = false;
+        this.buses = false;
+        this.anomalies = false;
+        this.tDensity = false;
+        this.tVehicles = false;
+
     }
 
 
@@ -73,10 +84,10 @@ class TrafficDataReport {
     };
 
     /**
-     * get TrafficDensityLevel
+     * get tDensityLevel
      */
-    getTrafficDensityLevel() {
-        return this.trafficDensityLevel;
+    getDensityLevel() {
+        return this.tDensityLevel;
     };
 
     /**
@@ -85,14 +96,12 @@ class TrafficDataReport {
     setTotalVehicles(totalVehicles) {
         checkNegativeValue(totalVehicles, "totalVehicles");
         this.totalVehicles += totalVehicles;
-
     };
 
     /**
      * set TotalBikes
      */
     setTotalBikes(totalBikes) {
-
         checkNegativeValue(totalBikes, "totalBikes");
         this.totalBikes += totalBikes;
     };
@@ -101,7 +110,6 @@ class TrafficDataReport {
      * set totalCars
      */
     setTotalCars(totalCars) {
-
         checkNegativeValue(totalCars, "totalCars");
         this.totalCars += totalCars;
     };
@@ -110,7 +118,6 @@ class TrafficDataReport {
      * set totalTrucks
      */
     setTotalTrucks(totalTrucks) {
-
         checkNegativeValue(totalTrucks, "totalTrucks");
         this.totalTrucks += totalTrucks;
     };
@@ -119,7 +126,6 @@ class TrafficDataReport {
      * set totalBuses
      */
     setTotalBuses(totalBuses) {
-
         checkNegativeValue(totalBuses, "totalBuses");
         this.totalBuses += totalBuses;
     };
@@ -128,7 +134,6 @@ class TrafficDataReport {
      * set totalAnomalies
      */
     setTotalAnomalies(totalAnomalies) {
-
         checkNegativeValue(totalAnomalies, "totalAnomalies");
         this.totalAnomalies += totalAnomalies;
     };
@@ -137,24 +142,71 @@ class TrafficDataReport {
      * set speedAverage
      */
     setSpeedAverage(speedAverage) {
-
         checkNegativeValue(speedAverage, "speedAverage");
         this.speedAverage += speedAverage;
     };
 
-    /**
-     * set trafficDensityLevel
-     */
-    setTrafficDensityLevel(trafficDensityLevel) {
-
-        checkNegativeValue(trafficDensityLevel, "trafficDensityLevel");
-        this.trafficDensityLevel += trafficDensityLevel;
-    };
-
-
 
     // helper methods
 
+    isBikes(boolean) {
+        this.bikes = boolean;
+    };
+
+    isTrucks(boolean) {
+        this.trucks = boolean;
+    };
+
+    isBuses(boolean) {
+        this.buses = boolean;
+
+    };
+    isAnomalies(boolean) {
+        this.anomalies = boolean;
+    };
+
+    isCars(boolean) {
+        this.cars = boolean;
+    }
+
+    istDensityLevel(boolean) {
+        this.tDensity = boolean;
+    }
+
+    isSpeedAverage() {
+        this.sAverage = boolean;
+    }
+
+    isTotalVehicles(boolean) {
+        this.tVehicles = boolean;
+    }
+
+    /***
+    * Method determines traffic density level
+    * and sets the traffic density report field accordinly
+    */
+    calcTrafficDensityLevel() {
+        if (this.totalVehicles <= 20) {
+            this.trafficDensityLevel = "LOW";  // set traffic report field
+        } else if (this.totalVehicles > 20) {
+            this.trafficDensityLevel = "MEDIUM"; // set traffic report field
+        } else if (this.totalVehicles >= 40) {
+            this.trafficDensityLevel = "HIGH";  // set traffic report field
+        }
+
+        return this.trafficDensityLevel;
+    }
+
+
+    /***
+    * Method simulates the operation of calculating the vehicles speed average
+    */
+    calcSpeedAverage() {
+        // generate a speed between 20 and 70
+        let average = Math.round(totalVehicles / Math.floor(Math.random() * (70 - 20 + 1)) + 20);
+        this.speedAverage = average;
+        return this.speedAverage;
+    }
 
     /**
      * Method checks for negative values
@@ -166,6 +218,29 @@ class TrafficDataReport {
         if (value < 0) {
             throw new Error(`Invalid data type for ${fieldName}. Must be a positive number.`);
         }
+    }
+
+
+    /**
+     * Generates a string representation of a traffic data report
+     * @returns report
+     */
+    getReport() {
+
+        let report = "";
+
+        if (this.cars) { report += "- Total cars " + this.getTotalCars() };
+        if (this.bikes) { report += "- Total bikes " + this.getTotalBikes() };
+        if (this.trucks) { report += "- Total trucks " + this.getTotalTrucks() };
+        if (this.buses) { report += "- Total buses " + this.getTotalBuses() };
+        if (this.anomalies) { report += "- Total anomalies " + this.getTotalAnomalies() };
+        if (this.tVehicles) { report += "- Total of vehicles reported " + this.getTotalVehicles() };
+        if (this.tDensity) { report += "- Total of vehicles reported " + this.calcTrafficDensityLevel() };
+        if (this.sAverage) { report += "- Total speed average " + this.calcSpeedAverage() };
+
+
+        return report.trim();
+
     }
 
 }

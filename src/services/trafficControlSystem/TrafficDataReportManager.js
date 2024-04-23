@@ -1,5 +1,6 @@
+const EventEmitter = require('events');
 
-
+// import required classes
 const TrafficDataReport = require('./TrafficDataReport');
 
 /**
@@ -7,10 +8,11 @@ const TrafficDataReport = require('./TrafficDataReport');
  * data from various Traffic Light Systems and updates the TrafficDataReport 
  * with compiled results.
  */
-class TrafficDataReportManager {
+class TrafficDataReportManager extends EventEmitter {
 
     constructor(listOfTrafficLightSystems) {
-        this.trafficDataReport = new TrafficDataReport();
+        this.tls1Report = new TrafficDataReport();
+        this.tls2Report = new TrafficDataReport();
         this.listOfTrafficLightSystems = listOfTrafficLightSystems;
         this.tls1 = null;
         this.tls2 = null;
@@ -49,45 +51,107 @@ class TrafficDataReportManager {
      * 2. For each VRS, retrieves traffic data metrics such as total vehicles, anomalies, bikes, buses, cars, and trucks.
      * 3. Aggregates these metrics into a central TrafficDataReport object by updating its respective properties.
      */
-    collecDataFromTCSystems() {
+    /* collecDataFromTCSystems() {
+ 
+         // collect data from all VRS associated to TLS1
+         this.tls1VRSystems.forEach(vrs => {
+             try {
+                 this.trafficDataReport.setTotalVehicles(vrs.getTotalVehicles());
+                 this.trafficDataReport.setTotalAnomalies(vrs.getTotalAnomalies());
+                 this.trafficDataReport.setTotalBikes(vrs.getTotalBikes());
+                 this.trafficDataReport.setTotalBuses(vrs.getTotalBuses());
+                 this.trafficDataReport.setTotalCars(vrs.getTotalCars());
+                 this.trafficDataReport.setTotalTrucks(vrs.getTotalTrucks());
+             } catch (error) {
+                 console.error(`Error updating repor data from VRS: ${error.message}`);
+                 // Handle specific error scenarios or log the error
+             }
+         });
+ 
+         // collect data from all VRS associated to TLS2
+         this.tls2VRSystems.forEach(vrs => {
+             try {
+                 this.trafficDataReport.setTotalVehicles(vrs.getTotalVehicles());
+                 this.trafficDataReport.setTotalAnomalies(vrs.getTotalAnomalies());
+                 this.trafficDataReport.setTotalBikes(vrs.getTotalBikes());
+                 this.trafficDataReport.setTotalBuses(vrs.getTotalBuses());
+                 this.trafficDataReport.setTotalCars(vrs.getTotalCars());
+                 this.trafficDataReport.setTotalTrucks(vrs.getTotalTrucks());
+             } catch (error) {
+                 console.error(`Error updating repor data from VRS: ${error.message}`);
+                 // Handle specific error scenarios or log the error
+             }
+         });
+ 
+     }*/
 
-        // collect data from all VRS associated to TLS1
-        this.tls1VRSystems.forEach(vrs => {
-            try {
-                this.trafficDataReport.setTotalVehicles(vrs.getTotalVehicles());
-                this.trafficDataReport.setTotalAnomalies(vrs.getTotalAnomalies());
-                this.trafficDataReport.setTotalBikes(vrs.getTotalBikes());
-                this.trafficDataReport.setTotalBuses(vrs.getTotalBuses());
-                this.trafficDataReport.setTotalCars(vrs.getTotalCars());
-                this.trafficDataReport.setTotalTrucks(vrs.getTotalTrucks());
-            } catch (error) {
-                console.error(`Error updating repor data from VRS: ${error.message}`);
-                // Handle specific error scenarios or log the error
-            }
-        });
+    /**
+     * 
+     */
+    reportCars() {
+        this.tls1Report.isCars(true);
+        this.tls2Report.isCars(true)
+    };
 
-        // collect data from all VRS associated to TLS2
-        this.tls2VRSystems.forEach(vrs => {
-            try {
-                this.trafficDataReport.setTotalVehicles(vrs.getTotalVehicles());
-                this.trafficDataReport.setTotalAnomalies(vrs.getTotalAnomalies());
-                this.trafficDataReport.setTotalBikes(vrs.getTotalBikes());
-                this.trafficDataReport.setTotalBuses(vrs.getTotalBuses());
-                this.trafficDataReport.setTotalCars(vrs.getTotalCars());
-                this.trafficDataReport.setTotalTrucks(vrs.getTotalTrucks());
-            } catch (error) {
-                console.error(`Error updating repor data from VRS: ${error.message}`);
-                // Handle specific error scenarios or log the error
-            }
-        });
+    /**
+     * 
+     */
+    reportBuses() {
+        this.tls1Report.isBuses(true);
+        this.tls2Report.isBuses(true);
+    };
 
+    /**
+     * 
+     */
+    reportBikes() {
+        this.tls1Report.isBikes(true);
+        this.tls2Report.isBikes(true)
+    };
+
+    /**
+    * 
+    */
+    reportTrucks() {
+        this.tls1Report.isTrucks(true);
+        this.tls2Report.isTrucks(true)
+    };
+
+    /**
+     * 
+     */
+    reportAnomalies() {
+        this.tls1Report.isAnomalies(true);
+        this.tls2Report.isAnomalies(true)
     }
 
-    generateReport() {
-        // Compile and return the traffic report
-        console.log("Generating traffic report...");
-        return this.trafficDataReport;
+    /**
+  * 
+  */
+    reportSpeedverage() {
+        this.tls1Report.isSpeedAverage(true);
+        this.tls2Report.isSpeedAverage(true)
     }
+
+    /**
+     * 
+     */
+    reportTotalVehicles() {
+        this.tls1Report.totalVehicles(true);
+        this.tls2Report.totalVehicles(true)
+    }
+
+    /**
+     * 
+     */
+    getAndSendReport() {
+
+        const tls1data = this.tls1Report.getReport();
+        const tls2data = this.tls2Report.getReport();
+
+        this.emit('trafficReport', tls1data, tls2data);
+    }
+
 }
 
 module.exports = TrafficDataReportManager;

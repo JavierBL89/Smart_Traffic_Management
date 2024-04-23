@@ -40,7 +40,6 @@ class TrafficControlManager extends EventEmitter {
         this.resetCycle = false;
         this.yellowPhaseLength = 2;    // set yellow Phase Length 
         this.listOfTrafficLightSystems = listOfTrafficLightSystems;
-
     }
 
 

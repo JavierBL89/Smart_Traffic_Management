@@ -1,5 +1,5 @@
 const TrafficDataCollector = require('./TrafficDataCollector');
-
+const TrafficDataReportManager = require('../trafficControlSystem/TrafficDataReportManager');
 
 /**
  * 
@@ -40,12 +40,6 @@ class VisualRecognitionSystem {
         this.trafficLightID = TrafficLightSystemID;
     }
 
-    /**
-     * Set number of micro traffic scans
-     */
-    setNumOfTrafficScans(numOfTrafficScans) {
-        this.numOfTrafficScans = numOfTrafficScans;
-    }
 
     /**
      * Set length of each micro traffic scan by seconds
@@ -64,19 +58,18 @@ class VisualRecognitionSystem {
     }
 
     /**
-     * Get getNumOfTrafficScans
-     */
-    getNumOfTrafficScans() {
-        return this.numOfTrafficScans;
-    }
-
-    /**
      * Get total of Vehicles per scan
      */
-
     getTotalVehicles() {
         this.totalVehicles = (this.tdc.getCarCounter() + this.tdc.getBikeCounter() + this.tdc.getBusCounter() + this.tdc.getTruckCounter());
         return this.totalVehicles;
+    }
+
+    /***
+     * Get traffic density
+     */
+    getTrafficDensity() {
+        return this.tdc.geetTrafficDensity();
     }
 
     /**
@@ -123,8 +116,15 @@ class VisualRecognitionSystem {
     /**
      * Methos responsible for startting visual recognition proccess
      * **/
-    startDataCollectorCycle() {
-        this.tdc.startDataCollector();
+    async startDataCollectorCycle(reportInstance) {
+        await this.tdc.startDataCollector();
+
+        reportInstance.setTotalVehicles(this.tdc.getTotalVehicles());
+        reportInstance.setTotalBikes(this.tdc.getBikeCounter());
+        reportInstance.setTotalCars(this.tdc.getCarCounter());
+        reportInstance.setTotalTrucks(this.tdc.getTruckCounter());
+        reportInstance.setTotalBuses(this.tdc.getBusCounter());
+        reportInstance.setTotalAnomalies(this.tdc.getAnomalies());
     }
 
     /**

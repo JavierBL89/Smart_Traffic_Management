@@ -35,6 +35,99 @@ class TrafficDataCollector {
         this.randomNumber = 0;
     }
 
+
+    //setters 
+
+    /**
+     * Set setCycleTime
+     */
+    setScanTime(scanLengthInSeconds) {
+        this.scanLengthInSeconds = scanLengthInSeconds;
+    }
+
+    /**
+     * Set setCycleTime
+     */
+    setBusCounter(busCounter) {
+        this.busCounter = busCounter;
+    }
+
+    /**
+     * Set setCycleTime
+     */
+    setNumOfTrafficScans(numOfCycles) {
+        this.numOfTrafficScans = numOfCycles;
+    }
+
+    /**
+     * Set carCounter
+     */
+    setCarCounter(carCounter) {
+        this.carCounter = carCounter;
+    }
+
+    /**
+     * Set truckCounter
+     */
+    setTruckCounter(truckCounter) {
+        this.truckCounter = truckCounter;
+    }
+
+    /**
+     * Set bikeCounter
+     */
+    setBikeCounter(bikeCounter) {
+        this.bikeCounter = bikeCounter;
+    }
+
+
+
+    // getters
+
+
+    /**
+     * Get getNumOfTrafficScans
+     */
+    getNumOfTrafficScans() {
+        return this.numOfTrafficScans;
+    }
+
+    /**
+     * Get get scan time in nanoseconds
+     */
+    getScanTime() {
+        return this.scanLengthInSeconds;
+    }
+
+    /**
+     * Get getBusCounter
+     */
+    getBusCounter() {
+        return this.busCounter;
+    }
+
+    /**
+     * Get getCarCounter
+     */
+    getCarCounter() {
+        return this.carCounter;
+    }
+
+    /**
+     * Get getTruckCounter
+     */
+    getTruckCounter() {
+        return this.truckCounter;
+    }
+
+    /**
+     * Get getBikeCounter
+     */
+    getBikeCounter() {
+        return this.bikeCounter;
+    }
+
+
     // helper methods
 
     /***
@@ -47,7 +140,7 @@ class TrafficDataCollector {
      * This way it simulates a real word scenario to schedule a traffic scan  for n seconds 
      * per n number of times to complete a traffic scan cycle where would be more appropriate to use a timer.
      * **/
-    startDataCollector() {
+    async startDataCollector() {
 
         this.carCounter = 0;
         this.truckCounter = 0;
@@ -65,8 +158,7 @@ class TrafficDataCollector {
             console.error("Error occurred while collecting traffic data: " + e.message);
             return;
         }
-
-        //getAnomalies();            // check traffic anomalies
+        getAnomalies();            // check traffic anomalies
     }
 
     /***
@@ -117,102 +209,14 @@ class TrafficDataCollector {
         console.log(str);
     }
 
-    /***
-     * Method simulates the operation of calculating the vehicles speed average
-     */
-    getSpeedAverage() {
-        return Math.floor(Math.random() * 70); // generate a random number between 0 and 70
-    }
-
-    //setters 
-
     /**
-     * Set setCycleTime
-     */
-    setScanTime(scanLengthInSeconds) {
-        this.scanLengthInSeconds = scanLengthInSeconds;
+   * Get total of Vehicles per scan
+   */
+    getTotalVehicles() {
+        this.totalVehicles = (this.tdc.getCarCounter() + this.tdc.getBikeCounter() + this.tdc.getBusCounter() + this.tdc.getTruckCounter());
+        return this.totalVehicles;
     }
 
-    /**
-     * Set setCycleTime
-     */
-    setBusCounter(busCounter) {
-        this.busCounter = busCounter;
-    }
-
-    /**
-     * Set setCycleTime
-     */
-    setNumOfTrafficScans(numOfCycles) {
-        this.numOfTrafficScans = numOfCycles;
-    }
-
-    /**
-     * Set carCounter
-     */
-    setCarCounter(carCounter) {
-        this.carCounter = carCounter;
-    }
-
-    /**
-     * Set truckCounter
-     */
-    setTruckCounter(truckCounter) {
-        this.truckCounter = truckCounter;
-    }
-
-    /**
-     * Set bikeCounter
-     */
-    setBikeCounter(bikeCounter) {
-        this.bikeCounter = bikeCounter;
-    }
-
-
-    // getters
-
-
-    /**
-     * Get getNumOfTrafficScans
-     */
-    getNumOfTrafficScans() {
-        return this.numOfTrafficScans;
-    }
-
-    /**
-     * Get get scan time in nanoseconds
-     */
-    getScanTime() {
-        return this.scanLengthInSeconds;
-    }
-
-    /**
-     * Get getBusCounter
-     */
-    getBusCounter() {
-        return this.busCounter;
-    }
-
-    /**
-     * Get getCarCounter
-     */
-    getCarCounter() {
-        return this.carCounter;
-    }
-
-    /**
-     * Get getTruckCounter
-     */
-    getTruckCounter() {
-        return this.truckCounter;
-    }
-
-    /**
-     * Get getBikeCounter
-     */
-    getBikeCounter() {
-        return this.bikeCounter;
-    }
 }
 
 // Export the VisualRecognitionSystem class

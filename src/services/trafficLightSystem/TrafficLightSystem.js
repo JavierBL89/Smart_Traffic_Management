@@ -10,12 +10,17 @@ class TrafficLightSystem {
     // vars
     static nextSystemID = 304;
 
-    constructor() {
+    constructor(reportInstance) {
         this.systemID = ++TrafficLightSystem.nextSystemID;   // auto increment id
         this.operative = true;
         this.state = "";
         this.trafficLights = [];
         this.visualRecognitionSystems = [];
+        this.reportInstance = reportInstance;
+        this.trafficDensity = "";
+        this.speedAverage = 0;
+        this.totalOfVehicles = 0;
+        this.totalAnomalies = 0;
     }
 
     // setters
@@ -74,6 +79,14 @@ class TrafficLightSystem {
      */
     getTrafficLights() {
         return this.trafficLights;
+    }
+
+
+    /***
+     * Get an instance of trafic data report object
+     */
+    getReportIntence() {
+        return this.reportInstance;
     }
 
     /**
@@ -206,7 +219,7 @@ class TrafficLightSystem {
     async startVRDataCollection() {
         // Iterates over the list of Visual Recognition Systems associated to this Traffic Light System
         for (let vrs of this.visualRecognitionSystems) {
-            await vrs.startDataCollectorCycle();
+            await vrs.startDataCollectorCycle(this.reportInstance);
             console.log("Data collection finished...");
         }
         console.log("Data collection started...");
@@ -221,6 +234,9 @@ class TrafficLightSystem {
             vrs.printDetailedScanReport();
         }
     }
+
+
+
 }
 
 // Export the TrafficLightSystem class
