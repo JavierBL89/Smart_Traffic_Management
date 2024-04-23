@@ -97,8 +97,9 @@ proto.traffic_report.ReportConfig.prototype.toObject = function(opt_includeInsta
  */
 proto.traffic_report.ReportConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
-    reporttype: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    enable: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+    totalvehicles: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    trafficdensity: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    speedaverage: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -137,11 +138,15 @@ proto.traffic_report.ReportConfig.deserializeBinaryFromReader = function(msg, re
     switch (field) {
     case 1:
       var value = /** @type {string} */ (reader.readString());
-      msg.setReporttype(value);
+      msg.setTotalvehicles(value);
       break;
     case 2:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setEnable(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTrafficdensity(value);
+      break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSpeedaverage(value);
       break;
     default:
       reader.skipField();
@@ -172,17 +177,24 @@ proto.traffic_report.ReportConfig.prototype.serializeBinary = function() {
  */
 proto.traffic_report.ReportConfig.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getReporttype();
+  f = message.getTotalvehicles();
   if (f.length > 0) {
     writer.writeString(
       1,
       f
     );
   }
-  f = message.getEnable();
-  if (f) {
-    writer.writeBool(
+  f = message.getTrafficdensity();
+  if (f.length > 0) {
+    writer.writeString(
       2,
+      f
+    );
+  }
+  f = message.getSpeedaverage();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
       f
     );
   }
@@ -190,10 +202,10 @@ proto.traffic_report.ReportConfig.serializeBinaryToWriter = function(message, wr
 
 
 /**
- * optional string reportType = 1;
+ * optional string totalVehicles = 1;
  * @return {string}
  */
-proto.traffic_report.ReportConfig.prototype.getReporttype = function() {
+proto.traffic_report.ReportConfig.prototype.getTotalvehicles = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
@@ -202,26 +214,44 @@ proto.traffic_report.ReportConfig.prototype.getReporttype = function() {
  * @param {string} value
  * @return {!proto.traffic_report.ReportConfig} returns this
  */
-proto.traffic_report.ReportConfig.prototype.setReporttype = function(value) {
+proto.traffic_report.ReportConfig.prototype.setTotalvehicles = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional bool enable = 2;
- * @return {boolean}
+ * optional string trafficDensity = 2;
+ * @return {string}
  */
-proto.traffic_report.ReportConfig.prototype.getEnable = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 2, false));
+proto.traffic_report.ReportConfig.prototype.getTrafficdensity = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /**
- * @param {boolean} value
+ * @param {string} value
  * @return {!proto.traffic_report.ReportConfig} returns this
  */
-proto.traffic_report.ReportConfig.prototype.setEnable = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 2, value);
+proto.traffic_report.ReportConfig.prototype.setTrafficdensity = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string speedAverage = 3;
+ * @return {string}
+ */
+proto.traffic_report.ReportConfig.prototype.getSpeedaverage = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.traffic_report.ReportConfig} returns this
+ */
+proto.traffic_report.ReportConfig.prototype.setSpeedaverage = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 

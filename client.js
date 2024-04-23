@@ -6,15 +6,17 @@ const readLine = require('readline');
 // import gRPC generated classes
 const { ConfigRequest, ConfigResponse } = require('./protos/config_tcs_pb');
 
-const r1 = readLine.createInterface({
+const rl = readLine.createInterface({
 
     input: process.stdin,
     output: process.stdout
 });
 
+
 var PROTO_PATH_1 = __dirname + '/protos/init_traffic_control_system.proto';
 var PROTO_PATH_2 = __dirname + '/protos/config_tcs.proto';
 var PROTO_PATH_3 = __dirname + '/protos/start_traffic_control.proto'
+var PROTO_PATH_4 = __dirname + '/protos/traffic_report.proto'
 
 let packageDefinition1 = grpc.loadPackageDefinition(
     protoLoader.loadSync(PROTO_PATH_1, {
@@ -47,23 +49,35 @@ let packageDefinition3 = grpc.loadPackageDefinition(
 );
 
 
+let packageDefinition4 = grpc.loadPackageDefinition(
+    protoLoader.loadSync(PROTO_PATH_4, {
+        keepCase: true,
+        longs: String,
+        enums: String,
+        defaults: true,
+        oneofs: true
+    })
+);
+
 const client_service_1 = new packageDefinition1.init_traffic_control_system.InitTrafficControlSystem('127.0.0.1:50051', grpc.credentials.createInsecure());
 const client_service_2 = new packageDefinition2.config_tcs.ConfigTrafficControlSytem('127.0.0.1:50051', grpc.credentials.createInsecure());
-var client_service_3 = new packageDefinition3.start_traffic_control.StartTrafficControl('127.0.0.1:50051', grpc.credentials.createInsecure());
+const client_service_3 = new packageDefinition3.start_traffic_control.StartTrafficControl('127.0.0.1:50051', grpc.credentials.createInsecure());
+const client_service_4 = new packageDefinition4.traffic_report.TrafficReport('127.0.0.1:50051', grpc.credentials.createInsecure());
 
 
 /****
  * Method displays a console-based user interface.
  * It propmts user to enter one of the menu options and call controller()
  * to manage the input
- */ async function appMenu() {
+ */
+async function appMenu() {
 
     console.log('\nPlease select an option');
-    //console.log('1: Add a new Traffic Control System to the network (Urinary) (AddTrafficControlSystem)');
     console.log('1: Initialize Traffic Control Systems (Urinary) (InitTrafficControlSystem service)');
     console.log("2: Configure Visual Recognition Systems 'Systems must be previously initialized' (Bidirectional client stream - server stream) (ConfigureVisualRecognitionSystems service)");
-    console.log("3: Start traffic control cycle' (Server Stream) (StartTrafficControl service)");
-    console.log("4: Exit");
+    console.log("3: Configure desired data shown on traffic reports' (Client Stream) (TrafficReport service)");
+    console.log("4: Start traffic control cycle' (Server Stream) (StartTrafficControl service)");
+    console.log("5: Exit");
     const userIn = await askQuestion("\nEnter an option ");
     controller(userIn);
 }
@@ -77,39 +91,111 @@ var client_service_3 = new packageDefinition3.start_traffic_control.StartTraffic
  */
 async function controller(userIn) {
 
-
     switch (userIn.trim()) {
 
-        case ("1"):   //  URINARY CALL
+        case ("1"):   //  URINARY RPC
 
-            const initCall = client_service_1.InitTrafficControlSystem({}, (error, response) => {
+            client_service_1.InitTrafficControlSystem({}, (error, response) => {
                 handleError(error, response); // error handling
                 appMenu();
             });
             break;
 
-        case ("2"):  // BIDIRECTIONAL CLIENT STREAM-SERVER STREAM COMMUNICATION
+        case ("2"):  // BIDIRECTIONAL CLIENT STREAM-SERVER STREAM RPC
 
             await handleConfigTCS(); // wait till finishes to jump to next line
             appMenu();   // display menu
             break;
 
-        case ("3"):  // SERVER STREAM COMMUNICATION
+        case ("3"): // CLIENT STREAM RPC
+            await handleConfigReport();  // wait till finishes to jump to next line
+            appMenu();   // display menu
+            break;
+
+        case ("4"):  // SERVER STREAM RCP
             await handleStartControlCycle(); // error handling
             appMenu();
             break;
 
-        case ("4"):
+        case ("5"):
             console.log("Exiting application");
             running = false;
             break;
 
         default:
             console.log("Invalid input. Exiting...");
-            r1.close(); // Close readline interface
+            rl.close(); // Close readline interface
             break;
     }
 
+}
+
+
+/****
+ * 
+ */
+async function handleConfigReport() {
+
+    // promise wrapper for async execution so that app menu is displayed only after task comppletition
+    return new Promise(async (resolve, reject) => {
+        try {
+
+            const totalVehicles = await askQuestion("\nReport total number of vehicles 'y/n': ");
+            const trafficDensity = await askQuestion("Report traffic desnsity levels 'y/n': ");
+            const speedAverage = await askQuestion("Report vehicles speed average 'y/n': ");
+
+            // Create a ReportConfig instance and init the streamming call
+            const clientStreamRequest = client_service_4.ConfigureReport();
+
+            clientStreamRequest.on('data', (response) => {
+                console.log('Server response:', response.message);
+            });
+
+            // log a messsage when server ends connection
+            clientStreamRequest.on('end', () => {
+                console.log('Server ends connection..');
+                resolve(true); // it resolves true when the server ends the connection
+
+            });
+
+            // handle any errors during the stream request.
+            clientStreamRequest.on('error', (error) => {
+                console.error("Error. Something went wrong during client request streaming:", error);
+                resolve(false); // it resolves false if an error occurs during the streaming
+
+            });
+
+            clientStreamRequest.write({
+                totalVehicles: totalVehicles.trim(),
+                trafficDensity: trafficDensity.trim(),
+                speedAverage: speedAverage.trim()
+            });
+            clientStreamRequest.end();
+
+            //listen for commands during connection to send or end the stream
+            /* rl.on('line', (input) => {
+ 
+                 const [command, totalVehicles, trafficDensity, speedAverage] = input.split(' ');
+                 // Log the values received for debugging
+                 console.log("Received command:", command);
+                 console.log("Total Vehicles:", totalVehicles);
+                 console.log("Traffic Density:", trafficDensity);
+                 console.log("Speed Average:", speedAverage);
+                 if (command === 'send') {
+                     clientStreamRequest.write({
+                         totalVehicles: totalVehicles.trim(),
+                         trafficDensity: trafficDensity.trim(),
+                         speedAverage: speedAverage.trim()
+                     });
+                 } else if (command === 'end') {
+                     clientStreamRequest.end();
+                 }
+             });*/
+        } catch (error) {
+            console.error("Configuration failed with an exception:", error);
+            reject(error); // Reject the promise if there is an exception
+        }
+    });
 }
 
 /****
@@ -119,18 +205,20 @@ async function controller(userIn) {
  * with real-time updates and handling any communication errors.
  * */
 async function handleStartControlCycle() {
+
     let call = client_service_3.StartTrafficControl({});
 
     call.on('data', (response) => {
         console.log('\nReceived from server:', response.message);
     })
+    // handle any error during communication
     call.on('error', (error) => {
         console.error('\nError from server:', error.message);
-        appMenu();
+
     })
     call.on('end', (response) => {
         console.log('\nServer ended stream');
-        appMenu();
+
     })
 }
 
@@ -162,7 +250,7 @@ function handleError(error, response) {
 * which are then sent to the server, proccess them independantly, 
 * and reports user with a stream of messages.
 **/
-async function handleConfigTCS(error, response) {
+async function handleConfigTCS() {
 
     // promise wrapper for async execution so that app menu is displayed only after task comppletition
     return new Promise(async (resolve, reject) => {
@@ -184,6 +272,7 @@ async function handleConfigTCS(error, response) {
                 console.log('Update confirmation:', response.message);
 
             });
+
             // log a messsage when server ends connection
             configRequestStream.on('end', () => {
                 console.log('Server ends connection..');
@@ -198,14 +287,14 @@ async function handleConfigTCS(error, response) {
 
             });
 
-            // send stream of data entered after stream setup
-            configRequestStream.write({
+
+            /*configRequestStream.write({
                 greenCycleLength: parseInt(greenCycleLength),
                 numbOfTotalCycles: parseInt(numbOfTotalCycles)
-            });
+            });*/
 
-            // listen for more commands during connection to send or end the stream
-            r1.on('line', (input) => {
+            // listen for commands during connection to send or end the stream
+            rl.on('line', (input) => {
                 const [command, greenCycleLength, numbOfTotalCycles] = input.split(' ');
                 if (command === 'send') {
                     configRequestStream.write({
@@ -227,8 +316,9 @@ async function handleConfigTCS(error, response) {
  * Method handles user prompts
  */
 function askQuestion(query) {
-    return new Promise(resolve => r1.question(query, resolve));
+    return new Promise(resolve => rl.question(query, resolve));
 };
+
 
 /****************************************************************** */
 

@@ -93,13 +93,6 @@ class VisualRecognitionSystem {
         return this.systemID;
     }
 
-    /**
-     * Get length(on seconds) of each micro Traffic Scan
-     * @return the scanTime
-     */
-    getScanTimeInNanoSeconds() {
-        return this.scanLengthInSeconds;
-    }
 
     // helper methods
 

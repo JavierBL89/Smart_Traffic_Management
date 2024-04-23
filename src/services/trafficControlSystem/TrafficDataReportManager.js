@@ -11,6 +11,7 @@ const TrafficDataReport = require('./TrafficDataReport');
 class TrafficDataReportManager extends EventEmitter {
 
     constructor(listOfTrafficLightSystems) {
+        super();
         this.tls1Report = new TrafficDataReport();
         this.tls2Report = new TrafficDataReport();
         this.listOfTrafficLightSystems = listOfTrafficLightSystems;
@@ -37,80 +38,40 @@ class TrafficDataReportManager extends EventEmitter {
         this.tls1 = listOfTrafficLightSystems[0];
         this.tls2 = listOfTrafficLightSystems[1];
 
+        this.tls1Report.setTLS(tls1);   // associate traffic report instance to a TLS1
+        this.tls1Report.setTLS(tls2);  // associate traffic report instance to a TLS2 
+
         // grab the list of Visual Recognition Systems assocciated to each (TLS)
         this.tls1VRSystems = tls1.visualRecognitionSystems;
         this.tls2VRSystems = tls2.visualRecognitionSystems;
     }
 
     /**
-     * Collects traffic data from all Visual Recognition Systems (VRS) associated with two Traffic Light Systems (TLS),
-     * aggregating the data into a TrafficDataReport instance.
-     *
-     * Operations Performed:
-     * 1. Iterates over each VRS associated with TLS1 and TLS2.
-     * 2. For each VRS, retrieves traffic data metrics such as total vehicles, anomalies, bikes, buses, cars, and trucks.
-     * 3. Aggregates these metrics into a central TrafficDataReport object by updating its respective properties.
-     */
-    /* collecDataFromTCSystems() {
- 
-         // collect data from all VRS associated to TLS1
-         this.tls1VRSystems.forEach(vrs => {
-             try {
-                 this.trafficDataReport.setTotalVehicles(vrs.getTotalVehicles());
-                 this.trafficDataReport.setTotalAnomalies(vrs.getTotalAnomalies());
-                 this.trafficDataReport.setTotalBikes(vrs.getTotalBikes());
-                 this.trafficDataReport.setTotalBuses(vrs.getTotalBuses());
-                 this.trafficDataReport.setTotalCars(vrs.getTotalCars());
-                 this.trafficDataReport.setTotalTrucks(vrs.getTotalTrucks());
-             } catch (error) {
-                 console.error(`Error updating repor data from VRS: ${error.message}`);
-                 // Handle specific error scenarios or log the error
-             }
-         });
- 
-         // collect data from all VRS associated to TLS2
-         this.tls2VRSystems.forEach(vrs => {
-             try {
-                 this.trafficDataReport.setTotalVehicles(vrs.getTotalVehicles());
-                 this.trafficDataReport.setTotalAnomalies(vrs.getTotalAnomalies());
-                 this.trafficDataReport.setTotalBikes(vrs.getTotalBikes());
-                 this.trafficDataReport.setTotalBuses(vrs.getTotalBuses());
-                 this.trafficDataReport.setTotalCars(vrs.getTotalCars());
-                 this.trafficDataReport.setTotalTrucks(vrs.getTotalTrucks());
-             } catch (error) {
-                 console.error(`Error updating repor data from VRS: ${error.message}`);
-                 // Handle specific error scenarios or log the error
-             }
-         });
- 
-     }*/
-
-    /**
-     * 
-     */
+   * Set isCars for both TLS traffic report instnace
+   */
     reportCars() {
         this.tls1Report.isCars(true);
         this.tls2Report.isCars(true)
     };
 
     /**
-     * 
-     */
+    * Set isBuses for both TLS traffic report instnace
+    */
     reportBuses() {
         this.tls1Report.isBuses(true);
         this.tls2Report.isBuses(true);
     };
 
     /**
-     * 
-     */
+    * Set isBikes for both TLS traffic report instnace
+    */
     reportBikes() {
         this.tls1Report.isBikes(true);
         this.tls2Report.isBikes(true)
     };
 
     /**
-    * 
+    * Set isTrucks for both TLS traffic report instnace
     */
     reportTrucks() {
         this.tls1Report.isTrucks(true);
@@ -118,39 +79,59 @@ class TrafficDataReportManager extends EventEmitter {
     };
 
     /**
-     * 
-     */
+    * Set isAnomalies for both TLS traffic report instnace
+    */
     reportAnomalies() {
         this.tls1Report.isAnomalies(true);
         this.tls2Report.isAnomalies(true)
     }
 
     /**
-  * 
-  */
+      * Set isSpeedAverage for both TLS traffic report instnace
+      */
     reportSpeedverage() {
         this.tls1Report.isSpeedAverage(true);
         this.tls2Report.isSpeedAverage(true)
     }
 
     /**
-     * 
-     */
+    * Set totalVehicles for both TLS traffic report instnace
+    */
     reportTotalVehicles() {
         this.tls1Report.totalVehicles(true);
         this.tls2Report.totalVehicles(true)
     }
 
     /**
-     * 
-     */
-    getAndSendReport() {
-
-        const tls1data = this.tls1Report.getReport();
-        const tls2data = this.tls2Report.getReport();
-
-        this.emit('trafficReport', tls1data, tls2data);
+    * Set trafficDensityLevel for both TLS traffic report instnace
+    */
+    reportTrafficDensity() {
+        this.tls1Report.trafficDensityLevel(true);
+        this.tls2Report.trafficDensityLevel(true)
     }
+
+    /***
+     *  Get TLS1 report
+     */
+    getTLS1report() {
+
+        this.emit('trafficTLS1Report', { report: this.tls2Report.getReport() });
+
+        return this.tls1Report.getReport();
+    }
+
+
+    /***
+     *  Get TLS1 report
+     */
+    getTLS2report() {
+
+        this.emit('trafficTLS2Report', { report: this.tls2Report.getReport() });
+
+        return this.tls2Report.getReport();
+    }
+
+
 
 }
 

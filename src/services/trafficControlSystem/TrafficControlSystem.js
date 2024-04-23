@@ -3,7 +3,6 @@
 const TCSystemsListManager = require('../controlCentreSystem/TCSystemsListManager');
 const TrafficLightSystem = require('../trafficLightSystem/TrafficLightSystem');
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
-const StateRecord = require('../trafficLightSystem/StateRecord');
 const TrafficDataReportManager = require('./TrafficDataReportManager');
 const async = require('async');
 const TrafficControlManager = require('./TrafficControlManager');
@@ -29,7 +28,7 @@ class TrafficControlSystem {
         this.numOfVisualRecognitionScans = 0;
         this.lengthOfVRScans = 0; // in nanoseconds
         this.cycleCount = 0;
-        this.maxCycles = 3;
+        this.maxCycles = 0;
         this.listOfTrafficLightSystems = [];
         this.tlsStateHistory = [];
         this.trafficReportManager = new TrafficDataReportManager(this.listOfTrafficLightSystems);
@@ -111,10 +110,6 @@ class TrafficControlSystem {
         return this.maxCycles;
     }
 
-    // Get trafficCycleLoops
-    getTrafficCycleLoops() {
-        return this.trafficCycleLoops;
-    }
 
     // Get listOfTrafficLightSystems
     getListOfTrafficLightSystems() {
@@ -135,6 +130,7 @@ class TrafficControlSystem {
     getTrafficReportManager() {
         return this.trafficReportManager;
     }
+
     // helper methods
 
     /**

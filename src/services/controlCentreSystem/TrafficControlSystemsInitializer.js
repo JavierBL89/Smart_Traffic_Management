@@ -62,7 +62,6 @@ class TrafficControlSystemsInitializer extends EventEmitter {
      */
     async startTrafficControlCycle() {
 
-
         for (let tcs of this.listOfTrafficControlSystems) {
             // server stream message
             this.emit("cycleStart", { cycleNumber: 1, state: "green", tls: tcs.getTls1().getSystemId() });

@@ -10,7 +10,7 @@
  */
 class TrafficDataReport {
 
-    constructor() {
+    constructor(tls) {
         this.totalVehicles = 0;
         this.totalBikes = 0;
         this.totalCars = 0;
@@ -19,8 +19,7 @@ class TrafficDataReport {
         this.totalAnomalies = 0;
         this.speedAverage = 0;
         this.trafficDensityLevel = "";
-        this.tls1 = null;
-        this.tls2 = null;
+        this.tls = tls;
         this.cars = false;
         this.bikes = false;
         this.trucks = false;
@@ -32,6 +31,12 @@ class TrafficDataReport {
     }
 
 
+    /****
+     * 
+     */
+    setTLS(tls) {
+        this.tls = tls;
+    }
     /**
      * get TotalVehicles
      */
@@ -94,7 +99,7 @@ class TrafficDataReport {
     * set TotalVehicles
     */
     setTotalVehicles(totalVehicles) {
-        checkNegativeValue(totalVehicles, "totalVehicles");
+        this.checkNegativeValue(totalVehicles, "totalVehicles");
         this.totalVehicles += totalVehicles;
     };
 
@@ -102,7 +107,7 @@ class TrafficDataReport {
      * set TotalBikes
      */
     setTotalBikes(totalBikes) {
-        checkNegativeValue(totalBikes, "totalBikes");
+        this.checkNegativeValue(totalBikes, "totalBikes");
         this.totalBikes += totalBikes;
     };
 
@@ -110,7 +115,7 @@ class TrafficDataReport {
      * set totalCars
      */
     setTotalCars(totalCars) {
-        checkNegativeValue(totalCars, "totalCars");
+        this.checkNegativeValue(totalCars, "totalCars");
         this.totalCars += totalCars;
     };
 
@@ -118,7 +123,7 @@ class TrafficDataReport {
      * set totalTrucks
      */
     setTotalTrucks(totalTrucks) {
-        checkNegativeValue(totalTrucks, "totalTrucks");
+        this.checkNegativeValue(totalTrucks, "totalTrucks");
         this.totalTrucks += totalTrucks;
     };
 
@@ -126,7 +131,7 @@ class TrafficDataReport {
      * set totalBuses
      */
     setTotalBuses(totalBuses) {
-        checkNegativeValue(totalBuses, "totalBuses");
+        this.checkNegativeValue(totalBuses, "totalBuses");
         this.totalBuses += totalBuses;
     };
 
@@ -134,7 +139,7 @@ class TrafficDataReport {
      * set totalAnomalies
      */
     setTotalAnomalies(totalAnomalies) {
-        checkNegativeValue(totalAnomalies, "totalAnomalies");
+        this.checkNegativeValue(totalAnomalies, "totalAnomalies");
         this.totalAnomalies += totalAnomalies;
     };
 
@@ -142,7 +147,7 @@ class TrafficDataReport {
      * set speedAverage
      */
     setSpeedAverage(speedAverage) {
-        checkNegativeValue(speedAverage, "speedAverage");
+        this.checkNegativeValue(speedAverage, "speedAverage");
         this.speedAverage += speedAverage;
     };
 
@@ -228,7 +233,7 @@ class TrafficDataReport {
     getReport() {
 
         let report = "";
-
+        report += "Traffic data report of TLS " + this.tls.getSystemId();
         if (this.cars) { report += "- Total cars " + this.getTotalCars() };
         if (this.bikes) { report += "- Total bikes " + this.getTotalBikes() };
         if (this.trucks) { report += "- Total trucks " + this.getTotalTrucks() };

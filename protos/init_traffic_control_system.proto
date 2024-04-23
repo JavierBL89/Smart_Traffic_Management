@@ -13,7 +13,7 @@ service InitTrafficControlSystem {
 
 }
 
-// Numbers to be added
+//Request
 message InitRequest{
     // Empty
 }

@@ -5,6 +5,13 @@ syntax = "proto3";
 // Package
 package start_traffic_control;
 
+/**
+* Define a Sever Stream RPC.
+*
+* User makes the request to initiate a traffic control cycle with a single input.
+* The sever listens to event durin th cycle and report a stream of messages in response to the client 
+*/
+
 
 // service definition
 service StartTrafficControl {
@@ -13,7 +20,7 @@ service StartTrafficControl {
 
 }
 
-// Numbers to be added
+// Request
 message StartRequest{
     // Empty
 }

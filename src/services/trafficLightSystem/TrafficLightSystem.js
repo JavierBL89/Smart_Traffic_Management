@@ -1,8 +1,6 @@
 
 const TrafficLight = require('./TrafficLight');
 const VisualRecognitionSystem = require('../visualRecognitionSystem/VisualRecognitionSystem');
-const StateRecord = require('./StateRecord');
-
 /**
  * 
  */

@@ -7,7 +7,7 @@ package config_tcs;
 
 
 /****
-* Define a server stream - client stream RPC for configuration of traffic control cycles 
+* Define a bidirectional stream RPC for configuration of traffic control cycles 
 *
 * Service allows a user to configure Visual REcognition Systems . 
 * The user specifies parameters for traffic scans and their length,  

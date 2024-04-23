@@ -221,6 +221,7 @@ class TrafficControlManager extends EventEmitter {
     */
     async startTrafficControlCycle(tlsId, state, resetCycle) {
 
+        console.log(this.cycleCount + " " + this.maxCycles);
         /**  prevent the app from run indefinetly. */
         if (this.cycleCount > this.maxCycles) {
             console.log("\nReached the maximum number of cycles.");

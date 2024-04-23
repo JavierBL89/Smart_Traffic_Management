@@ -158,7 +158,7 @@ class TrafficDataCollector {
             console.error("Error occurred while collecting traffic data: " + e.message);
             return;
         }
-        getAnomalies();            // check traffic anomalies
+        this.getAnomalies();            // check traffic anomalies
     }
 
     /***
@@ -213,7 +213,7 @@ class TrafficDataCollector {
    * Get total of Vehicles per scan
    */
     getTotalVehicles() {
-        this.totalVehicles = (this.tdc.getCarCounter() + this.tdc.getBikeCounter() + this.tdc.getBusCounter() + this.tdc.getTruckCounter());
+        this.totalVehicles = (this.getCarCounter() + this.getBikeCounter() + this.getBusCounter() + this.getTruckCounter());
         return this.totalVehicles;
     }
 
