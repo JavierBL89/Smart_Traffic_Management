@@ -182,17 +182,15 @@ server.addService(configTrafficControlSystemProto.ConfigTrafficControlSytem.serv
  */
 server.addService(configureTrafficReportProto.TrafficReport.service, {
 
-    ConfigureReport: (call, callback) => {
+    ConfigureReport: (call) => {
 
         try {
-            // Log the incoming request data
-            console.log("Received request:", call.request);
             let trafficDataReportManager;
             // iterate through the list of traffic control systems associated to Control Center System
             for (let tcs of controlCenterInstance.getListTCSManager()) {
                 trafficDataReportManager = tcs.getTrafficReportManager();  // grab instance of the Traffic Control Manager class          
             }
-            handleTrafficReport(trafficDataReportManager, call, callback);
+            handleTrafficReport(trafficDataReportManager, call);
         } catch (error) {
             console.error('Error while configuring traffic report parameters:', error);
             call.write({ message: `Error: ${error.message}` });
@@ -212,7 +210,7 @@ server.addService(configureTrafficReportProto.TrafficReport.service, {
  * @param callback - is a function that will be called once the processing of the traffic data report is complete. 
  * It sends a response back to the client or caller to indicate the status of the operation
  */
-function handleTrafficReport(trafficDataReportManager, call, callback) {
+function handleTrafficReport(trafficDataReportManager, call) {
 
     call.on('data', (request) => {
 
@@ -234,12 +232,13 @@ function handleTrafficReport(trafficDataReportManager, call, callback) {
     })
 
     call.on('end', () => {
-        callback(null, { success: true, message: 'Configuration for traffic report data successful.' });
+        call.write({ success: true, message: 'Configuration for traffic report data successful.' });
+        call.end();
     });
 
     // handle any error during communication
     call.on('error', (error) => {
-        callback(null, { status: false, message: `Error: ${error.message}` });
+        call.write({ status: false, message: `Error: ${error.message}` });
     });
 };
 
@@ -399,6 +398,8 @@ async function handleTrafficControlCycle(trafficControlManager, call) {
 
 /***
  * Funtion to handle events when retreiving traffic data reports
+ * 
+ * HAD NOT TIME TO FIX THE ERROR ON CLIENT STREAM RPC AND IMPLEMENT THIS FUCNTIONALITY
  */
 function getTrafficReport(trafficDataReportManager, call) {
     try {

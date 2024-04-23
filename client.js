@@ -140,9 +140,9 @@ async function handleConfigReport() {
     return new Promise(async (resolve, reject) => {
         try {
 
-            const totalVehicles = await askQuestion("\nReport total number of vehicles 'y/n': ");
-            const trafficDensity = await askQuestion("Report traffic desnsity levels 'y/n': ");
-            const speedAverage = await askQuestion("Report vehicles speed average 'y/n': ");
+            const totalVehicles = await askQuestion("\nReport total number of vehicles'y/n': ");
+            const trafficDensity = await askQuestion("Report traffic desnsity levels'y/n': ");
+            const speedAverage = await askQuestion("Report vehicles speed average'y/n': ");
 
             // Create a ReportConfig instance and init the streamming call
             const clientStreamRequest = client_service_4.ConfigureReport();
@@ -165,13 +165,17 @@ async function handleConfigReport() {
 
             });
 
+            /* this also throws error 
+            'Configuration failed with an exception: Error: Incorrect arguments passed'
+            * however this same implementation on line 296 works correctly... 
+            */
             clientStreamRequest.write({
                 totalVehicles: totalVehicles.trim(),
                 trafficDensity: trafficDensity.trim(),
                 speedAverage: speedAverage.trim()
             });
-            clientStreamRequest.end();
 
+            /************************ THE ABOVE COMMENTED call 'line' IS NOT FUNCITONING AS EXPECTED WITH UNDEFINED VALUES */
             //listen for commands during connection to send or end the stream
             /* rl.on('line', (input) => {
  
@@ -191,6 +195,7 @@ async function handleConfigReport() {
                      clientStreamRequest.end();
                  }
              });*/
+
         } catch (error) {
             console.error("Configuration failed with an exception:", error);
             reject(error); // Reject the promise if there is an exception
@@ -256,6 +261,7 @@ async function handleConfigTCS() {
     return new Promise(async (resolve, reject) => {
         try {
             const greenCycleLength = await askQuestion("\nEnter the max length in seconds of the green phase for a traffic light system: ");
+
             const numbOfTotalCycles = await askQuestion("Enter the max number of total traffic control cycles: ");
 
             // Create a new ConfigRequest instance and init the streamming call
@@ -287,24 +293,11 @@ async function handleConfigTCS() {
 
             });
 
-
-            /*configRequestStream.write({
+            configRequestStream.write({
                 greenCycleLength: parseInt(greenCycleLength),
                 numbOfTotalCycles: parseInt(numbOfTotalCycles)
-            });*/
-
-            // listen for commands during connection to send or end the stream
-            rl.on('line', (input) => {
-                const [command, greenCycleLength, numbOfTotalCycles] = input.split(' ');
-                if (command === 'send') {
-                    configRequestStream.write({
-                        greenCycleLength: parseInt(greenCycleLength),
-                        numbOfTotalCycles: parseInt(numbOfTotalCycles)
-                    });
-                } else if (command === 'end') {
-                    configRequestStream.end();
-                }
             });
+
         } catch (error) {
             console.error("Configuration failed with an exception:", error);
             reject(error); // Reject the promise if there is an exception
