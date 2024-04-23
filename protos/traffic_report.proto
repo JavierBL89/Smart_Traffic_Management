@@ -1,0 +1,40 @@
+/////////////////// Interface definition ////////////////////
+
+syntax = "proto3";
+
+// Package
+package traffic_report;
+
+/**
+* Define a client-streaming RPC for traffic report configuration
+*
+Service allows user to enter a stream of desired parameters collected 
+* during the cycles of the traffic control systems to be reported after TLS operation ends.
+* After user selection, server responds with a confirmation of the report configuration 
+*
+**/
+
+
+// Service definition
+service TrafficReport {
+  rpc ConfigureReport (stream ReportConfig) returns (ReportResponse);
+}
+
+// Request message
+message ReportConfig {
+
+    // "cars", "buses", "bikes", "trucks", "anomalies"
+    string reportType = 1; 
+
+    // True to enable, false to disable
+    bool enable = 2; 
+}
+
+
+// Response message
+message ReportResponse {
+
+    bool success = 1;
+
+    string message = 2;
+}
